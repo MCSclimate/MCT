@@ -296,12 +296,12 @@
   if(myID == root) then
      allocate(counts(0:npes-1), displs(0:npes-1), stat=ier)
      if (ier /= 0) then
-	call die(myname_, 'allocate(counts,...',ier)
+	call die(myname_, 'allocate(counts(0:...',ier)
      endif
   else
      allocate(counts(1), displs(1), stat=ier)
      if (ier /= 0) then
-	call die(myname_, 'allocate(counts,...',ier)
+	call die(myname_, 'allocate(counts(1),...',ier)
      endif
   endif
 
@@ -315,14 +315,11 @@
         ! the entries of counts and displs.
 
   if(myID == root) then
-     ngseg = 0
-     do i=0,npes-1
+     ngseg = counts(0)
+     displs(0) = 0
+     do i=1,npes-1
 	ngseg = ngseg + counts(i)
-        if(i == 0) then
-	   displs(i) = 0
-	else
-	   displs(i) = displs(i-1) + counts(i-1)
-	endif
+	displs(i) = displs(i-1) + counts(i-1)
      end do
   endif
 
@@ -480,7 +477,7 @@
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::initr_'
-  integer :: myID,ier,l,i
+  integer :: myID,ier,l,i,sz
 
         ! Determine the local process ID myID:
 
@@ -551,9 +548,12 @@
         ! length(:) and pe_loc(:), respectively
 
   if(myID == root) then
-     GSMap%start(1:GSMap%ngseg) = start(1:GSMap%ngseg)
-     GSMap%length(1:GSMap%ngseg) = length(1:GSMap%ngseg)
-     GSMap%pe_loc(1:GSMap%ngseg) = pe_loc(1:GSMap%ngseg)
+!$omp parallel do default(shared) private(i)
+     do i=1,GSMap%ngseg
+        GSMap%start(i)  = start(i)
+        GSMap%length(i) = length(i)
+        GSMap%pe_loc(i) = pe_loc(i)
+     enddo
   endif
 
         ! Broadcast the root values of GSMap%start(:), GSMap%length(:),
@@ -583,10 +583,12 @@
      call MPI_BCAST(GSMap%gsize, 1, MP_INTEGER, root, my_comm, ier)
      if(ier/=0) call MP_perr_die(myname_, 'MPI_BCAST(GSMap%gsize)', ier)
   else
-     GSMap%gsize = 0
+     sz = 0
+!$omp parallel do default(shared) private(i) reduction(+:sz)
      do i=1,GSMap%ngseg
-	GSMap%gsize = GSMap%gsize + GSMap%length(i)
+	sz = sz + GSMap%length(i)
      end do
+     GSMap%gsize = sz
   endif
 
  end subroutine initr_
@@ -651,7 +653,6 @@
      call die(myname_,'non-positive value of gsize',gsize)
   endif
 
-
        ! Is ngseg positive?
 
   if(ngseg <= 0) then
@@ -685,6 +686,7 @@
   GSMap%ngseg = ngseg
   GSMap%gsize = gsize
 
+!$omp parallel do default(shared) private(n)
   do n=1,ngseg
      GSMap%start(n) = start(n)
      GSMap%length(n) = length(n)
@@ -785,6 +787,7 @@
   GSMap%ngseg = ngseg
   GSMap%gsize = gsize
 
+!$omp parallel do default(shared) private(n)
   do n=1,ngseg
      GSMap%start(n) = all_arrays(n)
      GSMap%length(n) = all_arrays(ngseg + n)
@@ -1146,6 +1149,7 @@
 
         ! Compute the number of segments residing on pID, nlocseg
 
+!$omp parallel do default(shared) private(i) reduction(+:nlocseg)
   do i=1,GSMap%ngseg
      if(GSMap%pe_loc(i) == pID) then
 	nlocseg = nlocseg + 1
@@ -1196,48 +1200,31 @@
 !EOP ___________________________________________________________________
 
 
-
 ! Local variables
 
         character(len=*),parameter :: myname_=myname//'::max_local_segs'
 
-        integer i
-        integer this_comp_id
-        integer nprocs
-
         integer, allocatable::  segcount(:)  ! segments on proc i
-        integer ier
-
-        integer this_ngseg
-        integer segment_pe
-        integer max_segcount
+        integer ier, i, nprocs, segment_pe, max_segcount
 
 
 ! Start of routine
 
-        this_comp_id = comp_id(gsmap)
-        nprocs=ThisMCTWorld%nprocspid(this_comp_id)
+        nprocs=ThisMCTWorld%nprocspid(gsmap%comp_id)
 
         allocate( segcount(nprocs), stat=ier )
         if (ier/=0) call die(myname_,'allocate segcount')
 
         segcount=0
-
-        this_ngseg=ngseg(gsmap)
-
-        do i=1,this_ngseg
-
-          segment_pe = gsmap%pe_loc(i) + 1     ! want value 1..nprocs
-
-          if (segment_pe < 1 .OR. segment_pe > nprocs) then
-            call die(myname_,'bad segment location',segment_pe)
-          endif
-
+!$omp parallel do default(shared) private(i,segment_pe) reduction(+:segcount)
+        do i=1,gsmap%ngseg
+          segment_pe = gsmap%pe_loc(i)
           segcount(segment_pe) = segcount(segment_pe) + 1
         enddo
 
         max_segcount=0
-        do i=1,nprocs
+!$omp parallel do default(shared) private(i) reduction(max:max_segcount)
+        do i=0,nprocs-1
           max_segcount= max( max_segcount, segcount(i) )
         enddo
 
@@ -1357,11 +1344,7 @@
 
   character(len=*),parameter :: myname_=myname//'::GlobalStorage_'
 
-  integer :: global_storage, ngseg, n
-
-      ! Return global number of segments:
-
-  ngseg = ngseg_(GSMap)
+  integer :: global_storage, n
 
       ! Initialize global_storage (the total number of points in the
       ! GlobalSegMap:
@@ -1370,7 +1353,8 @@
 
       ! Add up the number of points present in the GlobalSegMap:
 
-  do n=1,ngseg
+!$omp parallel do default(shared) private(n) reduction(+:global_storage)
+  do n=1,GSMap%ngseg
      global_storage = global_storage + GSMap%length(n)
   end do
 
@@ -1407,11 +1391,7 @@
 
   character(len=*),parameter :: myname_=myname//'::ProcessStorage_'
 
-  integer :: pe_storage, ngseg, n
-
-      ! Return global number of segments:
-
-  ngseg = ngseg_(GSMap)
+  integer :: pe_storage, n
 
       ! Initialize pe_storage (the total number of points on process
       ! PEno in the GlobalSegMap):
@@ -1420,7 +1400,8 @@
 
       ! Add up the number of points on process PEno in the GlobalSegMap:
 
-  do n=1,ngseg
+!$omp parallel do default(shared) private(n) reduction(+:pe_storage)
+  do n=1,GSMap%ngseg
      if(GSMap%pe_loc(n) == PEno) then
 	pe_storage = pe_storage + GSMap%length(n)
      endif
@@ -1548,10 +1529,6 @@
   call MP_COMM_RANK(comm, myID, ierr)
   if(ierr /= 0) call MP_perr_die(myname_,'MP_COMM_RANK',ierr)
 
-        ! Determine global number of segments:
-
-  ngseg = ngseg_(GSMap)
-
         ! Compute the local size of the distributed vector by summing
         ! the entries of GSMap%length(:) whose corresponding values in
         ! GSMap%pe_loc(:) equal the local process ID.  This automatically
@@ -1559,7 +1536,8 @@
 
   local_size = 0
 
-  do n=1,ngseg
+!$omp parallel do default(shared) private(n) reduction(+:local_size)
+  do n=1,GSMap%ngseg
      if(GSMap%pe_loc(n) == myID) then
 	local_size = local_size + GSMap%length(n)
      endif
@@ -1607,15 +1585,15 @@
         ! Initially, set the rank to -1 (invalid).
   rank=-1
 
-  do i=1,size(GSMap%start)
+!$omp parallel do default(shared) private(i,ilc,ile)
+  do i=1,GSMap%ngseg
     ilc = GSMap%start(i)
-    ile = ilc + GSMap%length(i) - 1
+    ile = ilc + GSMap%length(i)
 
 		! If i_g in [ilc,ile].  Note that i_g := [1:..]
 
-    if(ilc <= i_g .and. i_g <= ile) then
+    if(ilc <= i_g .and. i_g < ile) then
       rank = GSMap%pe_loc(i)
-      return
     endif
   end do
 
@@ -1665,14 +1643,15 @@
 
   num_loc = 0
 
-  do i=1,size(GSMap%start)
+!$omp parallel do default(shared) private(i,ilc,ile) reduction(+:num_loc)
+  do i=1,GSMap%ngseg
 
     ilc = GSMap%start(i)
-    ile = ilc + GSMap%length(i) - 1
+    ile = ilc + GSMap%length(i)
 
 		! If i_g in [ilc,ile].  Note that i_g := [1:..]
 
-    if(ilc <= i_g .and. i_g <= ile) then
+    if(ilc <= i_g .and. i_g < ile) then
       num_loc = num_loc + 1
     endif
 
@@ -1685,7 +1664,7 @@
 
      num_loc = 1
      allocate(rank(num_loc), stat=ier)
-     rank = -1	! null value
+     rank(1) = -1 ! null value
      return
 
   else
@@ -1697,14 +1676,14 @@
 
      n = 0 ! counter
 
-     do i=1,size(GSMap%start)
+     do i=1,GSMap%ngseg
 
 	ilc = GSMap%start(i)
-	ile = ilc + GSMap%length(i) - 1
+	ile = ilc + GSMap%length(i)
 
 	! If i_g in [ilc,ile].  Note that i_g := [1:..]
 
-	if(ilc <= i_g .and. i_g <= ile) then
+	if(ilc <= i_g .and. i_g < ile) then
 	   n = n + 1
 	   rank(n) = GSMap%pe_loc(i)
 	endif
