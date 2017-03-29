@@ -1743,10 +1743,6 @@
   integer :: max_activepe, p
   logical, dimension(:), allocatable :: process_list
 
-        ! retrieve total number of segments in the map:
-
-  ngseg = ngseg_(GSMap)
-
         ! retrieve maximum active process id in the map:
 
   max_activepe = maxval(GSMap%pe_loc(:))
@@ -1766,17 +1762,13 @@
 
         ! scan entries of GSMap%pe_loc to count active processes:
 
-  do n=1,ngseg
+  do n=1,GSMap%ngseg
      if(GSMap%pe_loc(n) >= 0) then ! a legitimate pe_location
 
         if (.not. process_list(GSMap%pe_loc(n))) then
            process_list(GSMap%pe_loc(n)) = .true.
            count = count + 1
         endif
-
-     else  ! a negative entry in GSMap%pe_loc(n)
-	ierr = 2
-	call die(myname_,'negative value of GSMap%pe_loc',ierr)
      endif
   end do
 
@@ -1951,6 +1943,7 @@
 
 ! Determine number of segments that need to be examined
   nfseg = 0
+!$omp parallel do default(shared) private(iseg,lower_index,upper_index) reduction(+:nfseg)
   do iseg=1,ngseg  ! loop over segments
 
      lower_index = pointGSMap%start(iseg)
@@ -2037,6 +2030,7 @@
   endif
 
 ! Calculate map from (global) point indices to pes
+!$omp parallel do default(shared) private(iseg,lower_index,upper_index,ipoint)
   do iseg=1,ngseg  ! loop over segments
 
      lower_index = pointGSMap%start(iseg)
@@ -2054,6 +2048,7 @@
   end do ! do iseg=1, ngseg
 
 ! Calculate map from local point indices to pes
+!$omp parallel do default(shared) private(ipoint)
   do ipoint=1,npoints ! loop over points
 
      pe_locs(ipoint) = pindices_to_pes(points(ipoint))
