@@ -314,7 +314,7 @@ if echo $FC | grep xlf >/dev/null 2>&1; then
    if test "$FCFLAGS" = "$DEFFCFLAGS"; then
        FCFLAGS=""
    fi
-elif echo $FC | grep pgf >/dev/null 2>&1; then
+elif echo $ac_fc_version_output | grep -i pgfor >/dev/null 2>&1; then
    echo "Fortran Compiler is Portland Group"
    CPRDEF="PGI"
    if test -z "$REAL8"; then
@@ -356,7 +356,7 @@ elif test "$IS_GNU" = "yes" ; then
     fi
 #  Put ifort after gnu in case wrapper script mpifort
 #  from openmpi is wrapping gnu.  Prevents misidentification
-elif echo $FC | grep ifort >/dev/null 2>&1; then
+elif echo $ac_fc_version_output | grep -i 'intel.*fortran' >/dev/null 2>&1; then
    echo "Fortran Compiler is Intel ifort"
    CPRDEF="INTEL"
    if test -z "$REAL8"; then
