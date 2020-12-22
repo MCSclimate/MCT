@@ -3681,6 +3681,12 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
+if test -z "$GFC"; then
+   IS_GNU="no"
+else
+   IS_GNU=$GFC
+fi
+
 # CHECK FOR MPI LIBRARIES
 ac_ext=${ac_fc_srcext-f}
 ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
@@ -4067,7 +4073,7 @@ _ACEOF
 # 1 to this macro) to the Fortran 90 compiler in order to get "version" output
 ac_save_FCFLAGS=$FCFLAGS
 FCFLAGS="$FCFLAGS $ac_version"
-(eval echo $as_me:4070: \"$ac_link\") >&5
+(eval echo $as_me:4076: \"$ac_link\") >&5
 ac_fc_version_output=`eval $ac_link 5>&1 2>&1 | grep -v 'Driving:'`
 echo "$ac_fc_version_output" >&5
 FCFLAGS=$ac_save_FCFLAGS
@@ -5050,6 +5056,26 @@ elif echo $FC | grep ftn >/dev/null 2>&1; then
       DEBUG="-g"
    fi
  fi
+elif test "$IS_GNU" = "yes" ; then
+  if echo $FC | grep g95 >/dev/null 2>&1; then
+    echo "Fortran Compiler is GNU g95"
+    CPRDEF="GNU"
+  else
+    echo "Fortran Compiler is GNU"
+    CPRDEF="GNU"
+# For gfortran, default flags are different
+    if test "$FCFLAGS" = "-g -O2"; then
+       FCFLAGS=""
+    fi
+    if test -z "$DEBUG"; then
+       DEBUG="-g"
+    fi
+    if test -z "$OPT"; then
+       OPT="-O2"
+    fi
+  fi
+#  Put ifort after gnu in case wrapper script mpifort
+#  from openmpi is wrapping gnu.  Prevents misidentification
 elif echo $FC | grep ifort >/dev/null 2>&1; then
    echo "Fortran Compiler is Intel ifort"
    CPRDEF="INTEL"
@@ -5070,22 +5096,6 @@ elif echo $FC | grep ifort >/dev/null 2>&1; then
    fi
    if test -z "$DEBUG"; then
       DEBUG="-g"
-   fi
-elif echo $FC | grep g95 >/dev/null 2>&1; then
-   echo "Fortran Compiler is GNU"
-   CPRDEF="GNU"
-elif echo $FC | grep gfortran >/dev/null 2>&1; then
-   echo "Fortran Compiler is GNU"
-   CPRDEF="GNU"
-# For gfortran, default flags are different
-   if test "$FCFLAGS" = "-g -O2"; then
-      FCFLAGS=""
-   fi
-   if test -z "$DEBUG"; then
-      DEBUG="-g"
-   fi
-   if test -z "$OPT"; then
-      OPT="-O2"
    fi
 elif echo $ac_fc_version_output | grep -i nag >/dev/null 2>&1; then
    echo "Fortran Compiler is NAG"
@@ -5233,6 +5243,64 @@ elif echo $ac_fc_version_output | grep -i sx >/dev/null 2>&1; then
       OPT="-Chopt"
    fi
 fi
+
+# Test to see if fortran compiler supports the flag
+# -fallow-argument-mismatch flag introduced in gfortran 10.
+#
+# Also allow support for NAG compiler using the -mismatch_all flag.
+#
+# See https://github.com/Unidata/netcdf-fortran/issues/212
+# See https://github.com/Unidata/netcdf-fortran/issues/218
+ac_save_FCFLAGS="$FCFLAGS"
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if Fortran compiler supports allow-mismatch flag" >&5
+$as_echo_n "checking if Fortran compiler supports allow-mismatch flag... " >&6; }
+cat <<EOF >conftest.f90
+Program test
+USE ISO_C_BINDING, ONLY: C_PTRDIFF_T
+End Program
+EOF
+doit='$FC -c ${FCFLAGS} ${FCFLAGS_f90} -fallow-argument-mismatch conftest.f90'
+if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$doit\""; } >&5
+  (eval $doit) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+   nf_allow_mismatch=yes
+   FCFLAGS="${FCFLAGS} -fallow-argument-mismatch"
+  else
+   nf_allow_mismatch=no
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $nf_allow_mismatch" >&5
+$as_echo "$nf_allow_mismatch" >&6; }
+# End testing of gfortan allow-mismatch flags.
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if Fortran compiler supports mismatch_all flag" >&5
+$as_echo_n "checking if Fortran compiler supports mismatch_all flag... " >&6; }
+cat <<EOF >conftest.f90
+Program test
+USE ISO_C_BINDING, ONLY: C_PTRDIFF_T
+End Program
+EOF
+doit='$FC -c ${FCFLAGS} ${FCFLAGS_f90} -mismatch_all conftest.f90'
+if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$doit\""; } >&5
+  (eval $doit) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+   nf_mismatch_all=yes
+   FCFLAGS="${FCFLAGS} -mismatch_all"
+  else
+   nf_mismatch_all=no
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $nf_mismatch_all" >&5
+$as_echo "$nf_mismatch_all" >&6; }
+
+#end testing of NAG mismatch_all flag.
+
+##
+# End mismatch checks
+##
+
 
 ###########################################################
 # END of compiler-specific flag setting
