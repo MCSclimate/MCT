@@ -143,7 +143,7 @@ AC_C_BIGENDIAN
 
 # CHECK FOR THE FORTRAN COMPILER
 # RLJ- specify the order, include PathScale and do not search for F77
-AC_PROG_FC([nagfor xlf95 pgf95 ifort gfortran pathf95 ftn lf95 f95 fort ifc efc g95 xlf90 pgf90 pathf90 epcf90 pghpf])
+AC_PROG_FC([nagfor xlf95 pgf95 ifort gfortran pathf95 ftn lf95 f95 fort ifc efc xlf90 pgf90 pathf90 epcf90 pghpf])
 
 if test -z "$GFC"; then
    IS_GNU="no"
@@ -335,6 +335,49 @@ elif echo $FC | grep pgf >/dev/null 2>&1; then
    if test -z "$DEBUG"; then
       DEBUG="-g"
    fi
+elif test "$IS_GNU" = "yes" ; then
+# The GNU compiler can hide inside other compilers like ftn
+  if echo $ac_fc_version_output | grep -i Cray >/dev/null 2>&1; then
+   echo "Fortran Compiler is GNU, Cray"
+    CPRDEF="GNU"
+  else
+    echo "Fortran Compiler is GNU"
+    CPRDEF="GNU"
+  fi
+# For gfortran, default flags are different
+    if test "$FCFLAGS" = "-g -O2"; then
+       FCFLAGS=""
+    fi
+    if test -z "$DEBUG"; then
+       DEBUG="-g"
+    fi
+    if test -z "$OPT"; then
+       OPT="-O2"
+    fi
+#  Put ifort after gnu in case wrapper script mpifort
+#  from openmpi is wrapping gnu.  Prevents misidentification
+elif echo $FC | grep ifort >/dev/null 2>&1; then
+   echo "Fortran Compiler is Intel ifort"
+   CPRDEF="INTEL"
+   if test -z "$REAL8"; then
+      REAL8="-r8"
+   fi
+   if test "$FCFLAGS" = "$DEFFCFLAGS"; then
+      FCFLAGS="-w -ftz"
+   fi
+   if test -z "$PROGFCFLAGS"; then
+      PROGFCFLAGS="-assume byterecl"
+   fi
+   if test -z "$ENDIAN"; then
+      ENDIAN="-convert big_endian"
+   fi
+   if test -z "$OPT"; then
+      OPT="-O2"
+   fi
+   if test -z "$DEBUG"; then
+      DEBUG="-g"
+   fi
+# Put ftn after GNU for the case where ftn is wrapping PGF
 elif echo $FC | grep ftn >/dev/null 2>&1; then
  if echo $ac_fc_version_output | grep -i Portland >/dev/null 2>&1; then
    echo "Fortran Compiler is Portland Group, Cray"
@@ -359,47 +402,6 @@ elif echo $FC | grep ftn >/dev/null 2>&1; then
       DEBUG="-g"
    fi
  fi
-elif test "$IS_GNU" = "yes" ; then
-  if echo $FC | grep g95 >/dev/null 2>&1; then
-    echo "Fortran Compiler is GNU g95"
-    CPRDEF="GNU"
-  else
-    echo "Fortran Compiler is GNU"
-    CPRDEF="GNU"
-# For gfortran, default flags are different
-    if test "$FCFLAGS" = "-g -O2"; then
-       FCFLAGS=""
-    fi
-    if test -z "$DEBUG"; then
-       DEBUG="-g"
-    fi
-    if test -z "$OPT"; then
-       OPT="-O2"
-    fi
-  fi
-#  Put ifort after gnu in case wrapper script mpifort
-#  from openmpi is wrapping gnu.  Prevents misidentification
-elif echo $FC | grep ifort >/dev/null 2>&1; then
-   echo "Fortran Compiler is Intel ifort"
-   CPRDEF="INTEL"
-   if test -z "$REAL8"; then
-      REAL8="-r8"
-   fi
-   if test "$FCFLAGS" = "$DEFFCFLAGS"; then
-      FCFLAGS="-w -ftz"
-   fi
-   if test -z "$PROGFCFLAGS"; then
-      PROGFCFLAGS="-assume byterecl"
-   fi
-   if test -z "$ENDIAN"; then
-      ENDIAN="-convert big_endian"
-   fi
-   if test -z "$OPT"; then
-      OPT="-O2"
-   fi
-   if test -z "$DEBUG"; then
-      DEBUG="-g"
-   fi
 elif echo $ac_fc_version_output | grep -i nag >/dev/null 2>&1; then
    echo "Fortran Compiler is NAG"
    CPRDEF="NAG"
