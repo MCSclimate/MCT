@@ -3474,7 +3474,7 @@ ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
 ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_fc_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  for ac_prog in nagfor xlf95 pgf95 ifort gfortran pathf95 ftn lf95 f95 fort ifc efc g95 xlf90 pgf90 pathf90 epcf90 pghpf
+  for ac_prog in nagfor xlf95 pgf95 ifort gfortran pathf95 ftn lf95 f95 fort ifc efc xlf90 pgf90 pathf90 epcf90 pghpf
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -3518,7 +3518,7 @@ fi
 fi
 if test -z "$FC"; then
   ac_ct_FC=$FC
-  for ac_prog in nagfor xlf95 pgf95 ifort gfortran pathf95 ftn lf95 f95 fort ifc efc g95 xlf90 pgf90 pathf90 epcf90 pghpf
+  for ac_prog in nagfor xlf95 pgf95 ifort gfortran pathf95 ftn lf95 f95 fort ifc efc xlf90 pgf90 pathf90 epcf90 pghpf
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -3680,6 +3680,12 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
+if test -z "$GFC"; then
+   IS_GNU="no"
+else
+   IS_GNU=$GFC
+fi
 
 # CHECK FOR MPI LIBRARIES
 ac_ext=${ac_fc_srcext-f}
@@ -4067,7 +4073,7 @@ _ACEOF
 # 1 to this macro) to the Fortran 90 compiler in order to get "version" output
 ac_save_FCFLAGS=$FCFLAGS
 FCFLAGS="$FCFLAGS $ac_version"
-(eval echo $as_me:4070: \"$ac_link\") >&5
+(eval echo $as_me:4076: \"$ac_link\") >&5
 ac_fc_version_output=`eval $ac_link 5>&1 2>&1 | grep -v 'Driving:'`
 echo "$ac_fc_version_output" >&5
 FCFLAGS=$ac_save_FCFLAGS
@@ -5005,7 +5011,7 @@ if echo $FC | grep xlf >/dev/null 2>&1; then
    if test "$FCFLAGS" = "$DEFFCFLAGS"; then
        FCFLAGS=""
    fi
-elif echo $FC | grep pgf >/dev/null 2>&1; then
+elif echo $ac_fc_version_output | grep -i pgfor >/dev/null 2>&1; then
    echo "Fortran Compiler is Portland Group"
    CPRDEF="PGI"
    if test -z "$REAL8"; then
@@ -5026,6 +5032,49 @@ elif echo $FC | grep pgf >/dev/null 2>&1; then
    if test -z "$DEBUG"; then
       DEBUG="-g"
    fi
+elif test "$IS_GNU" = "yes" ; then
+# The GNU compiler can hide inside other compilers like ftn
+  if echo $ac_fc_version_output | grep -i Cray >/dev/null 2>&1; then
+   echo "Fortran Compiler is GNU, Cray"
+    CPRDEF="GNU"
+  else
+    echo "Fortran Compiler is GNU"
+    CPRDEF="GNU"
+  fi
+# For gfortran, default flags are different
+    if test "$FCFLAGS" = "-g -O2"; then
+       FCFLAGS=""
+    fi
+    if test -z "$DEBUG"; then
+       DEBUG="-g"
+    fi
+    if test -z "$OPT"; then
+       OPT="-O2"
+    fi
+#  Put ifort after gnu in case wrapper script mpifort
+#  from openmpi is wrapping gnu.  Prevents misidentification
+elif echo $ac_fc_version_output | grep -i 'intel.*fortran' >/dev/null 2>&1; then
+   echo "Fortran Compiler is Intel ifort"
+   CPRDEF="INTEL"
+   if test -z "$REAL8"; then
+      REAL8="-r8"
+   fi
+   if test "$FCFLAGS" = "$DEFFCFLAGS"; then
+      FCFLAGS="-w -ftz"
+   fi
+   if test -z "$PROGFCFLAGS"; then
+      PROGFCFLAGS="-assume byterecl"
+   fi
+   if test -z "$ENDIAN"; then
+      ENDIAN="-convert big_endian"
+   fi
+   if test -z "$OPT"; then
+      OPT="-O2"
+   fi
+   if test -z "$DEBUG"; then
+      DEBUG="-g"
+   fi
+# Put ftn after GNU for the case where ftn is wrapping PGF
 elif echo $FC | grep ftn >/dev/null 2>&1; then
  if echo $ac_fc_version_output | grep -i Portland >/dev/null 2>&1; then
    echo "Fortran Compiler is Portland Group, Cray"
@@ -5050,43 +5099,6 @@ elif echo $FC | grep ftn >/dev/null 2>&1; then
       DEBUG="-g"
    fi
  fi
-elif echo $FC | grep ifort >/dev/null 2>&1; then
-   echo "Fortran Compiler is Intel ifort"
-   CPRDEF="INTEL"
-   if test -z "$REAL8"; then
-      REAL8="-r8"
-   fi
-   if test "$FCFLAGS" = "$DEFFCFLAGS"; then
-      FCFLAGS="-w -ftz"
-   fi
-   if test -z "$PROGFCFLAGS"; then
-      PROGFCFLAGS="-assume byterecl"
-   fi
-   if test -z "$ENDIAN"; then
-      ENDIAN="-convert big_endian"
-   fi
-   if test -z "$OPT"; then
-      OPT="-O2"
-   fi
-   if test -z "$DEBUG"; then
-      DEBUG="-g"
-   fi
-elif echo $FC | grep g95 >/dev/null 2>&1; then
-   echo "Fortran Compiler is GNU"
-   CPRDEF="GNU"
-elif echo $FC | grep gfortran >/dev/null 2>&1; then
-   echo "Fortran Compiler is GNU"
-   CPRDEF="GNU"
-# For gfortran, default flags are different
-   if test "$FCFLAGS" = "-g -O2"; then
-      FCFLAGS=""
-   fi
-   if test -z "$DEBUG"; then
-      DEBUG="-g"
-   fi
-   if test -z "$OPT"; then
-      OPT="-O2"
-   fi
 elif echo $ac_fc_version_output | grep -i nag >/dev/null 2>&1; then
    echo "Fortran Compiler is NAG"
    CPRDEF="NAG"
@@ -5233,6 +5245,64 @@ elif echo $ac_fc_version_output | grep -i sx >/dev/null 2>&1; then
       OPT="-Chopt"
    fi
 fi
+
+# Test to see if fortran compiler supports the flag
+# -fallow-argument-mismatch flag introduced in gfortran 10.
+#
+# Also allow support for NAG compiler using the -mismatch_all flag.
+#
+# See https://github.com/Unidata/netcdf-fortran/issues/212
+# See https://github.com/Unidata/netcdf-fortran/issues/218
+ac_save_FCFLAGS="$FCFLAGS"
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if Fortran compiler supports allow-mismatch flag" >&5
+$as_echo_n "checking if Fortran compiler supports allow-mismatch flag... " >&6; }
+cat <<EOF >conftest.f90
+Program test
+USE ISO_C_BINDING, ONLY: C_PTRDIFF_T
+End Program
+EOF
+doit='$FC -c ${FCFLAGS} ${FCFLAGS_f90} -fallow-argument-mismatch conftest.f90'
+if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$doit\""; } >&5
+  (eval $doit) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+   nf_allow_mismatch=yes
+   FCFLAGS="${FCFLAGS} -fallow-argument-mismatch"
+  else
+   nf_allow_mismatch=no
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $nf_allow_mismatch" >&5
+$as_echo "$nf_allow_mismatch" >&6; }
+# End testing of gfortan allow-mismatch flags.
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if Fortran compiler supports mismatch_all flag" >&5
+$as_echo_n "checking if Fortran compiler supports mismatch_all flag... " >&6; }
+cat <<EOF >conftest.f90
+Program test
+USE ISO_C_BINDING, ONLY: C_PTRDIFF_T
+End Program
+EOF
+doit='$FC -c ${FCFLAGS} ${FCFLAGS_f90} -mismatch_all conftest.f90'
+if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$doit\""; } >&5
+  (eval $doit) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+   nf_mismatch_all=yes
+   FCFLAGS="${FCFLAGS} -mismatch_all"
+  else
+   nf_mismatch_all=no
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $nf_mismatch_all" >&5
+$as_echo "$nf_mismatch_all" >&6; }
+
+#end testing of NAG mismatch_all flag.
+
+##
+# End mismatch checks
+##
+
 
 ###########################################################
 # END of compiler-specific flag setting
