@@ -1,7 +1,8 @@
 dnl initialize autoconf
-AC_INIT(mpi.h)
+AC_INIT
+AC_CONFIG_SRCDIR([mpi.h])
 dnl specify config header file
-AC_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 dnl find c compiler, and fort compiler
 AC_PROG_CC
 AC_PROG_FC
@@ -88,4 +89,5 @@ if test -z "$INCLUDEFLAG"; then
 fi
 
 
-AC_OUTPUT(Makefile.conf)
+AC_CONFIG_FILES([Makefile.conf])
+AC_OUTPUT

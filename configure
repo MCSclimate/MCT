@@ -4555,7 +4555,7 @@ fi
 	  ;;
 	  # Ignore these flags.
 	-lang* | -lcrt*.o | -lc | -lgcc* | -lSystem | -libmil | -little \
-	  |-LANG:=* | -LIST:* | -LNO:* | -link | -list | -lnuma )
+	  |-LANG:=* | -LIST:* | -LNO:* | -link | -list | -lnuma | -loop* )
 	  ;;
 	-lkernel32)
 	  test x"$CYGWIN" != xyes && ac_cv_fc_libs="$ac_cv_fc_libs $ac_arg"
