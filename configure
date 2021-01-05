@@ -650,6 +650,14 @@ subdirs
 CPPDEFS
 CRULE
 FCLIBS
+host_os
+host_vendor
+host_cpu
+host
+build_os
+build_vendor
+build_cpu
+build
 FC_DEFINE
 FCFLAGS_F
 MPISERPATH
@@ -1365,6 +1373,10 @@ Fine tuning of the installation directories:
 _ACEOF
 
   cat <<\_ACEOF
+
+System types:
+  --build=BUILD     configure for building on BUILD [guessed]
+  --host=HOST       cross-compile to build programs to run on HOST [BUILD]
 _ACEOF
 fi
 
@@ -2363,6 +2375,104 @@ as_fn_append ac_header_c_list " strings.h strings_h HAVE_STRINGS_H"
 as_fn_append ac_header_c_list " sys/stat.h sys_stat_h HAVE_SYS_STAT_H"
 as_fn_append ac_header_c_list " sys/types.h sys_types_h HAVE_SYS_TYPES_H"
 as_fn_append ac_header_c_list " unistd.h unistd_h HAVE_UNISTD_H"
+
+# Auxiliary files required by this configure script.
+ac_aux_files="config.guess config.sub"
+
+# Locations in which to look for auxiliary files.
+ac_aux_dir_candidates="${srcdir}${PATH_SEPARATOR}${srcdir}/..${PATH_SEPARATOR}${srcdir}/../.."
+
+# Search for a directory containing all of the required auxiliary files,
+# $ac_aux_files, from the $PATH-style list $ac_aux_dir_candidates.
+# If we don't find one directory that contains all the files we need,
+# we report the set of missing files from the *first* directory in
+# $ac_aux_dir_candidates and give up.
+ac_missing_aux_files=""
+ac_first_candidate=:
+printf "%s\n" "$as_me:${as_lineno-$LINENO}: looking for aux files: $ac_aux_files" >&5
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_found=false
+for as_dir in $ac_aux_dir_candidates
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+  as_found=:
+
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}:  trying $as_dir" >&5
+  ac_aux_dir_found=yes
+  ac_install_sh=
+  for ac_aux in $ac_aux_files
+  do
+    # As a special case, if "install-sh" is required, that requirement
+    # can be satisfied by any of "install-sh", "install.sh", or "shtool",
+    # and $ac_install_sh is set appropriately for whichever one is found.
+    if test x"$ac_aux" = x"install-sh"
+    then
+      if test -f "${as_dir}install-sh"; then
+        printf "%s\n" "$as_me:${as_lineno-$LINENO}:   ${as_dir}install-sh found" >&5
+        ac_install_sh="${as_dir}install-sh -c"
+      elif test -f "${as_dir}install.sh"; then
+        printf "%s\n" "$as_me:${as_lineno-$LINENO}:   ${as_dir}install.sh found" >&5
+        ac_install_sh="${as_dir}install.sh -c"
+      elif test -f "${as_dir}shtool"; then
+        printf "%s\n" "$as_me:${as_lineno-$LINENO}:   ${as_dir}shtool found" >&5
+        ac_install_sh="${as_dir}shtool install -c"
+      else
+        ac_aux_dir_found=no
+        if $ac_first_candidate; then
+          ac_missing_aux_files="${ac_missing_aux_files} install-sh"
+        else
+          break
+        fi
+      fi
+    else
+      if test -f "${as_dir}${ac_aux}"; then
+        printf "%s\n" "$as_me:${as_lineno-$LINENO}:   ${as_dir}${ac_aux} found" >&5
+      else
+        ac_aux_dir_found=no
+        if $ac_first_candidate; then
+          ac_missing_aux_files="${ac_missing_aux_files} ${ac_aux}"
+        else
+          break
+        fi
+      fi
+    fi
+  done
+  if test "$ac_aux_dir_found" = yes; then
+    ac_aux_dir="$as_dir"
+    break
+  fi
+  ac_first_candidate=false
+
+  as_found=false
+done
+IFS=$as_save_IFS
+if $as_found
+then :
+
+else $as_nop
+  as_fn_error $? "cannot find required auxiliary files:$ac_missing_aux_files" "$LINENO" 5
+fi
+
+
+# These three variables are undocumented and unsupported,
+# and are intended to be withdrawn in a future Autoconf release.
+# They can cause serious problems if a builder's source tree is in a directory
+# whose full name contains unusual characters.
+if test -f "${ac_aux_dir}config.guess"; then
+  ac_config_guess="$SHELL ${ac_aux_dir}config.guess"
+fi
+if test -f "${ac_aux_dir}config.sub"; then
+  ac_config_sub="$SHELL ${ac_aux_dir}config.sub"
+fi
+if test -f "$ac_aux_dir/configure"; then
+  ac_configure="$SHELL ${ac_aux_dir}configure"
+fi
+
 # Check that the precious variables saved in the cache have kept the same
 # value.
 ac_cache_corrupted=false
@@ -4119,7 +4229,7 @@ _ACEOF
 # 1 to this macro) to the Fortran 90 compiler in order to get "version" output
 ac_save_FCFLAGS=$FCFLAGS
 FCFLAGS="$FCFLAGS $ac_version"
-(eval echo $as_me:4122: \"$ac_link\") >&5
+(eval echo $as_me:4232: \"$ac_link\") >&5
 ac_fc_version_output=`eval $ac_link 5>&1 2>&1 | grep -v 'Driving:'`
 echo "$ac_fc_version_output" >&5
 FCFLAGS=$ac_save_FCFLAGS
@@ -4297,6 +4407,82 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 # CHECK HOW TO NAME MANGLE C FUNCTIONS SO THAT IT CAN BE CALLED FROM FORTRAN
 OLDFC="$FC"
+
+
+
+
+  # Make sure we can run config.sub.
+$SHELL "${ac_aux_dir}config.sub" sun4 >/dev/null 2>&1 ||
+  as_fn_error $? "cannot run $SHELL ${ac_aux_dir}config.sub" "$LINENO" 5
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking build system type" >&5
+printf %s "checking build system type... " >&6; }
+if test ${ac_cv_build+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_build_alias=$build_alias
+test "x$ac_build_alias" = x &&
+  ac_build_alias=`$SHELL "${ac_aux_dir}config.guess"`
+test "x$ac_build_alias" = x &&
+  as_fn_error $? "cannot guess build type; you must specify one" "$LINENO" 5
+ac_cv_build=`$SHELL "${ac_aux_dir}config.sub" $ac_build_alias` ||
+  as_fn_error $? "$SHELL ${ac_aux_dir}config.sub $ac_build_alias failed" "$LINENO" 5
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_build" >&5
+printf "%s\n" "$ac_cv_build" >&6; }
+case $ac_cv_build in
+*-*-*) ;;
+*) as_fn_error $? "invalid value of canonical build" "$LINENO" 5;;
+esac
+build=$ac_cv_build
+ac_save_IFS=$IFS; IFS='-'
+set x $ac_cv_build
+shift
+build_cpu=$1
+build_vendor=$2
+shift; shift
+# Remember, the first character of IFS is used to create $*,
+# except with old shells:
+build_os=$*
+IFS=$ac_save_IFS
+case $build_os in *\ *) build_os=`echo "$build_os" | sed 's/ /-/g'`;; esac
+
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking host system type" >&5
+printf %s "checking host system type... " >&6; }
+if test ${ac_cv_host+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test "x$host_alias" = x; then
+  ac_cv_host=$ac_cv_build
+else
+  ac_cv_host=`$SHELL "${ac_aux_dir}config.sub" $host_alias` ||
+    as_fn_error $? "$SHELL ${ac_aux_dir}config.sub $host_alias failed" "$LINENO" 5
+fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_host" >&5
+printf "%s\n" "$ac_cv_host" >&6; }
+case $ac_cv_host in
+*-*-*) ;;
+*) as_fn_error $? "invalid value of canonical host" "$LINENO" 5;;
+esac
+host=$ac_cv_host
+ac_save_IFS=$IFS; IFS='-'
+set x $ac_cv_host
+shift
+host_cpu=$1
+host_vendor=$2
+shift; shift
+# Remember, the first character of IFS is used to create $*,
+# except with old shells:
+host_os=$*
+IFS=$ac_save_IFS
+case $host_os in *\ *) host_os=`echo "$host_os" | sed 's/ /-/g'`;; esac
+
 
 ac_ext=${ac_fc_srcext-f}
 ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
@@ -4555,10 +4741,29 @@ fi
 	  ;;
 	  # Ignore these flags.
 	-lang* | -lcrt*.o | -lc | -lgcc* | -lSystem | -libmil | -little \
-	  |-LANG:=* | -LIST:* | -LNO:* | -link | -list | -lnuma | -loop* )
+	  |-LANG:=* | -LIST:* | -LNO:* | -link)
 	  ;;
 	-lkernel32)
-	  test x"$CYGWIN" != xyes && ac_cv_fc_libs="$ac_cv_fc_libs $ac_arg"
+	  # Ignore this library only on Windows-like systems.
+	  case $host_os in
+	  cygwin* | msys* ) ;;
+	  *)
+	    ac_exists=false
+  for ac_i in $ac_cv_fc_libs; do
+    if test x"$ac_arg" = x"$ac_i"; then
+      ac_exists=true
+      break
+    fi
+  done
+
+  if test x"$ac_exists" = xtrue
+then :
+
+else $as_nop
+  ac_cv_fc_libs="$ac_cv_fc_libs $ac_arg"
+fi
+	    ;;
+	  esac
 	  ;;
 	-[LRuYz])
 	  # These flags, when seen by themselves, take an argument.
@@ -4611,6 +4816,7 @@ fi
 	-zallextract*| -zdefaultextract)
 	  ac_cv_fc_libs="$ac_cv_fc_libs $ac_arg"
 	  ;;
+	-mllvm) ${2+shift};; # Defend against 'clang -mllvm -loopopt=0'.
 	  # Ignore everything else.
   esac
 done
