@@ -1,7 +1,8 @@
 dnl initialize autoconf
-AC_INIT(mpi.h)
+AC_INIT
+AC_CONFIG_SRCDIR([mpi.h])
 dnl specify config header file
-AC_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 dnl find c compiler, and fort compiler
 AC_PROG_CC
 AC_PROG_FC
@@ -82,10 +83,57 @@ elif echo $ac_fc_version_output | grep -i nag >/dev/null 2>&1; then
      FCFLAGS="-mismatch"
    fi
 fi
+
+# Test to see if fortran compiler supports the flag
+# -fallow-argument-mismatch flag introduced in gfortran 10.
+#
+# Also allow support for NAG compiler using the -mismatch_all flag.
+#
+# See https://github.com/Unidata/netcdf-fortran/issues/212
+# See https://github.com/Unidata/netcdf-fortran/issues/218
+ac_save_FCFLAGS="$FCFLAGS"
+AC_MSG_CHECKING([if Fortran compiler supports allow-mismatch flag])
+cat <<EOF >conftest.f90
+Program test
+USE ISO_C_BINDING, ONLY: C_PTRDIFF_T
+End Program
+EOF
+doit='$FC -c ${FCFLAGS} ${FCFLAGS_f90} -fallow-argument-mismatch conftest.f90'
+if AC_TRY_EVAL(doit); then
+   nf_allow_mismatch=yes
+   FCFLAGS="${FCFLAGS} -fallow-argument-mismatch"
+  else
+   nf_allow_mismatch=no
+fi
+AC_MSG_RESULT([$nf_allow_mismatch])
+# End testing of gfortan allow-mismatch flags.
+
+AC_MSG_CHECKING([if Fortran compiler supports mismatch_all flag])
+cat <<EOF >conftest.f90
+Program test
+USE ISO_C_BINDING, ONLY: C_PTRDIFF_T
+End Program
+EOF
+doit='$FC -c ${FCFLAGS} ${FCFLAGS_f90} -mismatch_all conftest.f90'
+if AC_TRY_EVAL(doit); then
+   nf_mismatch_all=yes
+   FCFLAGS="${FCFLAGS} -mismatch_all"
+  else
+   nf_mismatch_all=no
+fi
+AC_MSG_RESULT([$nf_mismatch_all])
+
+#end testing of NAG mismatch_all flag.
+
+##
+# End mismatch checks
+##
+
 # INCLUDE FLAG IF NOT ALREADY SET IS MOST LIKELY -I
 if test -z "$INCLUDEFLAG"; then
    INCLUDEFLAG="-I"
 fi
 
 
-AC_OUTPUT(Makefile.conf)
+AC_CONFIG_FILES([Makefile.conf])
+AC_OUTPUT
