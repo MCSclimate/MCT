@@ -191,6 +191,7 @@
 ! !REVISION HISTORY:
 ! 20Sep07 - T. Craig migrated code from initd routine
 ! 20Sep07 - T. Craig - made mycomms an array
+! 03Nov19 - J. Edwards - Add barrier to improve peformance on high proc counts
 !EOP ___________________________________________________________________
 !
   character(len=*),parameter :: myname_=myname//'::initm_'
@@ -315,6 +316,7 @@
 !
 ! allocate space to hold global ids
 ! only needed on root, but allocate everywhere to avoid complaints.
+! Don't allocate large size on non-root.
       if (myLid==0) then
          allocate(Gprocids(mysize),stat=ier)
       else
@@ -323,9 +325,11 @@
       if(ier/=0) call die(myname_,'allocate(Gprocids)',ier)
 ! gather over the LOCAL comm
       call MPI_GATHER(myGid,1,MP_INTEGER,Gprocids,1,MP_INTEGER,0,mycomms(i),ier)
-      call MPI_Barrier(mycomms(i), ier)
-
       if(ier/=0) call die(myname_,'MPI_GATHER Gprocids',ier)
+
+! This barrier needed for good performance on high-processor counts.
+      call MPI_Barrier(mycomms(i), ier)
+      if(ier/=0) call die(myname_,'MPI_Barrier Gprocids',ier)
 
       if(myLid == 0) then
         call MPI_SEND(Gprocids,mysize,MP_INTEGER,0,myids(i),globalcomm,ier)
