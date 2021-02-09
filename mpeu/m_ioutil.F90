@@ -424,7 +424,7 @@ end function luavail
   if(present(unit)) lu=unit
   if(lu < 0) return
 
-  flush(lu)
+  call flush(lu)
 
 end subroutine luflush
 !-----------------------------------------------------------------------
