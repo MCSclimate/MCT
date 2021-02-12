@@ -482,7 +482,7 @@
 !
 ! !DESCRIPTION:
 ! Initialize MCTWorld using information valid only on the global root.
-! This is called by initm_ but could also be called by the user
+! This is called by initm\_ but could also be called by the user
 ! for very complex model--processor geometries.
 !
 ! !INTERFACE:
