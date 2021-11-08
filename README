@@ -15,7 +15,7 @@
 
 ######################################################################
 
-  This is version 2.10 of the Model Coupling Toolkit (MCT).
+  This is version 2.11 of the Model Coupling Toolkit (MCT).
 
   Our purpose in creating this toolkit is to support the construction
   of highly portable and extensible high-performance couplers
@@ -47,12 +47,6 @@
               compile the library.
 
   m4/      -- files for autoconf (not needed to build).
-
-Optional Contents available
-
-  babel/   -- multi language interface for MCT using BABEL.
-              See babel/README for more information.
-	      NO LONGER SUPPORTED
 
 ######################################################################
   REQUIREMENTS:

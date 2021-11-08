@@ -15,9 +15,9 @@ authors:
     affiliation: "Argonne National Laboratory"
     family-names: Ong
     given-names: Everest
-commit: 96e72223ce06f98778ee844ed2267cec02038391
-date-released: 2018-04-19
-doi: 10.11578/MCT/dc.20180413.2
+commit: 82b0071e69d14330b75d23b0bc68543ebea9aadc 
+date-released: 2021-02-11
+doi: 10.11578/MCT/dc.20211108.1
 keywords: 
   - "climate modeling"
   - "coupling"
@@ -25,4 +25,4 @@ keywords:
 license: BSD3
 repository-code: "https://github.com/MCSclimate/MCT"
 title: Model Coupling Toolkit
-version: 2.10.0
+version: 2.11.0
