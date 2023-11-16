@@ -14,7 +14,7 @@
 
     module m_mall
       implicit none
-      private	! except
+      private   ! except
 
       public :: mall_ci
       public :: mall_co
@@ -23,7 +23,7 @@
       public :: mall_flush
       public :: mall_reset
 
-		! mall_ activity controls
+                ! mall_ activity controls
 
       public :: mall_ison
       public :: mall_set
@@ -31,50 +31,50 @@
       interface mall_ci;    module procedure ci_; end interface
       interface mall_co;    module procedure co_; end interface
 
-      interface mall_mci;    module procedure	&
-	ciI0_,	&
-	ciI1_,	&
-	ciI2_,	&
-	ciI3_,	&
-	ciR0_,	&
-	ciR1_,	&
-	ciR2_,	&
-	ciR3_,	&
-	ciD0_,	&
-	ciD1_,	&
-	ciD2_,	&
-	ciD3_,	&
-	ciL0_,	&
-	ciL1_,	&
-	ciL2_,	&
-	ciL3_,	&
-	ciC0_,	&
-	ciC1_,	&
-	ciC2_,	&
-	ciC3_
+      interface mall_mci;    module procedure   &
+        ciI0_,  &
+        ciI1_,  &
+        ciI2_,  &
+        ciI3_,  &
+        ciR0_,  &
+        ciR1_,  &
+        ciR2_,  &
+        ciR3_,  &
+        ciD0_,  &
+        ciD1_,  &
+        ciD2_,  &
+        ciD3_,  &
+        ciL0_,  &
+        ciL1_,  &
+        ciL2_,  &
+        ciL3_,  &
+        ciC0_,  &
+        ciC1_,  &
+        ciC2_,  &
+        ciC3_
       end interface
 
-      interface mall_mco;    module procedure	&
-	coI0_,	&
-	coI1_,	&
-	coI2_,	&
-	coI3_,	&
-	coR0_,	&
-	coR1_,	&
-	coR2_,	&
-	coR3_,	&
-	coD0_,	&
-	coD1_,	&
-	coD2_,	&
-	coD3_,	&
-	coL0_,	&
-	coL1_,	&
-	coL2_,	&
-	coL3_,	&
-	coC0_,	&
-	coC1_,	&
-	coC2_,	&
-	coC3_
+      interface mall_mco;    module procedure   &
+        coI0_,  &
+        coI1_,  &
+        coI2_,  &
+        coI3_,  &
+        coR0_,  &
+        coR1_,  &
+        coR2_,  &
+        coR3_,  &
+        coD0_,  &
+        coD1_,  &
+        coD2_,  &
+        coD3_,  &
+        coL0_,  &
+        coL1_,  &
+        coL2_,  &
+        coL3_,  &
+        coC0_,  &
+        coC1_,  &
+        coC2_,  &
+        coC3_
       end interface
 
       interface mall_flush; module procedure flush_; end interface
@@ -84,7 +84,7 @@
       interface mall_set;  module procedure set_;  end interface
 
 ! !REVISION HISTORY:
-! 	13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname='MCT(MPEU)::m_mall'
@@ -98,25 +98,25 @@
   integer,parameter :: NSZ= 32
   integer,parameter :: MXL=250
 
-  integer, save :: nreset = 0		! number of reset_() calls
-  logical, save :: started = .false.	! the module is in use
+  integer, save :: nreset = 0           ! number of reset_() calls
+  logical, save :: started = .false.    ! the module is in use
 
-  integer, save :: n_ =0		! number of accouting bins.
+  integer, save :: n_ =0                ! number of accouting bins.
   character(len=NSZ),dimension(MXL),save :: name_
 
   ! integer, dimension(1) :: mall
-					! names of the accouting bins
+                                        ! names of the accouting bins
 
-  logical,save :: mall_on=.false.	! mall activity switch
+  logical,save :: mall_on=.false.       ! mall activity switch
 
   integer,save :: mci
-  integer,dimension(MXL),save :: mci_	! maximum ci_() calls
+  integer,dimension(MXL),save :: mci_   ! maximum ci_() calls
   integer,save :: nci
-  integer,dimension(MXL),save :: nci_	! net ci_() calls
+  integer,dimension(MXL),save :: nci_   ! net ci_() calls
   integer,save :: hwm
-  integer,dimension(MXL),save :: hwm_	! high-water-mark of allocate()
+  integer,dimension(MXL),save :: hwm_   ! high-water-mark of allocate()
   integer,save :: nwm
-  integer,dimension(MXL),save :: nwm_	! net-water-mark of allocate()
+  integer,dimension(MXL),save :: nwm_   ! net-water-mark of allocate()
 
 contains
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -134,8 +134,8 @@ contains
       logical :: ison_
 
 ! !REVISION HISTORY:
-! 	25Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ison_'
@@ -159,8 +159,8 @@ end function ison_
       logical,optional,intent(in) :: on
 
 ! !REVISION HISTORY:
-! 	25Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::set_'
@@ -186,8 +186,8 @@ end subroutine set_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciI0_'
@@ -212,8 +212,8 @@ end subroutine ciI0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciI1_'
@@ -238,8 +238,8 @@ end subroutine ciI1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciI2_'
@@ -264,8 +264,8 @@ end subroutine ciI2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciI3_'
@@ -291,8 +291,8 @@ end subroutine ciI3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciR0_'
@@ -318,8 +318,8 @@ end subroutine ciR0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciR1_'
@@ -345,8 +345,8 @@ end subroutine ciR1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciR2_'
@@ -372,8 +372,8 @@ end subroutine ciR2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciR3_'
@@ -399,8 +399,8 @@ end subroutine ciR3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciD0_'
@@ -426,8 +426,8 @@ end subroutine ciD0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciD1_'
@@ -453,8 +453,8 @@ end subroutine ciD1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciD2_'
@@ -480,8 +480,8 @@ end subroutine ciD2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciD3_'
@@ -506,8 +506,8 @@ end subroutine ciD3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciL0_'
@@ -532,8 +532,8 @@ end subroutine ciL0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciL1_'
@@ -558,8 +558,8 @@ end subroutine ciL1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciL2_'
@@ -584,8 +584,8 @@ end subroutine ciL2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciL3_'
@@ -610,8 +610,8 @@ end subroutine ciL3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciC0_'
@@ -639,8 +639,8 @@ end subroutine ciC0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciC1_'
@@ -668,8 +668,8 @@ end subroutine ciC1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciC2_'
@@ -697,8 +697,8 @@ end subroutine ciC2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ciC3_'
@@ -729,7 +729,7 @@ end subroutine ciC3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::ci_'
@@ -738,21 +738,21 @@ end subroutine ciC3_
   if(.not.mall_on) return
 
   if(nword < 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': invalide argument, nword = ',nword
+    write(stderr,'(2a,i4)') myname_,    &
+        ': invalide argument, nword = ',nword
     call die(myname_)
   endif
 
   ith=lookup_(thread)
 
-	! update the account
+        ! update the account
 
   nci_(ith)=nci_(ith)+1
   mci_(ith)=mci_(ith)+1
   nwm_(ith)=nwm_(ith)+nword
   if(hwm_(ith).lt.nwm_(ith)) hwm_(ith)=nwm_(ith)
 
-	! update the total budget
+        ! update the total budget
 
   nci=nci+1
   mci=mci+1
@@ -777,8 +777,8 @@ end subroutine ci_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coI0_'
@@ -803,8 +803,8 @@ end subroutine coI0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coI1_'
@@ -829,8 +829,8 @@ end subroutine coI1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coI2_'
@@ -855,8 +855,8 @@ end subroutine coI2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coI3_'
@@ -882,8 +882,8 @@ end subroutine coI3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coR0_'
@@ -909,8 +909,8 @@ end subroutine coR0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coR1_'
@@ -936,8 +936,8 @@ end subroutine coR1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coR2_'
@@ -963,8 +963,8 @@ end subroutine coR2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coR3_'
@@ -990,8 +990,8 @@ end subroutine coR3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coD0_'
@@ -1017,8 +1017,8 @@ end subroutine coD0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coD1_'
@@ -1044,8 +1044,8 @@ end subroutine coD1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coD2_'
@@ -1071,8 +1071,8 @@ end subroutine coD2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coD3_'
@@ -1097,8 +1097,8 @@ end subroutine coD3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coL0_'
@@ -1123,8 +1123,8 @@ end subroutine coL0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coL1_'
@@ -1149,8 +1149,8 @@ end subroutine coL1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coL2_'
@@ -1175,8 +1175,8 @@ end subroutine coL2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coL3_'
@@ -1201,8 +1201,8 @@ end subroutine coL3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coC0_'
@@ -1230,8 +1230,8 @@ end subroutine coC0_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coC1_'
@@ -1259,8 +1259,8 @@ end subroutine coC1_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coC2_'
@@ -1288,8 +1288,8 @@ end subroutine coC2_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	21Oct99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       21Oct99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::coC3_'
@@ -1320,7 +1320,7 @@ end subroutine coC3_
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::co_'
@@ -1329,22 +1329,22 @@ end subroutine coC3_
   if(.not.mall_on) return
 
   if(nword < 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': invalide argument, nword = ',nword
+    write(stderr,'(2a,i4)') myname_,    &
+        ': invalide argument, nword = ',nword
     call die(myname_)
   endif
 
-	! if the thread is "unknown", it would be treated as a
-	! new thread with net negative memory activity.
+        ! if the thread is "unknown", it would be treated as a
+        ! new thread with net negative memory activity.
 
   ith=lookup_(thread)
 
-	! update the account
+        ! update the account
 
   nci_(ith)=nci_(ith)-1
   nwm_(ith)=nwm_(ith)-nword
 
-	! update the total budget
+        ! update the total budget
 
   nci=nci-1
   nwm=nwm-nword
@@ -1373,13 +1373,13 @@ end subroutine co_
 
 
 ! !REVISION HISTORY:
-! 	13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::cix_'
 
-  write(stderr,'(2a,i4)') trim(thread),	&
-	': ALLOC_() error, stat =',stat
+  write(stderr,'(2a,i4)') trim(thread), &
+        ': ALLOC_() error, stat =',stat
   call die('ALLOC_',fnam,line)
 
 end subroutine cix_
@@ -1404,13 +1404,13 @@ end subroutine cix_
       integer,intent(in) :: line
 
 ! !REVISION HISTORY:
-! 	13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       13Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::cox_'
 
-  write(stderr,'(2a,i4)') trim(thread),	&
-	': DEALLOC_() error, stat =',stat
+  write(stderr,'(2a,i4)') trim(thread), &
+        ': DEALLOC_() error, stat =',stat
   call die('DEALLOC_',fnam,line)
 
 end subroutine cox_
@@ -1434,7 +1434,7 @@ end subroutine cox_
       integer,intent(in) :: lu
 
 ! !REVISION HISTORY:
-! 	17Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       17Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::flush_'
@@ -1456,8 +1456,8 @@ end subroutine cox_
     call die(myname_)
   endif
 
-  write(lu,'(a,t39,4(2x,a))',iostat=ier) '[MALL]',	&
-  		'max-ci','net-ci ','max-wm','net-wm'
+  write(lu,'(a,t39,4(2x,a))',iostat=ier) '[MALL]',      &
+                'max-ci','net-ci ','max-wm','net-wm'
   if(ier /= 0) then
     write(stderr,'(2a,i4)') myname_,': can not write(), unit =',lu
     call die(myname_)
@@ -1487,8 +1487,8 @@ end subroutine cox_
 
     name=name_(i)
     ln=max(len_trim(name),lnmax)
-    write(lu,'(a,2(2x,i6),a,2(2x,a6),a)') name(1:ln),	&
-	mci_(i),nci_(i),flag_ci,hwm_wd,nwm_wd,flag_wm
+    write(lu,'(a,2(2x,i6),a,2(2x,a6),a)') name(1:ln),   &
+        mci_(i),nci_(i),flag_ci,hwm_wd,nwm_wd,flag_wm
   end do
 
   call wcount_(hwm,hwm_wd)
@@ -1501,13 +1501,13 @@ end subroutine cox_
 
   name='.total.'
   ln=max(len_trim(name),lnmax)
-  write(lu,'(a,2(2x,i6),a,2(2x,a6),a)') name(1:ln),	&
-	mci,nci,flag_ci,hwm_wd,nwm_wd,flag_wm
+  write(lu,'(a,2(2x,i6),a,2(2x,a6),a)') name(1:ln),     &
+        mci,nci,flag_ci,hwm_wd,nwm_wd,flag_wm
 
   write(lu,'(72a/)') ('_',i=1,72)
 
-  if(nreset /= 1) write(lu,'(2a,i3,a)') myname_,	&
-	': reset_ ',nreset,' times'
+  if(nreset /= 1) write(lu,'(2a,i3,a)') myname_,        &
+        ': reset_ ',nreset,' times'
 
   call luflush(lu)
 end subroutine flush_
@@ -1530,7 +1530,7 @@ end subroutine flush_
       character(len=6),intent(out) :: cknt ! return a string value
 
 ! !REVISION HISTORY:
-! 	17Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       17Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::wcount_'
@@ -1581,7 +1581,7 @@ end subroutine wcount_
       integer :: lookup_
 
 ! !REVISION HISTORY:
-! 	17Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       17Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::lookup_'
@@ -1640,7 +1640,7 @@ end function lookup_
       implicit none
 
 ! !REVISION HISTORY:
-! 	16Mar98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       16Mar98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::reset_'

@@ -198,29 +198,29 @@
 !-----------------------------------------------------------------------
 !
 ! !REVISION HISTORY:
-! 	03Jul96 - J. Guo	- evolved to Fortran 90 module.  The
-!		modifications include 1) additional subroutines to
-!		dynamically manage the memory, 2) privatized most
-!		entries, 3) included "i90.h" into the module source
-!		with better initializations, 4) removed blockdata, 5)
-!		used a portable opntext() call to avoid I/O portability
-!		problems.
+!       03Jul96 - J. Guo        - evolved to Fortran 90 module.  The
+!               modifications include 1) additional subroutines to
+!               dynamically manage the memory, 2) privatized most
+!               entries, 3) included "i90.h" into the module source
+!               with better initializations, 4) removed blockdata, 5)
+!               used a portable opntext() call to avoid I/O portability
+!               problems.
 !
-!		See I90_page() I90_Release(), and I90_LoadF() for
-!		details.
+!               See I90_page() I90_Release(), and I90_LoadF() for
+!               details.
 !
-!	05Aug98	- Jing Guo	-
-!		  Removed i90_page() and its references.
-!		  Added internal subroutines push_() and pop_().
-!		  Modified i90_release().
-!		  Added i90_fullrelease().
-!		  Removed %loaded.  Check i90_depth instead.
+!       05Aug98 - Jing Guo      -
+!                 Removed i90_page() and its references.
+!                 Added internal subroutines push_() and pop_().
+!                 Modified i90_release().
+!                 Added i90_fullrelease().
+!                 Removed %loaded.  Check i90_depth instead.
 !       06Aug98 - Todling       - made I90_gstr public
-!	20Dec98 - Jing Guo	- replaced the description of I90_Gstr
-!	28Sep99 - Jing Guo	- Merged with the MPI version with
-!				  some addtional changes based on
-!				  merging decisions.
-!	12Oct99 - Larson/Guo	- Overloaded fltget() to new routines
+!       20Dec98 - Jing Guo      - replaced the description of I90_Gstr
+!       28Sep99 - Jing Guo      - Merged with the MPI version with
+!                                 some addtional changes based on
+!                                 merging decisions.
+!       12Oct99 - Larson/Guo    - Overloaded fltget() to new routines
 !                 getfltsp() and fltgetdp(), providing better support
 !                 for 32 and 64 bit platforms, respectively.
 !_______________________________________________________________________
@@ -239,27 +239,27 @@
      public :: I90_Gtoken  ! gets the next token
      public :: I90_Gstr    ! get a string upto to a "$" or EOL
 
-     public :: I90_AtoF	! ASCII to float (function)
-     public :: I90_AtoI	! ASCII to integer (function)
+     public :: I90_AtoF ! ASCII to float (function)
+     public :: I90_AtoI ! ASCII to integer (function)
 
      public :: I90_Gfloat  ! returns next float number (function)
-     public :: I90_GInt	! returns next integer number (function)
+     public :: I90_GInt ! returns next integer number (function)
 
      public :: lablin,rdnext,fltget,intget,getwrd,str2rn,chrget,getstr
      public :: strget
 
      interface fltget; module procedure &
-	  fltgetsp, &
-	  fltgetdp
+          fltgetsp, &
+          fltgetdp
      end interface
 
 
 !-----------------------------------------------------------------------
 !
-!	This part was originally in "i90.h", but included for module.
+!       This part was originally in "i90.h", but included for module.
 !
 
-		! revised parameter table to fit Fortran 90 standard
+                ! revised parameter table to fit Fortran 90 standard
 
   integer,   parameter :: LSZ      = 256
 
@@ -281,7 +281,7 @@
   character, parameter :: NULL= achar(00)   ! what it says
 
   type inpak90
-		! May be easily paged for extentable file size (J.G.)
+                ! May be easily paged for extentable file size (J.G.)
 
     integer :: nbuf                           ! actual size of buffer
     character(len=NBUF_MAX),pointer :: buffer ! hold the whole file?
@@ -292,7 +292,7 @@
     type(inpak90),pointer :: last
   end type inpak90
 
-  integer,parameter :: MALLSIZE_=10	! just an estimation
+  integer,parameter :: MALLSIZE_=10     ! just an estimation
 
   character(len=*),parameter :: myname='MCT(MPEU)::m_inpak90'
 !-----------------------------------------------------------------------
@@ -326,7 +326,7 @@
       integer,intent(out) :: istat
 
 ! !REVISION HISTORY:
-! 	28Jul98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       28Jul98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::I90_allLoadF'
@@ -357,7 +357,7 @@
     endif
   endif
 
-	! Initialize the buffer on all PEs
+        ! Initialize the buffer on all PEs
 
   call MPI_Bcast(i90_now%buffer,NBUF_MAX,MP_CHARACTER,root,comm,ier)
   if(ier /= 0) then
@@ -395,40 +395,40 @@ end subroutine I90_allLoadF
       integer,intent(out) :: ier
 
 ! !REVISION HISTORY:
-! 	05Aug98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       05Aug98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::push_'
   type(inpak90),pointer :: new
 
-  if(i90_depth <= 0) nullify(i90_now)	! just an initialization
+  if(i90_depth <= 0) nullify(i90_now)   ! just an initialization
 
-	! Too many levels
+        ! Too many levels
 
   if(i90_depth >= i90_MXDEP) then
-	call perr(myname_,'(overflow)',i90_depth)
-	ier=1
-	return
+        call perr(myname_,'(overflow)',i90_depth)
+        ier=1
+        return
   endif
 
   allocate(new,stat=ier)
-	if(ier /= 0) then
-	  call perr(myname_,'allocate(new)',ier)
-	  return
-	endif
+        if(ier /= 0) then
+          call perr(myname_,'allocate(new)',ier)
+          return
+        endif
 
-	if(mall_ison()) call mall_ci(MALLSIZE_,myname)
+        if(mall_ison()) call mall_ci(MALLSIZE_,myname)
 
   allocate(new%buffer,new%this_line,stat=ier)
-	if(ier /= 0) then
-	  call perr(myname_,'allocate(new%..)',ier)
-	  return
-	endif
+        if(ier /= 0) then
+          call perr(myname_,'allocate(new%..)',ier)
+          return
+        endif
 
-	if(mall_ison()) then
-	  call mall_mci(new%buffer,myname)
-	  call mall_mci(new%this_line,myname)
-	endif
+        if(mall_ison()) then
+          call mall_mci(new%buffer,myname)
+          call mall_mci(new%this_line,myname)
+        endif
 
   new%last => i90_now
   i90_now  => new
@@ -454,38 +454,38 @@ end subroutine push_
       integer,intent(out) :: ier
 
 ! !REVISION HISTORY:
-! 	05Aug98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       05Aug98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::pop_'
   type(inpak90),pointer :: old
 
   if(i90_depth <= 0) then
-	call perr(myname_,'(underflow)',i90_depth)
-	ier=1
-	return
+        call perr(myname_,'(underflow)',i90_depth)
+        ier=1
+        return
   endif
 
   old => i90_now%last
 
-	if(mall_ison()) then
-	  call mall_mco(i90_now%this_line,myname)
-	  call mall_mco(i90_now%buffer,myname)
-	endif
+        if(mall_ison()) then
+          call mall_mco(i90_now%this_line,myname)
+          call mall_mco(i90_now%buffer,myname)
+        endif
 
   deallocate(i90_now%buffer,i90_now%this_line,stat=ier)
-	if(ier /= 0) then
-	  call perr(myname_,'deallocate(new%..)',ier)
-	  return
-	endif
+        if(ier /= 0) then
+          call perr(myname_,'deallocate(new%..)',ier)
+          return
+        endif
 
-	if(mall_ison())  call mall_co(MALLSIZE_,myname)
+        if(mall_ison())  call mall_co(MALLSIZE_,myname)
 
   deallocate(i90_now,stat=ier)
-	if(ier /= 0) then
-	  call perr(myname_,'deallocate(new)',ier)
-	  return
-	endif
+        if(ier /= 0) then
+          call perr(myname_,'deallocate(new)',ier)
+          return
+        endif
 
   i90_now => old
   nullify(old)
@@ -502,20 +502,20 @@ end subroutine pop_
 ! !INTERFACE:
 !
       subroutine I90_Release(stat)
-	use m_die,only : perr,die
-	implicit none
-	integer,optional, intent(out) :: stat
+        use m_die,only : perr,die
+        implicit none
+        integer,optional, intent(out) :: stat
 !
 ! !DESCRIPTION:
 !
-!	I90_Release() is used to pair I90_LoadF() to release the memory
-!	used by I90_LoadF() for resourse data input.
+!       I90_Release() is used to pair I90_LoadF() to release the memory
+!       used by I90_LoadF() for resourse data input.
 !
 ! !SEE ALSO:
 !
 ! !REVISION HISTORY:
-! 	03Jul96 - J. Guo	- added to Arlindos inpak90 for its
-!				  Fortran 90 revision.
+!       03Jul96 - J. Guo        - added to Arlindos inpak90 for its
+!                                 Fortran 90 revision.
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::i90_Release'
   integer :: ier
@@ -548,7 +548,7 @@ end subroutine pop_
       integer,intent(out) :: ier
 
 ! !REVISION HISTORY:
-! 	05Aug98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       05Aug98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::i90_fullRelease'
@@ -565,8 +565,8 @@ end subroutine pop_
 end subroutine i90_fullRelease
 !=======================================================================
       subroutine I90_LoadF ( filen, iret )
-	use m_ioutil, only : luavail,opntext,clstext
-	use m_die, only : perr
+        use m_ioutil, only : luavail,opntext,clstext
+        use m_die, only : perr
       implicit NONE
 
 !-------------------------------------------------------------------------
@@ -625,44 +625,44 @@ end subroutine i90_fullRelease
       character*256   line
       character(len=*), parameter :: myname_ = myname//'::i90_loadf'
 
-		! Check to make sure there is not too many levels
-		! of the stacked resource files
+                ! Check to make sure there is not too many levels
+                ! of the stacked resource files
 
   if(i90_depth >= i90_MXDEP) then
-	call perr(myname_,'(overflow)',i90_depth)
-	iret=1
-	return
+        call perr(myname_,'(overflow)',i90_depth)
+        iret=1
+        return
   endif
 
 !     Open file
 !     ---------
 !      lu = i90_lua()
 
-      lu = luavail()	! a more portable version
+      lu = luavail()    ! a more portable version
       if ( lu .lt. 0 ) then
          iret = -97
          return
       end if
 
-	! A open through an interface to avoid portability problems.
-	! (J.G.)
+        ! A open through an interface to avoid portability problems.
+        ! (J.G.)
 
       call opntext(lu,filen,'old',ios)
       if ( ios .ne. 0 ) then
-	 write(stderr,'(2a,i5)') myname_,': opntext() error, ios =',ios
+         write(stderr,'(2a,i5)') myname_,': opntext() error, ios =',ios
          iret = ios
          return
       end if
 
-	! Create a dynamic page to store the file.  It might be expanded
-	! to allocate memory on requests (a link list) (J.G.)
+        ! Create a dynamic page to store the file.  It might be expanded
+        ! to allocate memory on requests (a link list) (J.G.)
 
-	! Changed from page_() to push_(), to allow multiple (stacked)
-	! inpak90 buffers.  J.G.
+        ! Changed from page_() to push_(), to allow multiple (stacked)
+        ! inpak90 buffers.  J.G.
 
-      call push_(ios)	! to create buffer space
+      call push_(ios)   ! to create buffer space
       if ( ios .ne. 0 ) then
-	 write(stderr,'(2a,i5)') myname_,': push_() error, ios =',ios
+         write(stderr,'(2a,i5)') myname_,': push_() error, ios =',ios
          iret = ios
          return
       end if
@@ -701,11 +701,11 @@ end subroutine i90_fullRelease
 !     All done
 !     --------
 !      close(lu)
-	call clstext(lu,ios)
-	if(ios /= 0) then
-	  iret=-99
-	  return
-	endif
+        call clstext(lu,ios)
+        if(ios /= 0) then
+          iret=-99
+          return
+        endif
       i90_now%buffer(ptr:ptr) = EOB
       i90_now%nbuf = ptr
       i90_now%this_line=' '
@@ -773,12 +773,12 @@ end subroutine i90_fullRelease
 
       character(len=(len(label)+len(EOL))) :: EOL_label
 
-!	Make sure that a buffer is defined (JG)
-!	----------------------------------
-	if(i90_depth <= 0) then
-	  iret = -1
-	  return
-	endif
+!       Make sure that a buffer is defined (JG)
+!       ----------------------------------
+        if(i90_depth <= 0) then
+          iret = -1
+          return
+        endif
 
 !     Determine whether label exists
 !     ------------------------------
@@ -892,12 +892,12 @@ end subroutine i90_fullRelease
 
       integer i, j
 
-!	Make sure that a buffer is defined (JG)
-!	----------------------------------
-	if(i90_depth <= 0) then
-	  iret = -1
-	  return
-	endif
+!       Make sure that a buffer is defined (JG)
+!       ----------------------------------
+        if(i90_depth <= 0) then
+          iret = -1
+          return
+        endif
 
       if ( i90_now%next_line .ge. i90_now%nbuf ) then
          iret = -1
@@ -1003,12 +1003,12 @@ end subroutine i90_fullRelease
       character*1   ch
       integer       ib, ie
 
-!	Make sure that a buffer is defined (JG)
-!	----------------------------------
-	if(i90_depth <= 0) then
-	  iret = -1
-	  return
-	endif
+!       Make sure that a buffer is defined (JG)
+!       ----------------------------------
+        if(i90_depth <= 0) then
+          iret = -1
+          return
+        endif
 
       call i90_trim ( i90_now%this_line )
 
@@ -1018,8 +1018,8 @@ end subroutine i90_fullRelease
            ie = index ( i90_now%this_line(ib:), ch )
       else
            ib = 1
-           ie = min(index(i90_now%this_line,BLK),	&
-		    index(i90_now%this_line,EOL)) - 1
+           ie = min(index(i90_now%this_line,BLK),       &
+                    index(i90_now%this_line,EOL)) - 1
 
       end if
 
@@ -1028,8 +1028,8 @@ end subroutine i90_fullRelease
            iret = -1
            return
       else
-		! Get the token, and shift the rest of %this_line to
-		! the left
+                ! Get the token, and shift the rest of %this_line to
+                ! the left
 
            token = i90_now%this_line(ib:ie)
            i90_now%this_line = i90_now%this_line(ie+2:)
@@ -1058,9 +1058,9 @@ end subroutine i90_fullRelease
 !  the line is returned.
 !
 !  NOTE: This routine is defined differently from \verb"i90_GTolen()",
-!	 where a {\sl token} is white-space delimited, but this routine
-!	 will try to fetch a string either terminated by a "$" or by the
-!	 end of the line.
+!        where a {\sl token} is white-space delimited, but this routine
+!        will try to fetch a string either terminated by a "$" or by the
+!        end of the line.
 !
 !  {\em Examples of valid strings:}
 !
@@ -1122,19 +1122,19 @@ end subroutine i90_fullRelease
 ! !REVISION HISTORY:
 !
 !  19Jun96   da Silva   Original code.
-!  01Oct96   Jing Guo	Removed the null terminitor
+!  01Oct96   Jing Guo   Removed the null terminitor
 !
 !-------------------------------------------------------------------------
 
       character*1   ch
       integer       ib, ie
 
-!	Make sure that a buffer is defined (JG)
-!	----------------------------------
-	if(i90_depth <= 0) then
-	  iret = -1
-	  return
-	endif
+!       Make sure that a buffer is defined (JG)
+!       ----------------------------------
+        if(i90_depth <= 0) then
+          iret = -1
+          return
+        endif
 
       call i90_trim ( i90_now%this_line )
 
@@ -1205,16 +1205,16 @@ end subroutine i90_fullRelease
       integer       ios
       real(FP)      x
 
-!	Make sure that a buffer is defined (JG)
-!	----------------------------------
-	if(i90_depth <= 0) then
-	  iret = -1
-	  return
-	endif
+!       Make sure that a buffer is defined (JG)
+!       ----------------------------------
+        if(i90_depth <= 0) then
+          iret = -1
+          return
+        endif
 
       call i90_gtoken ( token, iret )
       if ( iret .eq. 0 ) then
-           read(token,*,iostat=ios) x	! Does it require an extension?
+           read(token,*,iostat=ios) x   ! Does it require an extension?
            if ( ios .ne. 0 ) iret = -2
       end if
       if ( iret .ne. 0 ) x = 0.
@@ -1269,12 +1269,12 @@ end subroutine i90_fullRelease
       real(kind_r8) x
       integer       ios
 
-!	Make sure that a buffer is defined (JG)
-!	----------------------------------
-	if(i90_depth <= 0) then
-	  iret = -1
-	  return
-	endif
+!       Make sure that a buffer is defined (JG)
+!       ----------------------------------
+        if(i90_depth <= 0) then
+          iret = -1
+          return
+        endif
 
       call i90_gtoken ( token, iret )
       if ( iret .eq. 0 ) then
@@ -1543,8 +1543,8 @@ end subroutine i90_fullRelease
 !     Pad end of string with #
 !     ------------------------
       do i = 256, 1, -1
-         if ( string(i:i) .ne. ' ' .and.	&
-	        string(i:i) .ne. '$' ) go to 11
+         if ( string(i:i) .ne. ' ' .and.        &
+                string(i:i) .ne. '$' ) go to 11
          string(i:i) = '#'
       end do
  11   continue
@@ -1604,8 +1604,8 @@ end subroutine i90_fullRelease
 !     -------------------------
       ib = 1
       do i = 1, 255
-         if ( string(i:i) .ne. ' ' .and.	&
-	        string(i:i) .ne. TAB ) go to 21
+         if ( string(i:i) .ne. ' ' .and.        &
+                string(i:i) .ne. TAB ) go to 21
          ib = ib + 1
       end do
  21   continue
@@ -1666,7 +1666,7 @@ end subroutine i90_fullRelease
 
       call i90_label ( label, iret )
       if ( iret .ne. 0 ) then
-	write(stderr,'(2a)') 'i90/lablin: cannot find label ', label
+        write(stderr,'(2a)') 'i90/lablin: cannot find label ', label
       endif
 
       end subroutine lablin
@@ -1936,7 +1936,7 @@ end subroutine i90_fullRelease
 !...................................................................
 
       subroutine iniin()
-      print *, 		&
+      print *,          &
            'i90: iniin() is obsolete, use i90_loadf() instead!'
       return
       end subroutine iniin
@@ -1946,7 +1946,7 @@ end subroutine i90_fullRelease
 
       subroutine iunits ( mifans, moftrm, moferr, miftrm )
       integer mifans, moftrm, moferr, miftrm
-      print *, 		&
+      print *,          &
            'i90: iunits() is obsolete, use i90_loadf() instead!'
       return
       end subroutine iunits

@@ -14,35 +14,35 @@
 !   provides an easy way to
 !\begin{itemize}
 !  \item avoid the problem with {\sl fixed} or {\sl free} formatted
-!	Fortran 90 files;
+!       Fortran 90 files;
 !  \item provide protections with only a limited set of \verb"PUBLIC"
-!	variables; and
+!       variables; and
 !  \item be extended to a MPI Fortran 90 binding.
 !\end{itemize}
 !
 ! !INTERFACE:
 
     module m_mpif90
-      use m_mpif, only : MP_INTEGER	=> MPI_INTEGER
-      use m_mpif, only : MP_REAL	=> MPI_REAL
-      use m_mpif, only : MP_DOUBLE_PRECISION	&
-					=> MPI_DOUBLE_PRECISION
-      use m_mpif, only : MP_LOGICAL	=> MPI_LOGICAL
-      use m_mpif, only : MP_CHARACTER	=> MPI_CHARACTER
+      use m_mpif, only : MP_INTEGER     => MPI_INTEGER
+      use m_mpif, only : MP_REAL        => MPI_REAL
+      use m_mpif, only : MP_DOUBLE_PRECISION    &
+                                        => MPI_DOUBLE_PRECISION
+      use m_mpif, only : MP_LOGICAL     => MPI_LOGICAL
+      use m_mpif, only : MP_CHARACTER   => MPI_CHARACTER
 
-      use m_mpif, only : MP_REAL4	=> MPI_REAL4
-      use m_mpif, only : MP_REAL8	=> MPI_REAL8
+      use m_mpif, only : MP_REAL4       => MPI_REAL4
+      use m_mpif, only : MP_REAL8       => MPI_REAL8
 
-      use m_mpif, only : MP_COMM_WORLD	=> MPI_COMM_WORLD
-      use m_mpif, only : MP_COMM_NULL	=> MPI_COMM_NULL
-      use m_mpif, only : MP_SUM		=> MPI_SUM
-      use m_mpif, only : MP_PROD	=> MPI_PROD
-      use m_mpif, only : MP_MIN 	=> MPI_MIN
-      use m_mpif, only : MP_MAX 	=> MPI_MAX
-      use m_mpif, only : MP_MAX_ERROR_STRING	&
-					=> MPI_MAX_ERROR_STRING
+      use m_mpif, only : MP_COMM_WORLD  => MPI_COMM_WORLD
+      use m_mpif, only : MP_COMM_NULL   => MPI_COMM_NULL
+      use m_mpif, only : MP_SUM         => MPI_SUM
+      use m_mpif, only : MP_PROD        => MPI_PROD
+      use m_mpif, only : MP_MIN         => MPI_MIN
+      use m_mpif, only : MP_MAX         => MPI_MAX
+      use m_mpif, only : MP_MAX_ERROR_STRING    &
+                                        => MPI_MAX_ERROR_STRING
       use m_mpif, only : MP_STATUS_SIZE => MPI_STATUS_SIZE
-      use m_mpif, only : MP_ANY_SOURCE	=> MPI_ANY_SOURCE
+      use m_mpif, only : MP_ANY_SOURCE  => MPI_ANY_SOURCE
 
       implicit none
       private
@@ -98,18 +98,18 @@
       public :: MP_log2
 
 ! !REVISION HISTORY:
-! 	09Dec97 - Jing Guo <guo@thunder> - initial prototyping/coding.
-!		. started with everything public, without any interface
-!		  declaration.
-!		. Then limited to only variables current expected to
-!		  be used.
+!       09Dec97 - Jing Guo <guo@thunder> - initial prototyping/coding.
+!               . started with everything public, without any interface
+!                 declaration.
+!               . Then limited to only variables current expected to
+!                 be used.
 !
 !EOP
 !_______________________________________________________________________
 
 integer,dimension(MP_STATUS_SIZE) :: MP_status
 
-	!----------------------------------------
+        !----------------------------------------
 
 interface MP_init
   subroutine MPI_init(ier)
@@ -139,22 +139,22 @@ interface MP_error_string
   end subroutine MPI_error_string
 end interface
 
-interface MP_type; module procedure	&
-  typeI_,	& ! MPI_INTEGER
-  typeL_,	& ! MPI_LOGICAL
-  typeC_,	& ! MPI_CHARACTER
-  typeSP_,	& ! MPI_REAL
-  typeDP_,	& ! MPI_DOUBLE_PRECISION
-  typeI1_,	& ! MPI_INTEGER
-  typeL1_,	& ! MPI_LOGICAL
-  typeC1_,	& ! MPI_CHARACTER
-  typeSP1_,	& ! MPI_REAL
-  typeDP1_,	& ! MPI_DOUBLE_PRECISION
-  typeI2_,	& ! MPI_INTEGER
-  typeL2_,	& ! MPI_LOGICAL
-  typeC2_,	& ! MPI_CHARACTER
-  typeSP2_,	& ! MPI_REAL
-  typeDP2_	  ! MPI_DOUBLE_PRECISION
+interface MP_type; module procedure     &
+  typeI_,       & ! MPI_INTEGER
+  typeL_,       & ! MPI_LOGICAL
+  typeC_,       & ! MPI_CHARACTER
+  typeSP_,      & ! MPI_REAL
+  typeDP_,      & ! MPI_DOUBLE_PRECISION
+  typeI1_,      & ! MPI_INTEGER
+  typeL1_,      & ! MPI_LOGICAL
+  typeC1_,      & ! MPI_CHARACTER
+  typeSP1_,     & ! MPI_REAL
+  typeDP1_,     & ! MPI_DOUBLE_PRECISION
+  typeI2_,      & ! MPI_INTEGER
+  typeL2_,      & ! MPI_LOGICAL
+  typeC2_,      & ! MPI_CHARACTER
+  typeSP2_,     & ! MPI_REAL
+  typeDP2_        ! MPI_DOUBLE_PRECISION
 end interface
 
 interface MP_perr; module procedure perr_; end interface
@@ -167,7 +167,7 @@ interface MP_abort
   end subroutine MPI_abort
 end interface
 
-	!----------------------------------------
+        !----------------------------------------
 interface MP_wtime
   function MPI_wtime()
     double precision :: MPI_wtime
@@ -180,7 +180,7 @@ interface MP_wtick
   end function MPI_wtick
 end interface
 
-	!----------------------------------------
+        !----------------------------------------
 interface MP_comm_size
   subroutine MPI_comm_size(comm,size,ier)
     integer :: comm
@@ -212,10 +212,10 @@ interface MP_comm_free
   end subroutine MPI_comm_free
 end interface
 
-	!----------------------------------------
+        !----------------------------------------
 interface MP_cart_create
-  subroutine MPI_cart_create(comm_old,ndims,dims,periods,	&
-  	reorder,comm_cart,ier)
+  subroutine MPI_cart_create(comm_old,ndims,dims,periods,       &
+        reorder,comm_cart,ier)
     integer :: comm_old
     integer :: ndims
     integer,dimension(*) :: dims
@@ -253,7 +253,7 @@ interface MP_cart_rank
     integer :: ier
   end subroutine MPI_cart_rank
 end interface
-	!----------------------------------------
+        !----------------------------------------
 
   character(len=*),parameter :: myname='m_mpif90'
 contains
@@ -274,8 +274,8 @@ contains
       integer :: typeI_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeI_'
@@ -299,8 +299,8 @@ end function typeI_
       integer :: typeL_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeL_'
@@ -324,8 +324,8 @@ end function typeL_
       integer :: typeC_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeC_'
@@ -350,8 +350,8 @@ end function typeC_
       integer :: typeSP_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeSP_'
@@ -377,8 +377,8 @@ end function typeSP_
       integer :: typeDP_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeDP_'
@@ -403,8 +403,8 @@ end function typeDP_
       integer :: typeI1_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeI1_'
@@ -428,8 +428,8 @@ end function typeI1_
       integer :: typeL1_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeL1_'
@@ -453,8 +453,8 @@ end function typeL1_
       integer :: typeC1_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeC1_'
@@ -479,8 +479,8 @@ end function typeC1_
       integer :: typeSP1_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeSP1_'
@@ -506,8 +506,8 @@ end function typeSP1_
       integer :: typeDP1_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeDP1_'
@@ -532,8 +532,8 @@ end function typeDP1_
       integer :: typeI2_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeI2_'
@@ -557,8 +557,8 @@ end function typeI2_
       integer :: typeL2_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeL2_'
@@ -582,8 +582,8 @@ end function typeL2_
       integer :: typeC2_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeC2_'
@@ -608,8 +608,8 @@ end function typeC2_
       integer :: typeSP2_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeSP2_'
@@ -635,8 +635,8 @@ end function typeSP2_
       integer :: typeDP2_
 
 ! !REVISION HISTORY:
-! 	28Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::typeDP2_'
@@ -663,7 +663,7 @@ end function typeDP2_
       integer,intent(in) :: ierror
 
 ! !REVISION HISTORY:
-! 	21Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       21Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::perr_'
@@ -673,11 +673,11 @@ end function typeDP2_
 
   call MP_error_string(ierror,estr,ln,ier)
   if(ier /= 0 .or. ln<=0) then
-    write(stderr,'(4a,i4)') proc,': ',	&
-	MP_proc,' error, ierror =',ierror
+    write(stderr,'(4a,i4)') proc,': ',  &
+        MP_proc,' error, ierror =',ierror
   else
-    write(stderr,'(6a)') proc,': ',	&
-	MP_proc,' error, "',estr(1:ln),'"'
+    write(stderr,'(6a)') proc,': ',     &
+        MP_proc,' error, "',estr(1:ln),'"'
   endif
 
 end subroutine perr_
@@ -698,8 +698,8 @@ end subroutine perr_
       integer :: MP_log2
 
 ! !REVISION HISTORY:
-! 	01Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       01Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::MP_log2'

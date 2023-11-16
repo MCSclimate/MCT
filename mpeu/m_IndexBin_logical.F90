@@ -13,15 +13,15 @@
 
     module m_IndexBin_logical
       implicit none
-      private	! except
+      private   ! except
 
       public :: IndexBin
-      interface IndexBin; module procedure 	&
-	IndexBin0_
+      interface IndexBin; module procedure      &
+        IndexBin0_
       end interface
 
 ! !REVISION HISTORY:
-! 	17Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       17Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname='MCT(MPEU)::m_IndexBin_logical'
@@ -49,9 +49,9 @@ contains
       integer,optional,intent(out) :: ln0
 
 ! !REVISION HISTORY:
-! 	16Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
-!	27Sep99 - Jing Guo <guo@thunder> - Fixed a bug pointed out by
-!					   Chris Redder
+!       16Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       27Sep99 - Jing Guo <guo@thunder> - Fixed a bug pointed out by
+!                                          Chris Redder
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::IndexBin0_'
@@ -60,24 +60,24 @@ contains
   integer :: ln(0:1),lc(0:1)
 !________________________________________
 
-	allocate(inew(n),stat=ier)
-		if(ier /= 0) then
-		  write(stderr,'(2a,i4)') myname_,	&
-			': allocate() error, stat =',ier
-		  call die(myname_)
-		endif
+        allocate(inew(n),stat=ier)
+                if(ier /= 0) then
+                  write(stderr,'(2a,i4)') myname_,      &
+                        ': allocate() error, stat =',ier
+                  call die(myname_)
+                endif
 !________________________________________
-		! Count numbers entries for the given key0
+                ! Count numbers entries for the given key0
 
-  lc(0)=1	! the location of values the same as key0
+  lc(0)=1       ! the location of values the same as key0
   ln(0)=0
   do i=1,n
     if(keys(i) .eqv. key0) ln(0)=ln(0)+1
   end do
 
-  lc(1)=ln(0)+1	! the location of values not the same as key0
+  lc(1)=ln(0)+1 ! the location of values not the same as key0
 !________________________________________
-		! Reset the counters
+                ! Reset the counters
   ln(0:1)=0
   do i=1,n
     ix=indx(i)
@@ -94,12 +94,12 @@ contains
   end do
 
 !________________________________________
-		! Sort out the old pointers according to the new order
+                ! Sort out the old pointers according to the new order
   indx(:)=inew(:)
   if(present(ln0)) ln0=ln(0)
 !________________________________________
 
-	  deallocate(inew)
+          deallocate(inew)
 
 end subroutine IndexBin0_
 end module m_IndexBin_logical

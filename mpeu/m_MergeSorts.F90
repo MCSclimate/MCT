@@ -19,7 +19,7 @@
 
     module m_MergeSorts
       implicit none
-      private	! except
+      private   ! except
 
       public :: IndexSet
 
@@ -28,59 +28,59 @@
       integer,parameter :: I8 = selected_int_kind (13)
 
       interface IndexSet
-	module procedure setn_
-	module procedure set_
+        module procedure setn_
+        module procedure set_
       end interface
       interface IndexSort
-	module procedure iSortn_
-	module procedure i8Sortn_
-	module procedure rSortn_
-	module procedure dSortn_
-	module procedure cSortn_
-	module procedure iSort_
-	module procedure i8Sort_
-	module procedure rSort_
-	module procedure dSort_
-	module procedure cSort_
-	module procedure iSort1_
-	module procedure i8Sort1_
-	module procedure rSort1_
-	module procedure dSort1_
-	module procedure cSort1_
+        module procedure iSortn_
+        module procedure i8Sortn_
+        module procedure rSortn_
+        module procedure dSortn_
+        module procedure cSortn_
+        module procedure iSort_
+        module procedure i8Sort_
+        module procedure rSort_
+        module procedure dSort_
+        module procedure cSort_
+        module procedure iSort1_
+        module procedure i8Sort1_
+        module procedure rSort1_
+        module procedure dSort1_
+        module procedure cSort1_
       end interface
 
 ! !EXAMPLES:
 !
-!	...
-!	integer, intent(in) :: No
-!	type(Observations), dimension(No), intent(inout) :: obs
+!       ...
+!       integer, intent(in) :: No
+!       type(Observations), dimension(No), intent(inout) :: obs
 !
-!	integer, dimension(No) :: indx	! automatic array
+!       integer, dimension(No) :: indx  ! automatic array
 !
-!	call IndexSet(No,indx)
-!	call IndexSort(No,indx,obs(1:No)%lev,descend=.false.)
-!	call IndexSort(No,indx,obs(1:No)%lon,descend=.false.)
-!	call IndexSort(No,indx,obs(1:No)%lat,descend=.false.)
-!	call IndexSort(No,indx,obs(1:No)%kt,descend=.false.)
-!	call IndexSort(No,indx,obs(1:No)%ks,descend=.false.)
-!	call IndexSort(No,indx,obs(1:No)%kx,descend=.false.)
-!	call IndexSort(No,indx,obs(1:No)%kr,descend=.false.)
+!       call IndexSet(No,indx)
+!       call IndexSort(No,indx,obs(1:No)%lev,descend=.false.)
+!       call IndexSort(No,indx,obs(1:No)%lon,descend=.false.)
+!       call IndexSort(No,indx,obs(1:No)%lat,descend=.false.)
+!       call IndexSort(No,indx,obs(1:No)%kt,descend=.false.)
+!       call IndexSort(No,indx,obs(1:No)%ks,descend=.false.)
+!       call IndexSort(No,indx,obs(1:No)%kx,descend=.false.)
+!       call IndexSort(No,indx,obs(1:No)%kr,descend=.false.)
 !
-!		! Sorting
-!	obs(1:No) = obs( (/ (indx(i),i=1,No) /) )
-!     	...
-!		! Unsorting
-!	obs( (/ (indx(i),i=1,No) /) ) = obs(1:No)
+!               ! Sorting
+!       obs(1:No) = obs( (/ (indx(i),i=1,No) /) )
+!       ...
+!               ! Unsorting
+!       obs( (/ (indx(i),i=1,No) /) ) = obs(1:No)
 !
 ! !REVISION HISTORY:
 ! 23Mar15 - Steve Goldhaber (goldy@ucar.edu)
 !   . Added interface to perform index sort on 8-byte integers
-!	15Mar00	- Jing Guo
-!		. Added interfaces without the explicit size
-!		. Added interfaces for two dimensional arrays
-!	02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
-! 	04Jan99 - Jing Guo <guo@thunder> - revised
-! 	09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       15Mar00 - Jing Guo
+!               . Added interfaces without the explicit size
+!               . Added interfaces for two dimensional arrays
+!       02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
+!       04Jan99 - Jing Guo <guo@thunder> - revised
+!       09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*), parameter :: myname='MCT(MPEU)::m_MergeSorts'
@@ -99,13 +99,13 @@ contains
 
     subroutine setn_(n,indx)
       implicit none
-      integer, intent(in) :: n			! size of indx(:)
-      integer, dimension(n), intent(out) :: indx	! indices
+      integer, intent(in) :: n                  ! size of indx(:)
+      integer, dimension(n), intent(out) :: indx        ! indices
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. redefined for the original interface
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . redefined for the original interface
 !EOP ___________________________________________________________________
 
   call set_(indx(1:n))
@@ -123,13 +123,13 @@ end subroutine setn_
 
     subroutine set_(indx)
       implicit none
-      integer, dimension(:), intent(out) :: indx	! indices
+      integer, dimension(:), intent(out) :: indx        ! indices
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. Modified the interface, by removing the explicit size
-! 	09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
-! 	04Jan99 - Jing Guo <guo@thunder> - revised prolog format
+!       15Mar00 - Jing Guo
+!               . Modified the interface, by removing the explicit size
+!       09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       04Jan99 - Jing Guo <guo@thunder> - revised prolog format
 !EOP ___________________________________________________________________
 
   integer :: i
@@ -160,9 +160,9 @@ end subroutine set_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. redefined for the original interface
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . redefined for the original interface
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::iSortn_'
@@ -192,9 +192,9 @@ end subroutine iSortn_
 ! !REVISION HISTORY:
 ! 23Mar15 - Steve Goldhaber (goldy@ucar.edu)
 !   . Added interface to perform index sort on 8-byte integers
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. redefined for the original interface
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . redefined for the original interface
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::i8Sortn_'
@@ -223,9 +223,9 @@ end subroutine i8Sortn_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. redefined for the original interface
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . redefined for the original interface
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::rSortn_'
@@ -254,9 +254,9 @@ end subroutine rSortn_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. redefined for the original interface
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . redefined for the original interface
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::dSortn_'
@@ -284,9 +284,9 @@ end subroutine dSortn_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. redefined for the original interface
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . redefined for the original interface
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::cSortn_'
@@ -315,11 +315,11 @@ end subroutine cSortn_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. Modified the interface, by removing the explicit size
-!	02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
-! 	04Jan99 - Jing Guo <guo@thunder> - revised the prolog
-! 	09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       15Mar00 - Jing Guo
+!               . Modified the interface, by removing the explicit size
+!       02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
+!       04Jan99 - Jing Guo <guo@thunder> - revised the prolog
+!       09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -335,8 +335,8 @@ end subroutine cSortn_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return
@@ -432,11 +432,11 @@ end subroutine iSort_
 
 ! !REVISION HISTORY:
 !   17Dec14 - goldy@ucar.edu - Added 8-byte version
-!	15Mar00	- Jing Guo
-!		. Modified the interface, by removing the explicit size
-!	02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
-! 	04Jan99 - Jing Guo <guo@thunder> - revised the prolog
-! 	09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       15Mar00 - Jing Guo
+!               . Modified the interface, by removing the explicit size
+!       02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
+!       04Jan99 - Jing Guo <guo@thunder> - revised the prolog
+!       09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -452,8 +452,8 @@ end subroutine iSort_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return
@@ -549,11 +549,11 @@ end subroutine i8Sort_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. Modified the interface, by removing the explicit size
-!	02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
-! 	04Jan99 - Jing Guo <guo@thunder> - revised the prolog
-! 	09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       15Mar00 - Jing Guo
+!               . Modified the interface, by removing the explicit size
+!       02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
+!       04Jan99 - Jing Guo <guo@thunder> - revised the prolog
+!       09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -569,8 +569,8 @@ end subroutine i8Sort_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return
@@ -666,11 +666,11 @@ end subroutine rSort_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. Modified the interface, by removing the explicit size
-!	02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
-! 	04Jan99 - Jing Guo <guo@thunder> - revised the prolog
-! 	09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       15Mar00 - Jing Guo
+!               . Modified the interface, by removing the explicit size
+!       02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
+!       04Jan99 - Jing Guo <guo@thunder> - revised the prolog
+!       09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -686,8 +686,8 @@ end subroutine rSort_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return
@@ -782,11 +782,11 @@ end subroutine dSort_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. Modified the interface, by removing the explicit size
-!	02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
-! 	04Jan99 - Jing Guo <guo@thunder> - revised the prolog
-! 	09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       15Mar00 - Jing Guo
+!               . Modified the interface, by removing the explicit size
+!       02Feb99 - Jing Guo <guo@thunder> - Added if(present(stat)) ...
+!       04Jan99 - Jing Guo <guo@thunder> - revised the prolog
+!       09Sep97 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -802,8 +802,8 @@ end subroutine dSort_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return
@@ -899,11 +899,11 @@ end subroutine cSort_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. Copied code from iSort_
-!		. Extended the interface and the algorithm to handle
-!		  2-d arrays with an index.
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . Copied code from iSort_
+!               . Extended the interface and the algorithm to handle
+!                 2-d arrays with an index.
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -919,8 +919,8 @@ end subroutine cSort_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return
@@ -1017,11 +1017,11 @@ end subroutine iSort1_
 
 ! !REVISION HISTORY:
 !   17Dec14 - goldy@ucar.edu - Added 8-byte version
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. Copied code from iSort_
-!		. Extended the interface and the algorithm to handle
-!		  2-d arrays with an index.
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . Copied code from iSort_
+!               . Extended the interface and the algorithm to handle
+!                 2-d arrays with an index.
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -1037,8 +1037,8 @@ end subroutine iSort1_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return
@@ -1135,11 +1135,11 @@ end subroutine i8Sort1_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. Copied code from rSort_
-!		. Extended the interface and the algorithm to handle
-!		  2-d arrays with an index.
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . Copied code from rSort_
+!               . Extended the interface and the algorithm to handle
+!                 2-d arrays with an index.
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -1155,8 +1155,8 @@ end subroutine i8Sort1_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return
@@ -1253,11 +1253,11 @@ end subroutine rSort1_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. Copied code from dSort_
-!		. Extended the interface and the algorithm to handle
-!		  2-d arrays with an index.
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . Copied code from dSort_
+!               . Extended the interface and the algorithm to handle
+!                 2-d arrays with an index.
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -1273,8 +1273,8 @@ end subroutine rSort1_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return
@@ -1370,11 +1370,11 @@ end subroutine dSort1_
       integer, optional, intent(out) :: stat
 
 ! !REVISION HISTORY:
-!	15Mar00	- Jing Guo
-!		. initial prototype/prolog/code
-!		. Copied code from cSort_
-!		. Extended the interface and the algorithm to handle
-!		  2-d arrays with an index.
+!       15Mar00 - Jing Guo
+!               . initial prototype/prolog/code
+!               . Copied code from cSort_
+!               . Extended the interface and the algorithm to handle
+!                 2-d arrays with an index.
 !EOP ___________________________________________________________________
 
   logical :: dsnd
@@ -1390,8 +1390,8 @@ end subroutine dSort1_
 
   allocate(mtmp(n),stat=ierr)
   if(ierr /= 0) then
-    write(stderr,'(2a,i4)') myname_,	&
-	': allocate(mtmp(:)) error, stat =',ierr
+    write(stderr,'(2a,i4)') myname_,    &
+        ': allocate(mtmp(:)) error, stat =',ierr
     if(.not.present(stat)) call die(myname_)
     stat=ierr
     return

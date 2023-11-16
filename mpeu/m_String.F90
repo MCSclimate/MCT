@@ -21,11 +21,11 @@
 
       implicit none
 
-      private	! except
+      private   ! except
 
 ! !PUBLIC TYPES:
 
-      public :: String		! The class data structure
+      public :: String          ! The class data structure
 
     Type String
 #ifdef SEQUENCE
@@ -37,19 +37,19 @@
 ! !PUBLIC MEMBER FUNCTIONS:
 
       public :: toChar
-      public :: char		! convert to a CHARACTER(*)
+      public :: char            ! convert to a CHARACTER(*)
 
       public :: String_init
-      public :: init		! set a CHARACTER(*) type to a String
+      public :: init            ! set a CHARACTER(*) type to a String
 
       public :: String_clean
-      public :: clean		! Deallocate memory occupied by  a String
+      public :: clean           ! Deallocate memory occupied by  a String
 
       public :: String_len
-      public :: len		! length of a String
+      public :: len             ! length of a String
 
       public :: String_bcast
-      public :: bcast		! Broadcast a String
+      public :: bcast           ! Broadcast a String
 
       public :: String_mci      ! Track memory used to store a String
       public :: String_mco
@@ -57,26 +57,26 @@
       public :: ptr_chars       ! Assign a pointer to a String's
                                 ! character buffer
 
-  interface char;  module procedure	&
-	str2ch0_,	&
-	ch12ch0_
+  interface char;  module procedure     &
+        str2ch0_,       &
+        ch12ch0_
   end interface
 
-  interface toChar;  module procedure	&
-	str2ch0_,	&
-	ch12ch0_
+  interface toChar;  module procedure   &
+        str2ch0_,       &
+        ch12ch0_
   end interface
 
-  interface String_init;  module procedure	&
-	initc_,		&
-	initc1_,	&
-	inits_
+  interface String_init;  module procedure      &
+        initc_,         &
+        initc1_,        &
+        inits_
   end interface
 
-  interface init;  module procedure	&
-	initc_,		&
-	initc1_,	&
-	inits_
+  interface init;  module procedure     &
+        initc_,         &
+        initc1_,        &
+        inits_
   end interface
 
   interface String_clean; module procedure clean_; end interface
@@ -86,26 +86,26 @@
   interface String_bcast; module procedure bcast_; end interface
   interface bcast; module procedure bcast_; end interface
 
-  interface String_mci; module procedure	&
-    mci0_,	&
-    mci1_,	&
-    mci2_,	&
+  interface String_mci; module procedure        &
+    mci0_,      &
+    mci1_,      &
+    mci2_,      &
     mci3_
   end interface
 
-  interface String_mco; module procedure	&
-    mco0_,	&
-    mco1_,	&
-    mco2_,	&
+  interface String_mco; module procedure        &
+    mco0_,      &
+    mco1_,      &
+    mco2_,      &
     mco3_
   end interface
 
-  interface ptr_chars; module procedure	&
+  interface ptr_chars; module procedure &
     ptr_chars_
   end interface
 
 ! !REVISION HISTORY:
-! 	22Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       22Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname='MCT(MPEU)::m_String'
@@ -141,7 +141,7 @@ contains
      character(len=size(str%c,1))            :: str2ch0_
 
 ! !REVISION HISTORY:
-! 	23Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       23Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::str2ch0_'
@@ -182,7 +182,7 @@ contains
       character(len=size(ch1,1))                   :: ch12ch0_
 
 ! !REVISION HISTORY:
-! 	22Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       22Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ch12ch0_'
@@ -224,7 +224,7 @@ contains
       type(String),     intent(out) :: str
 
 ! !REVISION HISTORY:
-! 	23Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       23Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::initc_'
@@ -237,7 +237,7 @@ contains
     call die(myname_)
   endif
 
-	if(mall_ison()) call mall_mci(str%c,myname)
+        if(mall_ison()) call mall_mci(str%c,myname)
 
   do i=1,ln
     str%c(i)=chr(i:i)
@@ -288,7 +288,7 @@ contains
     call die(myname_)
   endif
 
-	if(mall_ison()) call mall_mci(str%c,myname)
+        if(mall_ison()) call mall_mci(str%c,myname)
 
   do i=1,ln
     str%c(i)=chr(i)
@@ -327,8 +327,8 @@ contains
       type(String),  intent(out) :: oStr
 
 ! !REVISION HISTORY:
-! 	07Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       07Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::inits_'
@@ -336,10 +336,10 @@ contains
 
   ln=size(iStr%c)
 
-	allocate(oStr%c(ln),stat=ier)
-		if(ier /= 0) call die(myname_,'allocate()',ier)
+        allocate(oStr%c(ln),stat=ier)
+                if(ier /= 0) call die(myname_,'allocate()',ier)
 
-	if(mall_ison()) call mall_mci(oStr%c,myname)
+        if(mall_ison()) call mall_mci(oStr%c,myname)
 
   do i=1,ln
     oStr%c(i)=iStr%c(i)
@@ -374,13 +374,13 @@ contains
       type(String), intent(inout) :: str
 
 ! !REVISION HISTORY:
-! 	23Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       23Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::clean_'
   integer :: ier
 
-	if(mall_ison()) call mall_mco(str%c,myname)
+        if(mall_ison()) call mall_mco(str%c,myname)
 
   deallocate(str%c,stat=ier)
   if(ier /= 0) then
@@ -433,7 +433,7 @@ contains
       integer, optional, intent(out)   :: stat
 
 ! !REVISION HISTORY:
-! 	27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::bcast_'
@@ -472,7 +472,7 @@ contains
       return
     endif
 
-	if(mall_ison()) call mall_mci(Str%c,myname)
+        if(mall_ison()) call mall_mci(Str%c,myname)
   endif
 
   call MPI_bcast(Str%c(1),ln,MP_CHARACTER,root,comm,ier)
@@ -509,8 +509,8 @@ contains
       character(len=*), intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	07Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       07Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::mci0_'
@@ -541,8 +541,8 @@ contains
       character(len=*),intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	07Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       07Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::mco0_'
@@ -575,8 +575,8 @@ contains
       character(len=*),               intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	07Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       07Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::mci1_'
@@ -609,8 +609,8 @@ contains
       character(len=*),               intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	07Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       07Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::mco1_'
@@ -643,8 +643,8 @@ contains
       character(len=*),                 intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	07Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       07Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::mci2_'
@@ -677,8 +677,8 @@ contains
       character(len=*),                 intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	07Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       07Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::mco2_'
@@ -711,8 +711,8 @@ contains
       character(len=*),                   intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	07Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       07Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::mci3_'
@@ -745,8 +745,8 @@ contains
       character(len=*),                   intent(in) :: thread
 
 ! !REVISION HISTORY:
-! 	07Feb00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       07Feb00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::mco3_'
@@ -778,8 +778,8 @@ contains
       type(String),intent(in) :: str
 
 ! !REVISION HISTORY:
-! 	10Apr00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       10Apr00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::len_'
@@ -818,8 +818,8 @@ contains
       character(len=1), dimension(:), pointer    :: ptr_chars_
 
 ! !REVISION HISTORY:
-! 	10Apr00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       10Apr00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ptr_chars_'

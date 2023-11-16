@@ -13,52 +13,52 @@
 
     module m_Permuter
       implicit none
-      private	! except
+      private   ! except
 
       public :: permute
       public :: unpermute
 
-    interface permute; module procedure	&
-	permutei_,	&	! integer in place
-	permuteio_,	&	! integer with an output
-	permutei1_,	&	! integer in place
-	permuteio1_,	&	! integer with an output
-	permuter_,	&	! real in place
-	permutero_,	&	! real with an output
-	permuter1_,	&	! real in place
-	permutero1_,	&	! real with an output
-	permuted_,	&	! dble in place
-	permutedo_,	&	! dble with an output
-	permuted1_,	&	! dble in place
-	permutedo1_,	&	! dble with an output
-	permutel_,	&	! logical in place
-	permutelo_,	&	! logical with an output
-	permutel1_,	&	! logical in place
-	permutelo1_		! logical with an output
+    interface permute; module procedure &
+        permutei_,      &       ! integer in place
+        permuteio_,     &       ! integer with an output
+        permutei1_,     &       ! integer in place
+        permuteio1_,    &       ! integer with an output
+        permuter_,      &       ! real in place
+        permutero_,     &       ! real with an output
+        permuter1_,     &       ! real in place
+        permutero1_,    &       ! real with an output
+        permuted_,      &       ! dble in place
+        permutedo_,     &       ! dble with an output
+        permuted1_,     &       ! dble in place
+        permutedo1_,    &       ! dble with an output
+        permutel_,      &       ! logical in place
+        permutelo_,     &       ! logical with an output
+        permutel1_,     &       ! logical in place
+        permutelo1_             ! logical with an output
     end interface
 
-    interface unpermute; module procedure	&
-	unpermutei_,	&	! integer in place
-	unpermuteio_,	&	! integer with an output
-	unpermutei1_,	&	! integer in place
-	unpermuteio1_,	&	! integer with an output
-	unpermuter_,	&	! real in place
-	unpermutero_,	&	! real with an output
-	unpermuter1_,	&	! real in place
-	unpermutero1_,	&	! real with an output
-	unpermuted_,	&	! dble in place
-	unpermutedo_,	&	! dble with an output
-	unpermuted1_,	&	! dble in place
-	unpermutedo1_,	&	! dble with an output
-	unpermutel_,	&	! logical in place
-	unpermutelo_,	&	! logical with an output
-	unpermutel1_,	&	! logical in place
-	unpermutelo1_		! logical with an output
+    interface unpermute; module procedure       &
+        unpermutei_,    &       ! integer in place
+        unpermuteio_,   &       ! integer with an output
+        unpermutei1_,   &       ! integer in place
+        unpermuteio1_,  &       ! integer with an output
+        unpermuter_,    &       ! real in place
+        unpermutero_,   &       ! real with an output
+        unpermuter1_,   &       ! real in place
+        unpermutero1_,  &       ! real with an output
+        unpermuted_,    &       ! dble in place
+        unpermutedo_,   &       ! dble with an output
+        unpermuted1_,   &       ! dble in place
+        unpermutedo1_,  &       ! dble with an output
+        unpermutel_,    &       ! logical in place
+        unpermutelo_,   &       ! logical with an output
+        unpermutel1_,   &       ! logical in place
+        unpermutelo1_           ! logical with an output
     end interface
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname='MCT(MPEU)::m_Permuter'
@@ -83,8 +83,8 @@ contains
       integer,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutei_'
@@ -93,7 +93,7 @@ contains
   integer :: i,ier
 
   allocate(wk(n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call permuteio_(wk,ary,indx,n)
 
@@ -102,7 +102,7 @@ contains
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine permutei_
 
@@ -124,8 +124,8 @@ end subroutine permutei_
       integer,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permuteio_'
@@ -157,8 +157,8 @@ end subroutine permuteio_
       integer,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutei_'
@@ -167,7 +167,7 @@ end subroutine permuteio_
   integer :: i,ier
 
   allocate(wk(n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call unpermuteio_(wk,ary,indx,n)
 
@@ -176,7 +176,7 @@ end subroutine permuteio_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine unpermutei_
 
@@ -198,8 +198,8 @@ end subroutine unpermutei_
       integer,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermuteio_'
@@ -232,8 +232,8 @@ end subroutine unpermuteio_
       integer ,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permuter_'
@@ -242,7 +242,7 @@ end subroutine unpermuteio_
   integer :: i,ier
 
   allocate(wk(n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call permutero_(wk,ary,indx,n)
 
@@ -251,7 +251,7 @@ end subroutine unpermuteio_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine permuter_
 
@@ -274,8 +274,8 @@ end subroutine permuter_
       integer ,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutero_'
@@ -308,8 +308,8 @@ end subroutine permutero_
       integer ,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermuter_'
@@ -318,7 +318,7 @@ end subroutine permutero_
   integer :: i,ier
 
   allocate(wk(n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call unpermutero_(wk,ary,indx,n)
 
@@ -327,7 +327,7 @@ end subroutine permutero_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine unpermuter_
 
@@ -350,8 +350,8 @@ end subroutine unpermuter_
       integer ,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutero_'
@@ -384,8 +384,8 @@ end subroutine unpermutero_
       integer ,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permuted_'
@@ -394,7 +394,7 @@ end subroutine unpermutero_
   integer :: i,ier
 
   allocate(wk(n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call permutedo_(wk,ary,indx,n)
 
@@ -403,7 +403,7 @@ end subroutine unpermutero_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine permuted_
 
@@ -426,8 +426,8 @@ end subroutine permuted_
       integer ,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutedo_'
@@ -460,8 +460,8 @@ end subroutine permutedo_
       integer ,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermuted_'
@@ -470,7 +470,7 @@ end subroutine permutedo_
   integer :: i,ier
 
   allocate(wk(n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call unpermutedo_(wk,ary,indx,n)
 
@@ -479,7 +479,7 @@ end subroutine permutedo_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine unpermuted_
 
@@ -502,8 +502,8 @@ end subroutine unpermuted_
       integer ,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutedo_'
@@ -535,8 +535,8 @@ end subroutine unpermutedo_
       integer,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutel_'
@@ -545,7 +545,7 @@ end subroutine unpermutedo_
   integer :: i,ier
 
   allocate(wk(n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call permutelo_(wk,ary,indx,n)
 
@@ -554,7 +554,7 @@ end subroutine unpermutedo_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine permutel_
 
@@ -576,8 +576,8 @@ end subroutine permutel_
       integer,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutelo_'
@@ -609,8 +609,8 @@ end subroutine permutelo_
       integer,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutel_'
@@ -619,7 +619,7 @@ end subroutine permutelo_
   integer :: i,ier
 
   allocate(wk(n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call unpermutelo_(wk,ary,indx,n)
 
@@ -628,7 +628,7 @@ end subroutine permutelo_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine unpermutel_
 
@@ -650,8 +650,8 @@ end subroutine unpermutel_
       integer,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutelo_'
@@ -683,8 +683,8 @@ end subroutine unpermutelo_
       integer,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutei1_'
@@ -694,7 +694,7 @@ end subroutine unpermutelo_
 
   l=size(ary,1)
   allocate(wk(l,n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call permuteio1_(wk,ary,indx,n)
 
@@ -703,7 +703,7 @@ end subroutine unpermutelo_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine permutei1_
 
@@ -725,8 +725,8 @@ end subroutine permutei1_
       integer,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permuteio1_'
@@ -759,8 +759,8 @@ end subroutine permuteio1_
       integer,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutei1_'
@@ -770,7 +770,7 @@ end subroutine permuteio1_
 
   l=size(ary,1)
   allocate(wk(l,n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call unpermuteio1_(wk,ary,indx,n)
 
@@ -779,7 +779,7 @@ end subroutine permuteio1_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine unpermutei1_
 
@@ -801,8 +801,8 @@ end subroutine unpermutei1_
       integer,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermuteio1_'
@@ -836,8 +836,8 @@ end subroutine unpermuteio1_
       integer ,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permuter1_'
@@ -847,7 +847,7 @@ end subroutine unpermuteio1_
 
   l=size(ary,1)
   allocate(wk(l,n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call permutero1_(wk,ary,indx,n)
 
@@ -856,7 +856,7 @@ end subroutine unpermuteio1_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine permuter1_
 
@@ -879,8 +879,8 @@ end subroutine permuter1_
       integer ,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutero1_'
@@ -914,8 +914,8 @@ end subroutine permutero1_
       integer ,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermuter1_'
@@ -925,7 +925,7 @@ end subroutine permutero1_
 
   l=size(ary,1)
   allocate(wk(l,n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call unpermutero1_(wk,ary,indx,n)
 
@@ -934,7 +934,7 @@ end subroutine permutero1_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine unpermuter1_
 
@@ -957,8 +957,8 @@ end subroutine unpermuter1_
       integer ,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutero1_'
@@ -992,8 +992,8 @@ end subroutine unpermutero1_
       integer ,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permuted1_'
@@ -1003,7 +1003,7 @@ end subroutine unpermutero1_
 
   l=size(ary,1)
   allocate(wk(l,n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call permutedo1_(wk,ary,indx,n)
 
@@ -1012,7 +1012,7 @@ end subroutine unpermutero1_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine permuted1_
 
@@ -1035,8 +1035,8 @@ end subroutine permuted1_
       integer ,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutedo1_'
@@ -1070,8 +1070,8 @@ end subroutine permutedo1_
       integer ,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermuted1_'
@@ -1081,7 +1081,7 @@ end subroutine permutedo1_
 
   l=size(ary,1)
   allocate(wk(l,n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call unpermutedo1_(wk,ary,indx,n)
 
@@ -1090,7 +1090,7 @@ end subroutine permutedo1_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine unpermuted1_
 
@@ -1113,8 +1113,8 @@ end subroutine unpermuted1_
       integer ,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutedo1_'
@@ -1147,8 +1147,8 @@ end subroutine unpermutedo1_
       integer,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutel1_'
@@ -1158,7 +1158,7 @@ end subroutine unpermutedo1_
 
   l=size(ary,1)
   allocate(wk(l,n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call permutelo1_(wk,ary,indx,n)
 
@@ -1167,7 +1167,7 @@ end subroutine unpermutedo1_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine permutel1_
 
@@ -1189,8 +1189,8 @@ end subroutine permutel1_
       integer,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::permutelo1_'
@@ -1223,8 +1223,8 @@ end subroutine permutelo1_
       integer,             intent(in)    :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutel1_'
@@ -1234,7 +1234,7 @@ end subroutine permutelo1_
 
   l=size(ary,1)
   allocate(wk(l,n),stat=ier)
-	if(ier/=0) call perr_die(myname_,'allocate()',ier)
+        if(ier/=0) call perr_die(myname_,'allocate()',ier)
 
   call unpermutelo1_(wk,ary,indx,n)
 
@@ -1243,7 +1243,7 @@ end subroutine permutelo1_
   end do
 
   deallocate(wk,stat=ier)
-	if(ier/=0) call perr_die(myname_,'deallocate()',ier)
+        if(ier/=0) call perr_die(myname_,'deallocate()',ier)
 
 end subroutine unpermutel1_
 
@@ -1265,8 +1265,8 @@ end subroutine unpermutel1_
       integer,             intent(in)  :: n
 
 ! !REVISION HISTORY:
-! 	25Aug99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       25Aug99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::unpermutelo1_'

@@ -13,30 +13,30 @@
 
     module m_rankMerge
       implicit none
-      private	! except
+      private   ! except
 
-      public :: rankSet		! set inital ranks
-      public :: rankMerge	! merge two ranks
+      public :: rankSet         ! set inital ranks
+      public :: rankMerge       ! merge two ranks
       public :: IndexedRankMerge ! index-merge two array segments
 
       interface rankSet; module procedure set_; end interface
 
-      interface rankMerge; module procedure	&
-	imerge_,	&	! rank-merging two integer arrays
-	rmerge_,	&	! rank-merging two real arrays
-	dmerge_,	&	! rank-merging two dble arrays
-	uniq_			! merging to rank arrays
+      interface rankMerge; module procedure     &
+        imerge_,        &       ! rank-merging two integer arrays
+        rmerge_,        &       ! rank-merging two real arrays
+        dmerge_,        &       ! rank-merging two dble arrays
+        uniq_                   ! merging to rank arrays
       end interface
 
-      interface IndexedRankMerge; module procedure	&
-	iindexmerge_,	&	! merging two index arrays of integers
-	rindexmerge_,	&	! merging two index arrays of reals
-	dindexmerge_		! merging two index arrays of dbles
+      interface IndexedRankMerge; module procedure      &
+        iindexmerge_,   &       ! merging two index arrays of integers
+        rindexmerge_,   &       ! merging two index arrays of reals
+        dindexmerge_            ! merging two index arrays of dbles
       end interface
 
 ! !REVISION HISTORY:
-! 	13Mar00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       13Mar00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname='MCT(MPEU)::m_rankMerge'
@@ -57,8 +57,8 @@ contains
       integer,dimension(:),intent(out) :: rank
 
 ! !REVISION HISTORY:
-! 	13Mar00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       13Mar00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::set_'
@@ -82,17 +82,17 @@ end subroutine set_
     subroutine imerge_(value_i,value_j,krank_i,krank_j,descend)
       implicit none
 
-      integer,dimension(:),intent(in)    :: value_j	! value of j-vec
-      integer,dimension(:),intent(in)    :: value_i	! value of i-vec
+      integer,dimension(:),intent(in)    :: value_j     ! value of j-vec
+      integer,dimension(:),intent(in)    :: value_i     ! value of i-vec
 
-      integer,dimension(:),intent(inout) :: krank_i	! rank of i-vec
-      integer,dimension(:),intent(inout) :: krank_j	! rank of j-vec
+      integer,dimension(:),intent(inout) :: krank_i     ! rank of i-vec
+      integer,dimension(:),intent(inout) :: krank_j     ! rank of j-vec
 
       logical,optional,intent(in) :: descend
 
 ! !REVISION HISTORY:
-! 	13Mar00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       13Mar00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::imerge_'
@@ -112,15 +112,15 @@ end subroutine set_
 
   i=1
   j=1
-  krank=0		! a preset rank value
+  krank=0               ! a preset rank value
   value_sv=0
 
   do
         geti=j>nj
-        if(geti) then		! .eqv. j>nj
-          if(i>ni) exit		! i>ni
+        if(geti) then           ! .eqv. j>nj
+          if(i>ni) exit         ! i>ni
           value = value_i(i)
-        else			! .eqv. j<=nj
+        else                    ! .eqv. j<=nj
           geti = i<=ni
           if(geti) then         ! .eqv. i<=ni
             value = value_i(i)
@@ -134,7 +134,7 @@ end subroutine set_
         endif
 
         if(krank==0 .or. value /= value_sv) then
-          krank=krank+1		! the next rank value
+          krank=krank+1         ! the next rank value
           value_sv=value
         endif
 
@@ -162,17 +162,17 @@ end subroutine imerge_
       use m_realkinds, only : SP
       implicit none
 
-      real(SP),dimension(:),intent(in)    :: value_i	! value of i-vec
-      real(SP),dimension(:),intent(in)    :: value_j	! value of j-vec
+      real(SP),dimension(:),intent(in)    :: value_i    ! value of i-vec
+      real(SP),dimension(:),intent(in)    :: value_j    ! value of j-vec
 
-      integer,dimension(:),intent(inout) :: krank_i	! rank of i-vec
-      integer,dimension(:),intent(inout) :: krank_j	! rank of j-vec
+      integer,dimension(:),intent(inout) :: krank_i     ! rank of i-vec
+      integer,dimension(:),intent(inout) :: krank_j     ! rank of j-vec
 
       logical,optional,intent(in) :: descend
 
 ! !REVISION HISTORY:
-! 	13Mar00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       13Mar00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::rmerge_'
@@ -192,15 +192,15 @@ end subroutine imerge_
 
   i=1
   j=1
-  krank=0		! a preset rank value
+  krank=0               ! a preset rank value
   value_sv=0
 
   do
         geti=j>nj
-        if(geti) then		! .eqv. j>nj
-          if(i>ni) exit		! i>ni
+        if(geti) then           ! .eqv. j>nj
+          if(i>ni) exit         ! i>ni
           value = value_i(i)
-        else			! .eqv. j<=nj
+        else                    ! .eqv. j<=nj
           geti = i<=ni
           if(geti) then         ! .eqv. i<=ni
             value = value_i(i)
@@ -214,7 +214,7 @@ end subroutine imerge_
         endif
 
         if(krank==0 .or. value /= value_sv) then
-          krank=krank+1		! the next rank value
+          krank=krank+1         ! the next rank value
           value_sv=value
         endif
 
@@ -242,17 +242,17 @@ end subroutine rmerge_
       use m_realkinds, only : DP
       implicit none
 
-      real(DP),dimension(:),intent(in)    :: value_i	! value of i-vec
-      real(DP),dimension(:),intent(in)    :: value_j	! value of j-vec
+      real(DP),dimension(:),intent(in)    :: value_i    ! value of i-vec
+      real(DP),dimension(:),intent(in)    :: value_j    ! value of j-vec
 
-      integer,dimension(:),intent(inout) :: krank_i	! rank of i-vec
-      integer,dimension(:),intent(inout) :: krank_j	! rank of j-vec
+      integer,dimension(:),intent(inout) :: krank_i     ! rank of i-vec
+      integer,dimension(:),intent(inout) :: krank_j     ! rank of j-vec
 
       logical,optional,intent(in) :: descend
 
 ! !REVISION HISTORY:
-! 	13Mar00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       13Mar00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::dmerge_'
@@ -272,15 +272,15 @@ end subroutine rmerge_
 
   i=1
   j=1
-  krank=0		! a preset rank value
+  krank=0               ! a preset rank value
   value_sv=0
 
   do
         geti=j>nj
-        if(geti) then		! .eqv. j>nj
-          if(i>ni) exit		! i>ni
+        if(geti) then           ! .eqv. j>nj
+          if(i>ni) exit         ! i>ni
           value = value_i(i)
-        else			! .eqv. j<=nj
+        else                    ! .eqv. j<=nj
           geti = i<=ni
           if(geti) then         ! .eqv. i<=ni
             value = value_i(i)
@@ -294,7 +294,7 @@ end subroutine rmerge_
         endif
 
         if(krank==0 .or. value /= value_sv) then
-          krank=krank+1		! the next rank value
+          krank=krank+1         ! the next rank value
           value_sv=value
         endif
 
@@ -322,18 +322,18 @@ end subroutine dmerge_
     subroutine iindexmerge_(indx_i,indx_j,value,krank_i,krank_j,descend)
       implicit none
 
-      integer,dimension(:),intent(in)    :: indx_i	! of the i-vec
-      integer,dimension(:),intent(in)    :: indx_j	! of the j-vec
-      integer,dimension(:),intent(in)    :: value	! of the full
+      integer,dimension(:),intent(in)    :: indx_i      ! of the i-vec
+      integer,dimension(:),intent(in)    :: indx_j      ! of the j-vec
+      integer,dimension(:),intent(in)    :: value       ! of the full
 
-      integer,dimension(:),intent(inout) :: krank_i	! rank of i-vec
-      integer,dimension(:),intent(inout) :: krank_j	! rank of j-vec
+      integer,dimension(:),intent(inout) :: krank_i     ! rank of i-vec
+      integer,dimension(:),intent(inout) :: krank_j     ! rank of j-vec
 
       logical,optional,intent(in) :: descend
 
 ! !REVISION HISTORY:
-! 	13Mar00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       13Mar00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::iindexmerge_'
@@ -353,20 +353,20 @@ end subroutine dmerge_
 
   i=1
   j=1
-  krank=0		! a preset rank value
+  krank=0               ! a preset rank value
   value_sv=0
 
   do
         geti=j>nj
-        if(geti) then		! .eqv. j>nj
-          if(i>ni) exit		! i>ni
-	  li=indx_i(i)
+        if(geti) then           ! .eqv. j>nj
+          if(i>ni) exit         ! i>ni
+          li=indx_i(i)
           value_ = value(li)
-        else			! .eqv. j<=nj
-	  lj=indx_j(j)
+        else                    ! .eqv. j<=nj
+          lj=indx_j(j)
           geti = i<=ni
           if(geti) then         ! .eqv. i<=ni
-	    li=indx_i(i)
+            li=indx_i(i)
             value_ = value(li)
             geti = krank_i(i) <= krank_j(j)
             if(krank_i(i)==krank_j(j)) then
@@ -378,7 +378,7 @@ end subroutine dmerge_
         endif
 
         if(krank==0 .or. value_ /= value_sv) then
-          krank=krank+1		! the next rank value
+          krank=krank+1         ! the next rank value
           value_sv=value_
         endif
 
@@ -407,18 +407,18 @@ end subroutine iindexmerge_
       use m_realkinds,only : SP
       implicit none
 
-      integer,dimension(:),intent(in)    :: indx_i	! of the i-vec
-      integer,dimension(:),intent(in)    :: indx_j	! of the j-vec
-      real(SP),dimension(:),intent(in)    :: value	! of the full
+      integer,dimension(:),intent(in)    :: indx_i      ! of the i-vec
+      integer,dimension(:),intent(in)    :: indx_j      ! of the j-vec
+      real(SP),dimension(:),intent(in)    :: value      ! of the full
 
-      integer,dimension(:),intent(inout) :: krank_i	! rank of i-vec
-      integer,dimension(:),intent(inout) :: krank_j	! rank of j-vec
+      integer,dimension(:),intent(inout) :: krank_i     ! rank of i-vec
+      integer,dimension(:),intent(inout) :: krank_j     ! rank of j-vec
 
       logical,optional,intent(in) :: descend
 
 ! !REVISION HISTORY:
-! 	13Mar00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       13Mar00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::rindexmerge_'
@@ -438,20 +438,20 @@ end subroutine iindexmerge_
 
   i=1
   j=1
-  krank=0		! a preset rank value
+  krank=0               ! a preset rank value
   value_sv=0
 
   do
         geti=j>nj
-        if(geti) then		! .eqv. j>nj
-          if(i>ni) exit		! i>ni
-	  li=indx_i(i)
+        if(geti) then           ! .eqv. j>nj
+          if(i>ni) exit         ! i>ni
+          li=indx_i(i)
           value_ = value(li)
-        else			! .eqv. j<=nj
-	  lj=indx_j(j)
+        else                    ! .eqv. j<=nj
+          lj=indx_j(j)
           geti = i<=ni
           if(geti) then         ! .eqv. i<=ni
-	    li=indx_i(i)
+            li=indx_i(i)
             value_ = value(li)
             geti = krank_i(i) <= krank_j(j)
             if(krank_i(i)==krank_j(j)) then
@@ -463,7 +463,7 @@ end subroutine iindexmerge_
         endif
 
         if(krank==0 .or. value_ /= value_sv) then
-          krank=krank+1		! the next rank value
+          krank=krank+1         ! the next rank value
           value_sv=value_
         endif
 
@@ -491,18 +491,18 @@ end subroutine rindexmerge_
       use m_realkinds,only : DP
       implicit none
 
-      integer,dimension(:),intent(in)    :: indx_i	! of the i-vec
-      integer,dimension(:),intent(in)    :: indx_j	! of the j-vec
-      real(DP),dimension(:),intent(in)    :: value	! of the full
+      integer,dimension(:),intent(in)    :: indx_i      ! of the i-vec
+      integer,dimension(:),intent(in)    :: indx_j      ! of the j-vec
+      real(DP),dimension(:),intent(in)    :: value      ! of the full
 
-      integer,dimension(:),intent(inout) :: krank_i	! rank of i-vec
-      integer,dimension(:),intent(inout) :: krank_j	! rank of j-vec
+      integer,dimension(:),intent(inout) :: krank_i     ! rank of i-vec
+      integer,dimension(:),intent(inout) :: krank_j     ! rank of j-vec
 
       logical,optional,intent(in) :: descend
 
 ! !REVISION HISTORY:
-! 	13Mar00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       13Mar00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::dindexmerge_'
@@ -522,20 +522,20 @@ end subroutine rindexmerge_
 
   i=1
   j=1
-  krank=0		! a preset rank value
+  krank=0               ! a preset rank value
   value_sv=0
 
   do
         geti=j>nj
-        if(geti) then		! .eqv. j>nj
-          if(i>ni) exit		! i>ni
-	  li=indx_i(i)
+        if(geti) then           ! .eqv. j>nj
+          if(i>ni) exit         ! i>ni
+          li=indx_i(i)
           value_ = value(li)
-        else			! .eqv. j<=nj
-	  lj=indx_j(j)
+        else                    ! .eqv. j<=nj
+          lj=indx_j(j)
           geti = i<=ni
           if(geti) then         ! .eqv. i<=ni
-	    li=indx_i(i)
+            li=indx_i(i)
             value_ = value(li)
             geti = krank_i(i) <= krank_j(j)
             if(krank_i(i)==krank_j(j)) then
@@ -547,7 +547,7 @@ end subroutine rindexmerge_
         endif
 
         if(krank==0 .or. value_ /= value_sv) then
-          krank=krank+1		! the next rank value
+          krank=krank+1         ! the next rank value
           value_sv=value_
         endif
 
@@ -574,12 +574,12 @@ end subroutine dindexmerge_
 
     subroutine uniq_(krank_i,krank_j)
       implicit none
-      integer,dimension(:),intent(inout) :: krank_i	! rank of i-vec
-      integer,dimension(:),intent(inout) :: krank_j	! rank of j-vec
+      integer,dimension(:),intent(inout) :: krank_i     ! rank of i-vec
+      integer,dimension(:),intent(inout) :: krank_j     ! rank of j-vec
 
 ! !REVISION HISTORY:
-! 	13Mar00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       13Mar00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::uniq_'
@@ -597,22 +597,22 @@ end subroutine dindexmerge_
   krank=0
   do
         geti=j>nj
-        if(geti) then		! .eqv. j>nj
-          if(i>ni) exit		! i>ni
-        else			! .eqv. j<=nj
+        if(geti) then           ! .eqv. j>nj
+          if(i>ni) exit         ! i>ni
+        else                    ! .eqv. j<=nj
           geti = i<=ni
-          if(geti) geti = krank_i(i) <= krank_j(j)	! if(i<=ni) ..
+          if(geti) geti = krank_i(i) <= krank_j(j)      ! if(i<=ni) ..
         endif
 
-        krank=krank+1		! the next rank value
+        krank=krank+1           ! the next rank value
 
-	if(geti) then
-	  krank_i(i)=krank
-	  i=i+1
-	else
-	  krank_j(j)=krank
-	  j=j+1
-	endif
+        if(geti) then
+          krank_i(i)=krank
+          i=i+1
+        else
+          krank_j(j)=krank
+          j=j+1
+        endif
   end do
 
 end subroutine uniq_

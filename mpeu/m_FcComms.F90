@@ -30,7 +30,7 @@
 
       implicit none
 
-      private	! except
+      private   ! except
 
       public :: fc_gather_int  ! flow control version of mpi_gather for integer vectors
       public :: fc_gather_fp   ! flow control version of mpi_gather for FP vectors

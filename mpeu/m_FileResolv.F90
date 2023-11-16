@@ -93,7 +93,7 @@ CONTAINS
 !EOP
 !--------------------------------------------------------------------------
 
-   character(len=*), parameter	:: myname = 'MCT(MPEU)::FileResolv'
+   character(len=*), parameter  :: myname = 'MCT(MPEU)::FileResolv'
 
 #if SYSUNICOS || CPRCRAY
    integer, external  :: ishell
@@ -192,7 +192,7 @@ CONTAINS
             if ( present(stat) ) then ! return an error code
                stat = 2
                return
-	    else ! shut down
+            else ! shut down
                fname = basen
                call die ( myname, 'cannot execute: '//trim(cmd) )
             end if

@@ -15,53 +15,53 @@
     module m_die
       use m_mpif90, only : MP_perr
       implicit none
-      private	! except
+      private   ! except
 
-      public :: die		! signal an exception
-      public :: diex		! a special die() supporting macros
-      public :: perr,warn	! message(s) to stderr
-      public :: perr_die	! to be phased out
-      public :: MP_die		! a special die() for MPI errors
-      public :: MP_perr		! perr for MPI errors, from m_mpif90
-      public :: MP_perr_die	! a special die() for MPI errors
-      public :: assert_		! used by ASSERT() macro of assert.H
+      public :: die             ! signal an exception
+      public :: diex            ! a special die() supporting macros
+      public :: perr,warn       ! message(s) to stderr
+      public :: perr_die        ! to be phased out
+      public :: MP_die          ! a special die() for MPI errors
+      public :: MP_perr         ! perr for MPI errors, from m_mpif90
+      public :: MP_perr_die     ! a special die() for MPI errors
+      public :: assert_         ! used by ASSERT() macro of assert.H
 
-      interface die; module procedure	&
-	die0_,	& ! die(where)
-	die1_,	& ! die(where,message)
-	die2_,	& ! die(where,proc,ier)
-	die4_	  ! die(where,mesg1,ival1,mesg2,ival2)
+      interface die; module procedure   &
+        die0_,  & ! die(where)
+        die1_,  & ! die(where,message)
+        die2_,  & ! die(where,proc,ier)
+        die4_     ! die(where,mesg1,ival1,mesg2,ival2)
       end interface
 
-      interface diex; module procedure	&
-	diex_	  ! diex(where,filename,lineno)
+      interface diex; module procedure  &
+        diex_     ! diex(where,filename,lineno)
       end interface
 
-      interface perr; module procedure	&
-	perr1_,	& ! perr(where,message)
-	perr2_,	& ! perr(where,proc,ier)
-	perr4_	  ! perr(where,mesg1,ival1,mesg2,ival2)
+      interface perr; module procedure  &
+        perr1_, & ! perr(where,message)
+        perr2_, & ! perr(where,proc,ier)
+        perr4_    ! perr(where,mesg1,ival1,mesg2,ival2)
       end interface
-      interface warn; module procedure	&
-	perr1_,	& ! perr(where,message)
-	perr2_,	& ! perr(where,proc,ier)
-	perr4_	  ! perr(where,mesg1,ival1,mesg2,ival2)
-      end interface
-
-      interface perr_die; module procedure	&
-	die2_	  ! perr_die(where,proc,ier)
+      interface warn; module procedure  &
+        perr1_, & ! perr(where,message)
+        perr2_, & ! perr(where,proc,ier)
+        perr4_    ! perr(where,mesg1,ival1,mesg2,ival2)
       end interface
 
-      interface MP_die; module procedure	&
-	MPdie2_	  ! MP_die(where,proc,ier)
+      interface perr_die; module procedure      &
+        die2_     ! perr_die(where,proc,ier)
       end interface
-      interface MP_perr_die; module procedure	&
-	MPdie2_	  ! MP_die(where,proc,ier)
+
+      interface MP_die; module procedure        &
+        MPdie2_   ! MP_die(where,proc,ier)
+      end interface
+      interface MP_perr_die; module procedure   &
+        MPdie2_   ! MP_die(where,proc,ier)
       end interface
 
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname='MCT(MPEU)::m_die'
@@ -85,7 +85,7 @@ contains
       character(len=*),intent(in) :: where
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::die0_'
@@ -117,7 +117,7 @@ end subroutine die0_
       character(len=*),intent(in) :: message
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::die1_'
@@ -152,7 +152,7 @@ end subroutine die1_
       integer,intent(in) :: ier
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::die2_'
@@ -189,7 +189,7 @@ end subroutine die2_
       integer,intent(in) :: ival2
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::die4_'
@@ -224,7 +224,7 @@ end subroutine die4_
       integer,intent(in) :: line
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::diex_'
@@ -253,7 +253,7 @@ end subroutine diex_
       character(len=*),intent(in) :: message
 
 ! !REVISION HISTORY:
-! 	27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::perr1_'
@@ -280,7 +280,7 @@ end subroutine perr1_
       integer,intent(in) :: ier
 
 ! !REVISION HISTORY:
-! 	27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::perr2_'
@@ -289,8 +289,8 @@ end subroutine perr1_
 
   cer='*******'
   write(cer,'(i16)',iostat=ios) ier
-  write(stderr,'(5a)') where,': ',	&
-	proc,' error, stat =',trim(adjustl(cer))
+  write(stderr,'(5a)') where,': ',      &
+        proc,' error, stat =',trim(adjustl(cer))
 
 end subroutine perr2_
 
@@ -314,7 +314,7 @@ end subroutine perr2_
       integer,intent(in) :: ival2
 
 ! !REVISION HISTORY:
-! 	27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::perr4_'
@@ -326,9 +326,9 @@ end subroutine perr2_
   write(cval1,'(i16)',iostat=ios) ival1
   write(cval2,'(i16)',iostat=ios) ival2
 
-  write(stderr,'(10a)') where,': error, ',	&
-	mesg1,'=',trim(adjustl(cval1)),', ',	&
-	mesg2,'=',trim(adjustl(cval2)),'.'
+  write(stderr,'(10a)') where,': error, ',      &
+        mesg1,'=',trim(adjustl(cval1)),', ',    &
+        mesg2,'=',trim(adjustl(cval2)),'.'
 
 end subroutine perr4_
 
@@ -350,7 +350,7 @@ end subroutine perr4_
       integer,intent(in) :: ier
 
 ! !REVISION HISTORY:
-! 	27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       27Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::MPdie2_'
@@ -374,18 +374,18 @@ end subroutine MPdie2_
       use m_flow,only : flow_flush
       use m_dropdead,only : ddie => die
       implicit none
-      Character(Len=*), Intent(In) :: str	! a message
-      Character(Len=*), Intent(In) :: file	! a filename
-      Integer, Intent(In) :: line		! a line number
+      Character(Len=*), Intent(In) :: str       ! a message
+      Character(Len=*), Intent(In) :: file      ! a filename
+      Integer, Intent(In) :: line               ! a line number
 
 ! !REVISION HISTORY:
-! 	25Aug00	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- modified
-!		- included into m_die for easier module management
-!	before	- Tom Clune
-!		- Created for MPI PSAS implementation as a separate
-!		  module
-! 	19Jan01	- J. Larson <larson@mcs.anl.gov> - removed nested
+!       25Aug00 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - modified
+!               - included into m_die for easier module management
+!       before  - Tom Clune
+!               - Created for MPI PSAS implementation as a separate
+!                 module
+!       19Jan01 - J. Larson <larson@mcs.anl.gov> - removed nested
 !                 single/double/single quotes in the second argument
 !                 to the call to perr1_().  This was done for the pgf90
 !                 port.

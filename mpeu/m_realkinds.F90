@@ -14,14 +14,14 @@
 
     module m_realkinds
       implicit none
-      private	! except
+      private   ! except
 
-      public :: kind_r4		! real*4
-      public :: kind_r8		! real*8
-      public :: kind_r		! default real
-      public :: SP		! default REAL
-      public :: DP		! default DOUBLE_PRECISION
-      public :: FP		! general floating point precision
+      public :: kind_r4         ! real*4
+      public :: kind_r8         ! real*8
+      public :: kind_r          ! default real
+      public :: SP              ! default REAL
+      public :: DP              ! default DOUBLE_PRECISION
+      public :: FP              ! general floating point precision
 
       real*4,parameter :: mpeuR4=1.
       real*8,parameter :: mpeuR8=1.
@@ -43,8 +43,8 @@
       integer,parameter :: kind_r =kind(mpeuR )
 
 ! !REVISION HISTORY:
-! 	19Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
-! 	23Jan03 - R. Jacob <jacob@mcs.anl.gov> - add FP
+!       19Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       23Jan03 - R. Jacob <jacob@mcs.anl.gov> - add FP
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname='MCT(MPEU)::m_realkinds'

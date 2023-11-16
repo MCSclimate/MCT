@@ -15,16 +15,16 @@
     module m_mpout
       use m_stdio, only : stdout,LEN_FILENAME
       implicit none
-      private	! except
+      private   ! except
 
-      public :: mpout	! The file handle as a Fortran logical unit
+      public :: mpout   ! The file handle as a Fortran logical unit
 
-      public :: mpout_open	! open the multiple output streams
-      public :: mpout_close	! close the multiple output streams
-      public :: mpout_sync	! sync. the multiple output streams
-      public :: mpout_flush	! flush the multople output streams
-      public :: mpout_ison	! verify if mpout is proper defined
-      public :: mpout_log	! write a message to mpout
+      public :: mpout_open      ! open the multiple output streams
+      public :: mpout_close     ! close the multiple output streams
+      public :: mpout_sync      ! sync. the multiple output streams
+      public :: mpout_flush     ! flush the multople output streams
+      public :: mpout_ison      ! verify if mpout is proper defined
+      public :: mpout_log       ! write a message to mpout
 
       interface mpout_open;  module procedure open_;  end interface
       interface mpout_close; module procedure close_; end interface
@@ -37,27 +37,27 @@
       end interface
 
 ! !REVISION HISTORY:
-! 	25Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
-!	28Sep99 - Jing Guo <guo@thunder>
-!		- Added additional calls to support the "Violet" system
-!		  development.
+!       25Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       28Sep99 - Jing Guo <guo@thunder>
+!               - Added additional calls to support the "Violet" system
+!                 development.
 !
 ! !DESIGN ISSUES:
 ! \begin{itemize}
 !
-! \item	It might be considered useful to implement this module to be
-!	applicable to a given {\sl communicator}.   The argument
-!	taken now is to only have one multiple output stream handle
-!	per excution.  This is consistent with \verb"stdout" in the
-!	traditional sense. (Jing Guo, 25Feb98)
+! \item It might be considered useful to implement this module to be
+!       applicable to a given {\sl communicator}.   The argument
+!       taken now is to only have one multiple output stream handle
+!       per excution.  This is consistent with \verb"stdout" in the
+!       traditional sense. (Jing Guo, 25Feb98)
 !
 ! \item \verb"mpout_log()" is implemented in a way producing output
-!	only if \verb"mpout_ison()" (being \verb".true.").  The reason
-!	of not implementing a default output such as \verb"stdout", is
-!	hoping to provent too many unexpected output when the system is
-!	switched to a multiple PE system.  The design principle for
-!	this module is that \verb"mpout" is basically {\sl not} the same
-!	module as \verb"stdout". (Jing Guo, 28Sep99)
+!       only if \verb"mpout_ison()" (being \verb".true.").  The reason
+!       of not implementing a default output such as \verb"stdout", is
+!       hoping to provent too many unexpected output when the system is
+!       switched to a multiple PE system.  The design principle for
+!       this module is that \verb"mpout" is basically {\sl not} the same
+!       module as \verb"stdout". (Jing Guo, 28Sep99)
 !
 ! \end{itemize}
 !EOP
@@ -70,7 +70,7 @@
   integer,save :: mpout=stdout
   logical,save :: mpout_set=.false.
   character(len=LEN_FILENAME-4),save :: upfix=def_pfix
-  integer,parameter :: mpout_MASK=3	! every four PEs
+  integer,parameter :: mpout_MASK=3     ! every four PEs
 
 contains
 
@@ -100,14 +100,14 @@ contains
 !
 !   Examples of using mpout_MASK or mask:
 !
-!	If the mask has all "1" in every bit, there will be no output
+!       If the mask has all "1" in every bit, there will be no output
 !   on every PE, except the PE of rank 0.
 !
-!	If the mask is 3 or "11"b, any PE of rank with any "dirty" bit
+!       If the mask is 3 or "11"b, any PE of rank with any "dirty" bit
 !   in its rank value will not have output.
 !
 ! !REVISION HISTORY:
-! 	25Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       25Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::open_'
@@ -117,17 +117,17 @@ contains
   integer :: ier
   integer :: umask
 
-	! Set the filename prefix
+        ! Set the filename prefix
 
   upfix=def_pfix
   if(present(pfix)) upfix=pfix
 
-	! Set the mask of the PEs with mpout
+        ! Set the mask of the PEs with mpout
 
   umask=mpout_MASK
   if(present(mask)) umask=mask
 
-	! If a check is not in place, sent the outputs to stdout
+        ! If a check is not in place, sent the outputs to stdout
 
   mpout=stdout
   mpout_set=.false.
@@ -146,8 +146,8 @@ contains
     write(sfix,'(a,z3.3)') '.',irank
     call opntext(mpout,trim(upfix)//sfix,'unknown',ier)
     if(ier /= 0) then
-      write(stderr,'(4a,i4)') myname_,	&
-	': opntext("',trim(upfix)//sfix,'") error, ier =',ier
+      write(stderr,'(4a,i4)') myname_,  &
+        ': opntext("',trim(upfix)//sfix,'") error, ier =',ier
       call die(myname_)
     endif
 
@@ -177,7 +177,7 @@ end subroutine open_
       implicit none
 
 ! !REVISION HISTORY:
-! 	25Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       25Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::close_'
@@ -192,8 +192,8 @@ end subroutine open_
 
     call clstext(mpout,ier)
     if(ier /= 0) then
-      write(stderr,'(2a,i3.3,a,i4)') myname_,	&
-	': clstext("',mpout,'") error, ier =',ier
+      write(stderr,'(2a,i3.3,a,i4)') myname_,   &
+        ': clstext("',mpout,'") error, ier =',ier
       call die(myname_)
     endif
     mpout=stdout
@@ -222,18 +222,18 @@ end subroutine close_
       character(len=*),intent(in) :: tag
 
 ! !REVISION HISTORY:
-! 	25Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       25Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !
 ! !DESIGN ISSUES:
 ! \begin{itemize}
 !
-! \item	Should the variable \verb"tag" be implemented as an optional
-!	argument?  Because the current implementation does not require
-!	actual synchronization between all threads of the multiple
-!	output streams, forcing the user to supply a unique \verb"tag"
-!	would make the final multi-stream merging verifiable.  However,
-!	since the \verb"tag"s have not been forced to be unique, the
-!	synchronization operations are still symbolic.
+! \item Should the variable \verb"tag" be implemented as an optional
+!       argument?  Because the current implementation does not require
+!       actual synchronization between all threads of the multiple
+!       output streams, forcing the user to supply a unique \verb"tag"
+!       would make the final multi-stream merging verifiable.  However,
+!       since the \verb"tag"s have not been forced to be unique, the
+!       synchronization operations are still symbolic.
 !
 ! \{itemize}
 !EOP
@@ -264,7 +264,7 @@ end subroutine sync_
       implicit none
 
 ! !REVISION HISTORY:
-! 	27Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       27Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::flush_'
@@ -289,8 +289,8 @@ end subroutine flush_
       logical :: ison_
 
 ! !REVISION HISTORY:
-! 	14Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
+!       14Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::ison_'
@@ -313,8 +313,8 @@ end function ison_
       character(len=*),intent(in) :: message
 
 ! !REVISION HISTORY:
-! 	07Jan02	- R. Jacob (jacob@mcs.anl.gov)
-!		- based on log2_.
+!       07Jan02 - R. Jacob (jacob@mcs.anl.gov)
+!               - based on log2_.
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::log1_'
@@ -338,9 +338,9 @@ end subroutine log1_
       character(len=*),intent(in) :: message
 
 ! !REVISION HISTORY:
-! 	14Sep99	- Jing Guo <guo@dao.gsfc.nasa.gov>
-!		- initial prototype/prolog/code
-! 	07Jan02	- R. Jacob (jacob@mcs.anl.gov)
+!       14Sep99 - Jing Guo <guo@dao.gsfc.nasa.gov>
+!               - initial prototype/prolog/code
+!       07Jan02 - R. Jacob (jacob@mcs.anl.gov)
 !               - change name to log2_
 !EOP ___________________________________________________________________
 

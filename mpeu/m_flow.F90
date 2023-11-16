@@ -14,7 +14,7 @@
 
     module m_flow
       implicit none
-      private	! except
+      private   ! except
 
       public :: flow_ci
       public :: flow_co
@@ -27,7 +27,7 @@
       interface flow_reset; module procedure reset_; end interface
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname='MCT(MPEU)::m_flow'
@@ -60,13 +60,13 @@ contains
       character(len=*),intent(in) :: name
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::ci_'
 
-	! Push in an entry in to a circulated list storage to save
-	! only the last MX_TNAME entries.
+        ! Push in an entry in to a circulated list storage to save
+        ! only the last MX_TNAME entries.
 
   iname=iname+1
   tname(modulo(iname,MX_TNAME)) = name
@@ -90,7 +90,7 @@ end subroutine ci_
       character(len=*),intent(in) :: name
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::co_'
@@ -109,7 +109,7 @@ end subroutine ci_
     endif
   endif
 
-	! Pop out an entry
+        ! Pop out an entry
 
   tname(modulo(iname,MX_TNAME))=' '
   iname=iname-1
@@ -131,13 +131,13 @@ end subroutine co_
       integer,intent(in) :: lu
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::flush_'
   integer :: i
 
-	! Nothing to show
+        ! Nothing to show
 
   if(mxdep == 0 .and. iname == -1) return
 
@@ -146,7 +146,7 @@ end subroutine co_
   if(.not.balanced .or. iname < -1) then
 
     write(lu,'(4a)',advance='no') &
-	', ci/co unbalanced at ',trim(ciname),'/',trim(coname)
+        ', ci/co unbalanced at ',trim(ciname),'/',trim(coname)
 
     write(lu,'(a,i4)') ', level =',iname+1
     return
@@ -178,7 +178,7 @@ end subroutine flush_
       implicit none
 
 ! !REVISION HISTORY:
-! 	26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       26Feb98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP
 !_______________________________________________________________________
   character(len=*),parameter :: myname_=myname//'::reset_'

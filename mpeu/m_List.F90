@@ -54,18 +54,18 @@
 
       implicit none
 
-      private	! except
+      private   ! except
 
 ! !PUBLIC TYPES:
 
-      public :: List		! The class data structure
+      public :: List            ! The class data structure
 
       Type List
 #ifdef SEQUENCE
      sequence
 #endif
-	 character(len=1),dimension(:),pointer :: bf
-	 integer,       dimension(:,:),pointer :: lc
+         character(len=1),dimension(:),pointer :: bf
+         integer,       dimension(:,:),pointer :: lc
       End Type List
 
 ! !PUBLIC MEMBER FUNCTIONS:
@@ -92,23 +92,23 @@
       public :: recv
       public :: GetSharedListIndices
 
-  interface init ; module procedure	&
-      init_,		&
-      initStr_,	&
+  interface init ; module procedure     &
+      init_,            &
+      initStr_, &
       initstr1_
   end interface
   interface clean; module procedure clean_; end interface
   interface nullify; module procedure nullify_; end interface
-  interface index; module procedure	&
+  interface index; module procedure     &
       index_,     &
       indexStr_
   end interface
   interface get_indices; module procedure get_indices_; end interface
   interface test_indices; module procedure test_indices_; end interface
   interface nitem; module procedure nitem_; end interface
-  interface get  ; module procedure	&
-      get_,		&
-      getall_,	&
+  interface get  ; module procedure     &
+      get_,             &
+      getall_,  &
       getrange_
   end interface
   interface identical; module procedure identical_; end interface
@@ -200,7 +200,7 @@
 
 ! !OUTPUT PARAMETERS:
 !
-      type(List),intent(out)	  :: aList  ! an indexed string values
+      type(List),intent(out)      :: aList  ! an indexed string values
 
 
 ! !REVISION HISTORY:
@@ -211,7 +211,7 @@
   character(len=1) :: c
   integer :: ib,ie,id,lb,le,ni,i,ier
 
-	! Pass 1, getting the sizes
+        ! Pass 1, getting the sizes
   le=0
   ni=0
   ib=1
@@ -221,18 +221,18 @@
     c=Values(i:i)
     select case(c)
     case(' ')
-      if(ib==i) ib=i+1	! moving ib up, starting from the next
+      if(ib==i) ib=i+1  ! moving ib up, starting from the next
     case(':')
       if(ib<=ie) then
-	ni=ni+1
-	id=1		! mark a ':'
+        ni=ni+1
+        id=1            ! mark a ':'
       endif
-      ib=i+1		! moving ib up, starting from the next
+      ib=i+1            ! moving ib up, starting from the next
     case default
       ie=i
-      if(id==1) then	! count an earlier marked ':'
-	id=0
-	le=le+1
+      if(id==1) then    ! count an earlier marked ':'
+        id=0
+        le=le+1
       endif
       le=le+1
     end select
@@ -246,12 +246,12 @@
   allocate(aList%bf(le),aList%lc(0:1,ni),stat=ier)
   if(ier /= 0) call die(myname_,'allocate()',ier)
 
-	if(mall_ison()) then
-	  call mall_mci(aList%bf,myname)
-	  call mall_mci(aList%lc,myname)
-	endif
+        if(mall_ison()) then
+          call mall_mci(aList%bf,myname)
+          call mall_mci(aList%lc,myname)
+        endif
 
-	! Pass 2, copy the value and assign the pointers
+        ! Pass 2, copy the value and assign the pointers
   lb=1
   le=0
   ni=0
@@ -263,21 +263,21 @@
 
     select case(c)
     case(' ')
-      if(ib==i) ib=i+1	! moving ib up, starting from the next
+      if(ib==i) ib=i+1  ! moving ib up, starting from the next
     case(':')
       if(ib<=ie) then
-	ni=ni+1
-	aList%lc(0:1,ni)=(/lb,le/)
-	id=1		! mark a ':'
+        ni=ni+1
+        aList%lc(0:1,ni)=(/lb,le/)
+        id=1            ! mark a ':'
       endif
 
-      ib=i+1		! moving ib up, starting from the next
-      lb=le+2		! skip to the next non-':' and non-','
+      ib=i+1            ! moving ib up, starting from the next
+      lb=le+2           ! skip to the next non-':' and non-','
     case default
       ie=i
-      if(id==1) then	! copy an earlier marked ':'
-	id=0
-	le=le+1
+      if(id==1) then    ! copy an earlier marked ':'
+        id=0
+        le=le+1
         aList%bf(le)=':'
       endif
 
@@ -317,11 +317,11 @@
 
 ! !INPUT PARAMETERS:
 !
-      type(String),intent(in)	  :: pstr
+      type(String),intent(in)     :: pstr
 
 ! !OUTPUT PARAMETERS:
 !
-      type(List),intent(out)	  :: aList  ! an indexed string values
+      type(List),intent(out)      :: aList  ! an indexed string values
 
 
 ! !REVISION HISTORY:
@@ -371,11 +371,11 @@
 
 ! !INPUT PARAMETERS:
 !
-      type(String),dimension(:),intent(in)	  :: strs
+      type(String),dimension(:),intent(in)        :: strs
 
 ! !OUTPUT PARAMETERS:
 !
-      type(List),intent(out)	  :: aList  ! an indexed string values
+      type(List),intent(out)      :: aList  ! an indexed string values
 
 
 ! !REVISION HISTORY:
@@ -392,10 +392,10 @@
   do i=1,n
     le=le+len(strs(i))
   end do
-  le=le+n-1	! for n-1 ":"s
+  le=le+n-1     ! for n-1 ":"s
 
-	allocate(ch1(le),stat=ier)
-		if(ier/=0) call die(myname_,'allocate()',ier)
+        allocate(ch1(le),stat=ier)
+                if(ier/=0) call die(myname_,'allocate()',ier)
 
   le=0
   do i=1,n
@@ -411,8 +411,8 @@
 
   call init_(aList,toChar(ch1))
 
-	deallocate(ch1,stat=ier)
-		if(ier/=0) call die(myname_,'deallocate()',ier)
+        deallocate(ch1,stat=ier)
+                if(ier/=0) call die(myname_,'deallocate()',ier)
 
  end subroutine initStr1_
 
@@ -467,9 +467,9 @@
      deallocate(aList%bf, aList%lc, stat=ier)
 
      if(present(stat)) then
-	stat=ier
+        stat=ier
      else
-	if(ier /= 0) call warn(myname_,'deallocate(aList%...)',ier)
+        if(ier /= 0) call warn(myname_,'deallocate(aList%...)',ier)
      endif
 
   endif
@@ -598,8 +598,8 @@
 
 ! !INPUT PARAMETERS:
 !
-      type(List),      intent(in) :: aList	! a List of names
-      character(len=*),intent(in) :: item	! a given item name
+      type(List),      intent(in) :: aList      ! a List of names
+      character(len=*),intent(in) :: item       ! a given item name
 
 ! !REVISION HISTORY:
 ! 22Apr98 - Jing Guo <guo@thunder> - initial prototype/prolog/code
@@ -619,7 +619,7 @@
 
        ! Now, go through the aList one item at a time
 
-  ITEM_COMPARE: do i=1,size(aList%lc,2)		! == nitem_(aList)
+  ITEM_COMPARE: do i=1,size(aList%lc,2)         ! == nitem_(aList)
 
        ! Compute some stats for the current item in aList:
 
@@ -641,11 +641,11 @@
        ! at a time:
 
        CHAR_COMPARE: do j=1,length
-	  if(aList%bf(lb+j-1) == item(j:j)) then ! a match for this character
-	     nMatch = nMatch + 1
-	  else
-	     EXIT
-	  endif
+          if(aList%bf(lb+j-1) == item(j:j)) then ! a match for this character
+             nMatch = nMatch + 1
+          else
+             EXIT
+          endif
        end do CHAR_COMPARE
 
        ! Check the number of leading characters in the current item in aList
@@ -654,8 +654,8 @@
        ! the next item in aList.
 
        if(nMatch == itemLength) then
-	  index_ = i
-	  EXIT
+          index_ = i
+          EXIT
        endif
 
 ! Old code that does not work with V. of the IBM
@@ -696,7 +696,7 @@
 
 ! !INPUT PARAMETERS:
 !
-      type(List),      intent(in) :: aList	! a List of names
+      type(List),      intent(in) :: aList      ! a List of names
       type(String),    intent(in) :: itemStr
 
 ! !REVISION HISTORY:
@@ -768,7 +768,7 @@
 !
 ! !INTERFACE:
 
- subroutine copy_(yL,xL)	! yL=xL
+ subroutine copy_(yL,xL)        ! yL=xL
 
 ! !USES:
 !
@@ -814,8 +814,8 @@
 
   else
      if(size(xL%lc,2) < 0) then ! serious error...
-	write(stderr,'(2a,i8)') myname_, &
-	     ':: FATAL size(xL%lc,2) = ',size(xL%lc,2)
+        write(stderr,'(2a,i8)') myname_, &
+             ':: FATAL size(xL%lc,2) = ',size(xL%lc,2)
      endif
        ! Initialize yL as a blank list
      call init_(yL, ' ')
@@ -1130,7 +1130,7 @@
 
   if(.not. allocated_(aList)) then
      write(stderr,'(2a)') myname_, &
-	  ':: FATAL--List argument aList is not initialized.'
+          ':: FATAL--List argument aList is not initialized.'
      call die(myname_)
   endif
 
@@ -1138,8 +1138,8 @@
 
   if(i1 > i2) then
      write(stderr,'(2a,2(a,i8))') myname_, &
-	  ':: FATAL.  Starting/Ending item ranks are out of order; ', &
-	  'i2 must be greater or equal to i1.  i1 =',i1,' i2 = ',i2
+          ':: FATAL.  Starting/Ending item ranks are out of order; ', &
+          'i2 must be greater or equal to i1.  i1 =',i1,' i2 = ',i2
      call die(myname_)
   endif
 
@@ -1149,15 +1149,15 @@
 
   if(i1 > ni) then
      write(stderr,'(2a,2(a,i8))') myname_, &
-	  ':: FATAL--i1 is greater than the number of items in ', &
-	  'The List argument aList: i1 =',i1,' ni = ',ni
+          ':: FATAL--i1 is greater than the number of items in ', &
+          'The List argument aList: i1 =',i1,' ni = ',ni
      call die(myname_)
   endif
 
   if(i2 > ni) then
      write(stderr,'(2a,2(a,i8))') myname_, &
-	  ':: FATAL--i2 is greater than the number of items in ', &
-	  'The List argument aList: i2 =',i2,' ni = ',ni
+          ':: FATAL--i2 is greater than the number of items in ', &
+          'The List argument aList: i2 =',i2,' ni = ',ni
      call die(myname_)
   endif
 
@@ -1222,17 +1222,17 @@
 
      COMPARE_LOOP:  do n=1,NumItems
 
-	call get_(DummStr, n, yL)  ! retrieve nth tag as a String
+        call get_(DummStr, n, yL)  ! retrieve nth tag as a String
 
-	if( indexStr_(xL, Dummstr) /= n ) then ! a discrepency spotted.
-	   call String_clean(Dummstr)
-	   myIdentical = .FALSE.
-	   EXIT
-	else
-	   call String_clean(Dummstr)
-	endif
+        if( indexStr_(xL, Dummstr) /= n ) then ! a discrepency spotted.
+           call String_clean(Dummstr)
+           myIdentical = .FALSE.
+           EXIT
+        else
+           call String_clean(Dummstr)
+        endif
 
-	   myIdentical = .TRUE.   ! we survived the whole test process.
+           myIdentical = .TRUE.   ! we survived the whole test process.
 
      end do COMPARE_LOOP
 
@@ -1290,7 +1290,7 @@
 
 ! !INPUT PARAMETERS:
 !
-      type(List),            intent(in)	:: aList  ! an indexed string values
+      type(List),            intent(in) :: aList  ! an indexed string values
       character(len=*),      intent(in) :: Values ! ":" delimited names
 
 ! !OUTPUT PARAMETERS:
@@ -1318,16 +1318,16 @@
 
   if(n > nitem_(aList)) then
      write(stderr,'(5a,2(i8,a))') myname_, &
-	  ':: FATAL--more items in argument Values than aList!  Input string', &
-	  'Values = "',Values,'" has ',n,' items.  aList has ',nitem_(aList),  &
-	  ' items.'
+          ':: FATAL--more items in argument Values than aList!  Input string', &
+          'Values = "',Values,'" has ',n,' items.  aList has ',nitem_(aList),  &
+          ' items.'
      call die(myname_)
   endif
   allocate(indices(n), stat=ierr)
   if(ierr /= 0) then
      write(stderr,'(2a,i8,a)') myname_, &
-	  ':: FATAL--allocate(indices(...) failed with stat=',ierr,&
-	  '.  On entry to this routine, this pointer must be NULL.'
+          ':: FATAL--allocate(indices(...) failed with stat=',ierr,&
+          '.  On entry to this routine, this pointer must be NULL.'
      call die(myname_)
   endif
 
@@ -1338,7 +1338,7 @@
     indices(i) = indexStr_(aList,tStr)
     if(indices(i) == 0) then ! ith item not present in aList!
        write(stderr,'(4a)') myname_, &
-	    ':: FATAL--item "',String_toChar(tStr),'" not found.'
+            ':: FATAL--item "',String_toChar(tStr),'" not found.'
        call die(myname_)
     endif
     call String_clean(tStr)
@@ -1406,7 +1406,7 @@
 
 ! !INPUT PARAMETERS:
 !
-      type(List),            intent(in)	:: aList  ! an indexed string values
+      type(List),            intent(in) :: aList  ! an indexed string values
       character(len=*),      intent(in) :: Values ! ":" delimited names
 
 ! !OUTPUT PARAMETERS:
@@ -1433,8 +1433,8 @@
   allocate(indices(n), stat=ierr)
   if(ierr /= 0) then
      write(stderr,'(2a,i8,a)') myname_, &
-	  ':: FATAL--allocate(indices(...) failed with stat=',ierr,&
-	  '.  On entry to this routine, this pointer must be NULL.'
+          ':: FATAL--allocate(indices(...) failed with stat=',ierr,&
+          '.  On entry to this routine, this pointer must be NULL.'
      call die(myname_)
   endif
 
@@ -1581,14 +1581,14 @@
   if((nitem_(iList1) == 0) .or. (nitem_(iList2) == 0)) then
 
      if((nitem_(iList1) == 0) .and. (nitem_(iList2) == 0)) then
-	call init_(oList,'')
+        call init_(oList,'')
      else
-	if((nitem_(iList1) == 0) .and. (nitem_(iList2) > 0)) then
-	   call copy_(oList, iList2)
-	endif
-	if((nitem_(iList1) > 0) .and. (nitem_(iList2) == 0)) then
-	   call copy_(oList,iList1)
-	endif
+        if((nitem_(iList1) == 0) .and. (nitem_(iList2) > 0)) then
+           call copy_(oList, iList2)
+        endif
+        if((nitem_(iList1) > 0) .and. (nitem_(iList2) == 0)) then
+           call copy_(oList,iList1)
+        endif
      endif
 
   else ! both lists are non-null
@@ -1603,22 +1603,22 @@
      CatBuffLength =  Length1 + Length2 + 1
      allocate(CatBuff(CatBuffLength), stat=ierr)
      if(ierr /= 0) then
-	write(stderr,'(2a,i8)') myname_, &
-	     ':: FATAL--allocate(CatBuff(...) failed.  ierr=',ierr
-	call die(myname_)
+        write(stderr,'(2a,i8)') myname_, &
+             ':: FATAL--allocate(CatBuff(...) failed.  ierr=',ierr
+        call die(myname_)
      endif
 
        ! Step three:  concatenate CHARACTERs with the colon separator
        ! into CatBuff(:)
 
      do i=1,Length1
-	CatBuff(i) = iList1%bf(i)
+        CatBuff(i) = iList1%bf(i)
      end do
 
      CatBuff(Length1 + 1) = ':'
 
      do i=1,Length2
-	CatBuff(Length1 + 1 + i) = iList2%bf(i)
+        CatBuff(Length1 + 1 + i) = iList2%bf(i)
      end do
 
        ! Step four:  initialize a String CatString:
@@ -1635,9 +1635,9 @@
 
      deallocate(CatBuff,stat=ierr)
      if(ierr /= 0) then
-	write(stderr,'(2a,i8)') myname_, &
-	     ':: FATAL--deallocate(CatBuff) failed.  ierr=',ierr
-	call die(myname_)
+        write(stderr,'(2a,i8)') myname_, &
+             ':: FATAL--deallocate(CatBuff) failed.  ierr=',ierr
+        call die(myname_)
      endif
 
   endif
@@ -1724,8 +1724,8 @@
 
   if(myID == root) then
      if(CharBufferSize_(ioList) <= 0) then
-	call die(myname_, 'Attempting to broadcast an empty list!',&
-	     CharBufferSize_(ioList))
+        call die(myname_, 'Attempting to broadcast an empty list!',&
+             CharBufferSize_(ioList))
      endif
      call getall_(DummStr, ioList)
   endif
@@ -1832,7 +1832,7 @@
   if(ierr /= 0) then
      if(present(status)) then
         write(stderr,'(2a,i8)') myname_, &
-	     ':: MPI_SEND(length...) failed.  ierror=', ierr
+             ':: MPI_SEND(length...) failed.  ierror=', ierr
         status = ierr
         return
      else
@@ -1848,7 +1848,7 @@
   if(ierr /= 0) then
      if(present(status)) then
         write(stderr,'(2a,i8)') myname_, &
-	     ':: MPI_SEND(DummStr%c...) failed.  ierror=', ierr
+             ':: MPI_SEND(DummStr%c...) failed.  ierror=', ierr
         status = ierr
         return
      else
@@ -1929,7 +1929,7 @@
   if(ierr /= 0) then
      if(present(status)) then
         write(stderr,'(2a,i8)') myname_, &
-	     ':: MPI_RECV(length...) failed.  ierror=', ierr
+             ':: MPI_RECV(length...) failed.  ierror=', ierr
         status = ierr
         return
      else
@@ -1947,7 +1947,7 @@
   if(ierr /= 0) then
      if(present(status)) then
         write(stderr,'(2a,i8)') myname_, &
-	     ':: MPI_RECV(DummStr%c...) failed.  ierror=', ierr
+             ':: MPI_RECV(DummStr%c...) failed.  ierror=', ierr
         status = ierr
         return
      else

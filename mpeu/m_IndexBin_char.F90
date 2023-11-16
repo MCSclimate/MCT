@@ -13,17 +13,17 @@
 
     module m_IndexBin_char
       implicit none
-      private	! except
+      private   ! except
 
       public :: IndexBin
-      interface IndexBin; module procedure 	&
-	IndexBin0_,	&
-	IndexBin1_,	&
-	IndexBin1w_
+      interface IndexBin; module procedure      &
+        IndexBin0_,     &
+        IndexBin1_,     &
+        IndexBin1w_
       end interface
 
 ! !REVISION HISTORY:
-! 	17Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       17Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname='MCT(MPEU)::m_IndexBin_char'
@@ -51,9 +51,9 @@ contains
       integer,optional,intent(out) :: ln0
 
 ! !REVISION HISTORY:
-! 	16Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
-!	27Sep99 - Jing Guo <guo@thunder> - Fixed a bug pointed out by
-!					   Chris Redder
+!       16Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       27Sep99 - Jing Guo <guo@thunder> - Fixed a bug pointed out by
+!                                          Chris Redder
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::IndexBin0_'
@@ -62,24 +62,24 @@ contains
   integer :: ln(0:1),lc(0:1)
 !________________________________________
 
-	allocate(inew(n),stat=ier)
-		if(ier /= 0) then
-		  write(stderr,'(2a,i4)') myname_,	&
-			': allocate() error, stat =',ier
-		  call die(myname_)
-		endif
+        allocate(inew(n),stat=ier)
+                if(ier /= 0) then
+                  write(stderr,'(2a,i4)') myname_,      &
+                        ': allocate() error, stat =',ier
+                  call die(myname_)
+                endif
 !________________________________________
-		! Count numbers entries for the given key0
+                ! Count numbers entries for the given key0
 
-  lc(0)=1	! the location of values the same as key0
+  lc(0)=1       ! the location of values the same as key0
   ln(0)=0
   do i=1,n
     if(keys(i) == key0) ln(0)=ln(0)+1
   end do
 
-  lc(1)=ln(0)+1	! the location of values not the same as key0
+  lc(1)=ln(0)+1 ! the location of values not the same as key0
 !________________________________________
-		! Reset the counters
+                ! Reset the counters
   ln(0:1)=0
   do i=1,n
     ix=indx(i)
@@ -96,12 +96,12 @@ contains
   end do
 
 !________________________________________
-		! Sort out the old pointers according to the new order
+                ! Sort out the old pointers according to the new order
   indx(:)=inew(:)
   if(present(ln0)) ln0=ln(0)
 !________________________________________
 
-	  deallocate(inew)
+          deallocate(inew)
 
 end subroutine IndexBin0_
 
@@ -128,7 +128,7 @@ end subroutine IndexBin0_
       integer, dimension(:),intent(out)   :: lns ! sizes of the bins
 
 ! !REVISION HISTORY:
-! 	16Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       16Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::IndexBin1_'
@@ -141,12 +141,12 @@ end subroutine IndexBin0_
   if(nbin==0) return
 !________________________________________
 
-	allocate(ibin(n),inew(n),stat=ier)
-		if(ier /= 0) then
-		  write(stderr,'(2a,i4)') myname_,	&
-			': allocate() error, stat =',ier
-		  call die(myname_)
-		endif
+        allocate(ibin(n),inew(n),stat=ier)
+                if(ier /= 0) then
+                  write(stderr,'(2a,i4)') myname_,      &
+                        ': allocate() error, stat =',ier
+                  call die(myname_)
+                endif
 !________________________________________
 
   do ib=1,nbin
@@ -154,29 +154,29 @@ end subroutine IndexBin0_
     lcs(ib)=0
   end do
 !________________________________________
-		! Count numbers in every bin, and store the bin-ID for
-		! later use.
+                ! Count numbers in every bin, and store the bin-ID for
+                ! later use.
   do i=1,n
     ix=indx(i)
 
-    call search_(keys(ix),nbin,bins,ib)	! ib = 1:nbin; =0 if not found
+    call search_(keys(ix),nbin,bins,ib) ! ib = 1:nbin; =0 if not found
 
     ibin(i)=ib
     if(ib /= 0) lns(ib)=lns(ib)+1
   end do
 !________________________________________
-		! Count the locations of every bin.
+                ! Count the locations of every bin.
   lc0=1
   do ib=1,nbin
     lcs(ib)=lc0
     lc0=lc0+lns(ib)
   end do
 !________________________________________
-		! Reset the counters
+                ! Reset the counters
   ln0=0
   lns(1:nbin)=0
   do i=1,n
-    ib=ibin(i)	! the bin-index of keys(indx(i))
+    ib=ibin(i)  ! the bin-index of keys(indx(i))
     if(ib/=0) then
       ni=lcs(ib)+lns(ib)
       lns(ib)=lns(ib)+1
@@ -184,14 +184,14 @@ end subroutine IndexBin0_
       ni=lc0+ln0
       ln0=ln0+1
     endif
-    inew(ni)=indx(i)	! the current value is put in the new order
+    inew(ni)=indx(i)    ! the current value is put in the new order
   end do
 !________________________________________
-		! Sort out the old pointers according to the new order
+                ! Sort out the old pointers according to the new order
   indx(:)=inew(:)
 !________________________________________
 
-	  deallocate(ibin,inew)
+          deallocate(ibin,inew)
 
 contains
 subroutine search_(key,nbin,bins,ib)
@@ -233,7 +233,7 @@ end subroutine IndexBin1_
       character(len=*),dimension(:),intent(in)    :: bins ! values
 
 ! !REVISION HISTORY:
-! 	17Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
+!       17Feb99 - Jing Guo <guo@thunder> - initial prototype/prolog/code
 !EOP ___________________________________________________________________
 
   character(len=*),parameter :: myname_=myname//'::IndexBin1w_'

@@ -32,8 +32,8 @@
       public :: GenTraceBackString
 
       interface GenTraceBackString; module procedure &
-	 GenTraceBackString1, &
-	 GenTraceBackString2
+         GenTraceBackString1, &
+         GenTraceBackString2
       end interface
 
 ! !PUBLIC DATA MEMBERS:
@@ -112,7 +112,7 @@
   allocate(ScratchBuffer(ScratchBufferLength), stat=ierr)
   if(ierr /= 0) then
      write(stderr,'(2a,i8)') myname_, &
-	  ':: Allocate(ScratchBuffer...) failed.  ierr = ',ierr
+          ':: Allocate(ScratchBuffer...) failed.  ierr = ',ierr
      call die(myname_)
   endif
 
@@ -136,7 +136,7 @@
   deallocate(ScratchBuffer, stat=ierr)
   if(ierr /= 0) then
      write(stderr,'(2a,i8)') myname_, &
-	  ':: Deallocate(ScratchBuffer...) failed.  ierr = ',ierr
+          ':: Deallocate(ScratchBuffer...) failed.  ierr = ',ierr
      call die(myname_)
   endif
 
@@ -204,7 +204,7 @@
   allocate(ScratchBuffer(ScratchBufferLength), stat=ierr)
   if(ierr /= 0) then
      write(stderr,'(2a,i8)') myname_, &
-	  ':: Allocate(ScratchBuffer...) failed.  ierr = ',ierr
+          ':: Allocate(ScratchBuffer...) failed.  ierr = ',ierr
      call die(myname_)
   endif
 
@@ -231,7 +231,7 @@
   deallocate(ScratchBuffer, stat=ierr)
   if(ierr /= 0) then
      write(stderr,'(2a,i8)') myname_, &
-	  ':: Deallocate(ScratchBuffer...) failed.  ierr = ',ierr
+          ':: Deallocate(ScratchBuffer...) failed.  ierr = ',ierr
      call die(myname_)
   endif
 
