@@ -108,8 +108,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
-      use m_mpif90
+      use m_mpif90, only : MP_Type
       use m_die
 
       use m_List, only : List
@@ -160,7 +161,7 @@
      call die(myname_,"inAV has not been initialized")
   endif
 
-  call MPI_SEND(ListAssoc, 2, MP_LOGICAL, dest, TagBase, comm, ierr)
+  call MPI_SEND(ListAssoc, 2, MPI_LOGICAL, dest, TagBase, comm, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,':: MPI_SEND(ListAssoc...',ierr)
   endif
@@ -268,8 +269,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
-      use m_mpif90
+      use m_mpif90, only : MP_type
       use m_die
 
       use m_List, only : List
@@ -302,7 +304,7 @@
  logical :: ListAssoc(2)
  integer :: ierr
  integer :: AVlength
- integer :: MPstatus(MP_STATUS_SIZE)
+ integer :: MPstatus(MPI_STATUS_SIZE)
 
       ! Initialize status (if present)
 
@@ -316,7 +318,7 @@
        ! ListAssoc(1) = .TRUE. <==> associated(outAV%iList%bf)
        ! ListAssoc(2) = .TRUE. <==> associated(outAV%rList%bf)
 
-  call MPI_RECV(ListAssoc, 2, MP_LOGICAL, dest, TagBase, comm, &
+  call MPI_RECV(ListAssoc, 2, MPI_LOGICAL, dest, TagBase, comm, &
                 MPstatus, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,':: MPI_RECV(ListAssoc...',ierr)
@@ -425,9 +427,10 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_type
       use m_realkinds, only : FP
       use m_GlobalMap, only : GlobalMap
       use m_GlobalMap, only : GlobalMap_lsize => lsize
@@ -475,9 +478,9 @@
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm, myID, ier)
+  call MPI_comm_rank(comm, myID, ier)
   if(ier /= 0) then
-     call MP_perr_die(myname_,':: call MP_COMM_RANK()',ier)
+     call MP_perr_die(myname_,':: call MPI_COMM_RANK()',ier)
   endif
 
 	! Verify the input: a _scatterd_ vector
@@ -515,15 +518,15 @@
 
      if(myID == root) then
 
-        call fc_gatherv_int(iV%iAttr,niV*nIA,MP_INTEGER,		&
+        call fc_gatherv_int(iV%iAttr,niV*nIA,MPI_INTEGER,		&
              oV%iAttr,GMap%counts*nIA,GMap%displs*nIA,             &
-             MP_INTEGER,root,comm)
+             MPI_INTEGER,root,comm)
 
      else
 
-        call fc_gatherv_int(iV%iAttr,niV*nIA,MP_INTEGER,		&
+        call fc_gatherv_int(iV%iAttr,niV*nIA,MPI_INTEGER,		&
              nonRootAV%iAttr,GMap%counts*nIA,GMap%displs*nIA,      &
-             MP_INTEGER,root,comm)
+             MPI_INTEGER,root,comm)
 
      endif  ! if(myID == root)
 
@@ -600,10 +603,10 @@
 !
 ! !USES:
 !
+      use mpi
 ! Message-passing environment utilities (mpeu) modules:
       use m_stdio
       use m_die
-      use m_mpif90
       use m_realkinds, only: FP
 ! GlobalSegMap and associated services:
       use m_GlobalSegMap, only : GlobalSegMap
@@ -893,9 +896,10 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_Type, MP_perr
       use m_realkinds, only : FP
 
       use m_List, only : List
@@ -960,9 +964,9 @@
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm,myID,ier)
+  call MPI_comm_rank(comm,myID,ier)
   if(ier /= 0) then
-    call MP_perr_die(myname_,'MP_comm_rank()',ier)
+    call MP_perr_die(myname_,'MPI_comm_rank()',ier)
   endif
 
 	! Verify the input: a _gathered_ vector
@@ -1010,10 +1014,10 @@
 
         ! From the root, broadcast iList and rList
 
-  call MPI_BCAST(nIA,1,MP_INTEGER,root,comm,ier)
+  call MPI_BCAST(nIA,1,MPI_INTEGER,root,comm,ier)
   if(ier /= 0) call MP_perr(myname_,'MPI_BCAST(nIA)',ier)
 
-  call MPI_BCAST(nRA,1,MP_INTEGER,root,comm,ier)
+  call MPI_BCAST(nRA,1,MPI_INTEGER,root,comm,ier)
   if(ier /= 0) call MP_perr(myname_,'MPI_BCAST(nRA)',ier)
 
   if(nIA>0) call List_bcast(iList, root, comm)
@@ -1039,8 +1043,8 @@
      if(myID == root) then
 
         call MPI_scatterv(iV%iAttr,GMap%counts*nIA, &
-             GMap%displs*nIA,MP_INTEGER,oV%iAttr,   &
-             noV*nIA,MP_INTEGER,root,comm,ier )
+             GMap%displs*nIA,MPI_INTEGER,oV%iAttr,   &
+             noV*nIA,MPI_INTEGER,root,comm,ier )
         if(ier /= 0) then
            call MP_perr_die(myname_,'MPI_scatterv(iAttr) on root',ier)
         endif
@@ -1048,8 +1052,8 @@
      else
 
         call MPI_scatterv(nonRootAV%iAttr,GMap%counts*nIA, &
-             GMap%displs*nIA,MP_INTEGER,oV%iAttr,          &
-             noV*nIA,MP_INTEGER,root,comm,ier )
+             GMap%displs*nIA,MPI_INTEGER,oV%iAttr,          &
+             noV*nIA,MPI_INTEGER,root,comm,ier )
         if(ier /= 0) then
            call MP_perr_die(myname_,'MPI_scatterv(iAttr) off root',ier)
         endif
@@ -1148,9 +1152,9 @@
 !
 ! Environment utilities from mpeu:
 
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_List, only : List_nullify => nullify
 
@@ -1505,9 +1509,10 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_Type
       use m_String, only : String,bcast,char,String_clean
       use m_String, only : String_bcast => bcast
       use m_List, only : List_get => get
@@ -1554,9 +1559,9 @@
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm,myID,ier)
+  call MPI_comm_rank(comm,myID,ier)
   if(ier /= 0) then
-    call MP_perr_die(myname_,'MP_comm_rank()',ier)
+    call MP_perr_die(myname_,'MPI_comm_rank()',ier)
   endif
 
        ! Broadcaast to all PEs
@@ -1567,17 +1572,17 @@
      lsize = AttrVect_lsize(aV)
   endif
 
-  call MPI_bcast(nIA,1,MP_INTEGER,root,comm,ier)
+  call MPI_bcast(nIA,1,MPI_INTEGER,root,comm,ier)
   if(ier /= 0) then
     call MP_perr_die(myname_,'MPI_bcast(nIA)',ier)
   endif
 
-  call MPI_bcast(nRA,1,MP_INTEGER,root,comm,ier)
+  call MPI_bcast(nRA,1,MPI_INTEGER,root,comm,ier)
   if(ier /= 0) then
     call MP_perr_die(myname_,'MPI_bcast(nRA)',ier)
   endif
 
-  call MPI_bcast(lsize,1,MP_INTEGER,root,comm,ier)
+  call MPI_bcast(lsize,1,MPI_INTEGER,root,comm,ier)
   if(ier /= 0) then
     call MP_perr_die(myname_,'MPI_bcast(lsize)',ier)
   endif

@@ -117,7 +117,7 @@
 !<
 !-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
-   use m_mpif90
+   use mpi
    use m_realkinds, only : FP
    use m_die,       only : MP_perr_die
 
@@ -179,7 +179,7 @@
    logical :: handshake, sendd                 ! protocol option flags
 
    integer :: ier                              ! return error status
-   integer :: status(MP_STATUS_SIZE)           ! MPI status
+   integer :: status(MPI_STATUS_SIZE)           ! MPI status
 !
 !-------------------------------------------------------------------------------------
 !
@@ -265,7 +265,7 @@
          p = swapids(istep)
          if (sndlths(p) > 0) then
             tag = mytask + offset_t
-            call mpi_irecv( hs, 1, MP_INTEGER, p, tag, comm, &
+            call mpi_irecv( hs, 1, MPI_INTEGER, p, tag, comm, &
                             hs_rcvids(istep), ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
          endif
@@ -282,7 +282,7 @@
                             p, tag, comm, rcvids(istep), ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
 
-            call mpi_send ( hs, 1, MP_INTEGER, p, tag, comm, ier )
+            call mpi_send ( hs, 1, MPI_INTEGER, p, tag, comm, ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_SEND',ier)
          endif
       enddo
@@ -321,7 +321,7 @@
                ! Submit a new handshake irecv request
                if (sndlths(p) > 0) then
                   tag = mytask + offset_t
-                  call mpi_irecv( hs, 1, MP_INTEGER, p, tag, comm, &
+                  call mpi_irecv( hs, 1, MPI_INTEGER, p, tag, comm, &
                                   hs_rcvids(rstep), ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
                endif
@@ -335,7 +335,7 @@
                                   p, tag, comm, rcvids(rstep), ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
 
-                  call mpi_send ( hs, 1, MP_INTEGER, p, tag, comm, ier )
+                  call mpi_send ( hs, 1, MPI_INTEGER, p, tag, comm, ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_SEND',ier)
                endif
             endif
@@ -364,7 +364,7 @@
          p = swapids(istep)
          if (sndlths(p) > 0) then
             tag = mytask + offset_t
-            call mpi_irecv( hs, 1, MP_INTEGER, p, tag, comm, &
+            call mpi_irecv( hs, 1, MPI_INTEGER, p, tag, comm, &
                             hs_rcvids(istep), ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
          endif
@@ -381,7 +381,7 @@
                             p, tag, comm, rcvids(istep), ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
 
-            call mpi_send ( hs, 1, MP_INTEGER, p, tag, comm, ier )
+            call mpi_send ( hs, 1, MPI_INTEGER, p, tag, comm, ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_SEND',ier)
          endif
       enddo
@@ -420,7 +420,7 @@
                ! Submit a new handshake irecv request
                if (sndlths(p) > 0) then
                   tag = mytask + offset_t
-                  call mpi_irecv( hs, 1, MP_INTEGER, p, tag, comm, &
+                  call mpi_irecv( hs, 1, MPI_INTEGER, p, tag, comm, &
                                   hs_rcvids(rstep), ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
                endif
@@ -434,7 +434,7 @@
                                   p, tag, comm, rcvids(rstep), ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
 
-                  call mpi_send ( hs, 1, MP_INTEGER, p, tag, comm, ier )
+                  call mpi_send ( hs, 1, MPI_INTEGER, p, tag, comm, ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_SEND',ier)
                endif
             endif
@@ -643,7 +643,7 @@
 !<
 !-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
-   use m_mpif90
+   use mpi
    use m_realkinds, only : FP
    use m_die,       only : MP_perr_die
 
@@ -705,7 +705,7 @@
    logical :: handshake, sendd                 ! protocol option flags
 
    integer :: ier                              ! return error status
-   integer :: status(MP_STATUS_SIZE)           ! MPI status
+   integer :: status(MPI_STATUS_SIZE)           ! MPI status
 !
 !-------------------------------------------------------------------------------------
 !
@@ -791,7 +791,7 @@
          p = swapids(istep)
          if (sndlths(p) > 0) then
             tag = mytask + offset_t
-            call mpi_irecv( hs, 1, MP_INTEGER, p, tag, comm, &
+            call mpi_irecv( hs, 1, MPI_INTEGER, p, tag, comm, &
                             hs_rcvids(istep), ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
          endif
@@ -808,7 +808,7 @@
                             p, tag, comm, rcvids(istep), ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
 
-            call mpi_send ( hs, 1, MP_INTEGER, p, tag, comm, ier )
+            call mpi_send ( hs, 1, MPI_INTEGER, p, tag, comm, ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_SEND',ier)
          endif
       enddo
@@ -847,7 +847,7 @@
                ! Submit a new handshake irecv request
                if (sndlths(p) > 0) then
                   tag = mytask + offset_t
-                  call mpi_irecv( hs, 1, MP_INTEGER, p, tag, comm, &
+                  call mpi_irecv( hs, 1, MPI_INTEGER, p, tag, comm, &
                                   hs_rcvids(rstep), ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
                endif
@@ -861,7 +861,7 @@
                                   p, tag, comm, rcvids(rstep), ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
 
-                  call mpi_send ( hs, 1, MP_INTEGER, p, tag, comm, ier )
+                  call mpi_send ( hs, 1, MPI_INTEGER, p, tag, comm, ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_SEND',ier)
                endif
             endif
@@ -890,7 +890,7 @@
          p = swapids(istep)
          if (sndlths(p) > 0) then
             tag = mytask + offset_t
-            call mpi_irecv( hs, 1, MP_INTEGER, p, tag, comm, &
+            call mpi_irecv( hs, 1, MPI_INTEGER, p, tag, comm, &
                             hs_rcvids(istep), ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
          endif
@@ -907,7 +907,7 @@
                             p, tag, comm, rcvids(istep), ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
 
-            call mpi_send ( hs, 1, MP_INTEGER, p, tag, comm, ier )
+            call mpi_send ( hs, 1, MPI_INTEGER, p, tag, comm, ier )
             if(ier /= 0) call MP_perr_die(subName,'MPI_SEND',ier)
          endif
       enddo
@@ -946,7 +946,7 @@
                ! Submit a new handshake irecv request
                if (sndlths(p) > 0) then
                   tag = mytask + offset_t
-                  call mpi_irecv( hs, 1, MP_INTEGER, p, tag, comm, &
+                  call mpi_irecv( hs, 1, MPI_INTEGER, p, tag, comm, &
                                   hs_rcvids(rstep), ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
                endif
@@ -960,7 +960,7 @@
                                   p, tag, comm, rcvids(rstep), ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_IRECV',ier)
 
-                  call mpi_send ( hs, 1, MP_INTEGER, p, tag, comm, ier )
+                  call mpi_send ( hs, 1, MPI_INTEGER, p, tag, comm, ier )
                   if(ier /= 0) call MP_perr_die(subName,'MPI_SEND',ier)
                endif
             endif

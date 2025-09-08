@@ -132,9 +132,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_GlobalSegMap, only :GlobalSegMap
       use m_ExchangeMaps,only: MCT_ExGSMap => ExchangeMap
-      use m_mpif90
       use m_die
 
       implicit none
@@ -233,7 +233,7 @@
       use m_MergeSorts    ,only:IndexSet
       use m_MergeSorts    ,only:IndexSort
 
-      use m_mpif90
+      use mpi
       use m_die
 
 !      use m_zeit
@@ -326,8 +326,8 @@
   integer,save  :: t_loop2            ! rml timers
   integer,save  :: t_load            ! rml timers
 
-  call MP_comm_rank(mycomm,myPid,ier)
-  if(ier/=0) call MP_perr_die(myname_,'MP_comm_rank',ier)
+  call MPI_comm_rank(mycomm,myPid,ier)
+  if(ier/=0) call MP_perr_die(myname_,'MPI_comm_rank',ier)
 
   nullify(Rout%permarr)
 
@@ -681,8 +681,8 @@
     Rout%locsize(count),stat=ier)
   if(ier/=0) call die(myname_,'allocate(Rout..)',ier)
 
-  allocate(Rout%istatus(MP_STATUS_SIZE,count), &
-             Rout%rstatus(MP_STATUS_SIZE,count), &
+  allocate(Rout%istatus(MPI_STATUS_SIZE,count), &
+             Rout%rstatus(MPI_STATUS_SIZE,count), &
 	     Rout%rreqs(count),Rout%ireqs(count),stat=ier)
   if(ier/=0) call die(myname_,'allocate(status,reqs,...)',ier)
 
@@ -847,7 +847,7 @@
 ! !USES:
 !
       use m_die
-      use m_mpif90
+      use mpi
 
       implicit none
 
@@ -866,8 +866,8 @@
     integer ier
     character(len=*),parameter :: myname_=myname//'::print_'
 
-    call MP_comm_rank(mycomm,myrank,ier)
-    if(ier/=0) call MP_perr_die(myname_,'MP_comm_rank',ier)
+    call MPI_comm_rank(mycomm,myrank,ier)
+    if(ier/=0) call MP_perr_die(myname_,'MPI_comm_rank',ier)
 
 
     do iproc=1,rout%nprocs

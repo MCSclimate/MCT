@@ -99,7 +99,7 @@
 !
       use m_realkinds, only : FP
       use m_stdio,     only : stderr
-      use m_die,       only : MP_perr_die, die, warn
+      use m_die,       only : die, warn
 
       use m_List, only : List_identical => identical
       use m_List, only : List_nitem => nitem
@@ -434,7 +434,6 @@
 !
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_String, only : String
       use m_String, only : String_ToChar => ToChar

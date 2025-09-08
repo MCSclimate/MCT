@@ -70,7 +70,6 @@
 !
       use m_stdio, only : stderr
       use m_die,   only : die
-      use m_mpif90
 
       use m_List, only : List
       use m_List, only : List_init => init

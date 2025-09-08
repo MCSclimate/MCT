@@ -86,9 +86,9 @@
 ! !USES:
 !
 
+   use mpi
    use m_die, only : MP_perr_die,die
    use m_stdio
-   use m_mpif90
 
    use m_List, only: List
    use m_List, only: List_init => init
@@ -193,7 +193,7 @@
      NumRowsColumns(2) = SparseMatrix_nCols(GsMat)
   endif
 
-  call MPI_Bcast(NumRowsColumns, 2, MP_INTEGER, root, comm, ierr)
+  call MPI_Bcast(NumRowsColumns, 2, MPI_INTEGER, root, comm, ierr)
 
   if(ierr /= 0) then
 	call MP_perr_die(myname_,"MPI_Bcast(NumRowsColumns...",ierr)
@@ -250,9 +250,9 @@
 !
 ! !USES:
 !
+   use mpi
    use m_die, only : MP_perr_die,die
    use m_stdio
-   use m_mpif90
 
    use m_List, only: List
    use m_List, only: List_init => init
@@ -355,7 +355,7 @@
      NumRowsColumns(2) = SparseMatrix_nCols(GsMat)
   endif
 
-  call MPI_Bcast(NumRowsColumns, 2, MP_INTEGER, root, comm, ierr)
+  call MPI_Bcast(NumRowsColumns, 2, MPI_INTEGER, root, comm, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,"MPI_Bcast(NumRowsColumns...",ierr)
   endif
@@ -598,9 +598,9 @@
 ! !USES:
 !
 
+   use mpi
    use m_die, only : MP_perr_die,die
    use m_stdio
-   use m_mpif90
 
    use m_GlobalSegMap, only: GlobalSegMap
 
@@ -680,7 +680,7 @@
      NumRowsColumns(2) = SparseMatrix_nCols(sMat)
   endif
 
-  call MPI_Bcast(NumRowsColumns, 2, MP_INTEGER, root, comm, ierr)
+  call MPI_Bcast(NumRowsColumns, 2, MPI_INTEGER, root, comm, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,"MPI_Bcast(NumRowsColumns...",ierr)
   endif

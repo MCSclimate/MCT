@@ -87,9 +87,10 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_type
 
       use m_GeneralGrid, only : GeneralGrid
       use m_GeneralGrid, only : GeneralGrid_init => init
@@ -153,7 +154,7 @@
   HeaderAssoc(5) = List_allocated(iGGrid%other_list)
   HeaderAssoc(6) = List_allocated(iGGrid%index_list)
 
-  call MPI_SEND(HeaderAssoc, 6, MP_LOGICAL, dest, TagBase, ThisMCTWorld%MCT_comm, ierr)
+  call MPI_SEND(HeaderAssoc, 6, MPI_LOGICAL, dest, TagBase, ThisMCTWorld%MCT_comm, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,':: MPI_SEND(HeaderAssoc...',ierr)
   endif
@@ -338,9 +339,10 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_type
 
       use m_GeneralGrid, only : GeneralGrid
       use m_GeneralGrid, only : GeneralGrid_init => init
@@ -383,7 +385,7 @@
 
   integer :: ierr
   integer :: source
-  integer :: MPstatus(MP_STATUS_SIZE), DescendSize
+  integer :: MPstatus(MPI_STATUS_SIZE), DescendSize
   logical :: HeaderAssoc(6)
 
 ! for now, assume the components root is the source.
@@ -421,7 +423,7 @@
 
   HeaderAssoc = .FALSE.
 
-  call MPI_RECV(HeaderAssoc, 6, MP_LOGICAL, source, TagBase, ThisMCTWorld%MCT_comm, MPstatus, ierr)
+  call MPI_RECV(HeaderAssoc, 6, MPI_LOGICAL, source, TagBase, ThisMCTWorld%MCT_comm, MPstatus, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,':: MPI_RECV(HeaderAssoc...',ierr)
   endif
@@ -613,9 +615,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalMap, only : GlobalMap
       use m_GlobalMap, only : GlobalMap_gsize => gsize
@@ -730,9 +732,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalSegMap, only : GlobalSegMap
       use m_GlobalSegMap, only : GlobalSegMap_lsize => lsize
@@ -839,9 +841,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalMap, only : GlobalMap
       use m_GlobalMap, only : GlobalMap_lsize => lsize
@@ -960,9 +962,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalSegMap, only : GlobalSegMap
       use m_GlobalSegMap, only : GlobalSegMap_lsize => lsize
@@ -1075,9 +1077,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalSegMap, only : GlobalSegMap
       use m_GlobalSegMap, only : GlobalSegMap_lsize => lsize
@@ -1193,9 +1195,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalSegMap, only : GlobalSegMap
       use m_GlobalSegMap, only : GlobalSegMap_lsize => lsize
@@ -1278,7 +1280,7 @@
 
   endif
 
-  call MPI_BCAST(HeaderAssoc,6,MP_LOGICAL,root,comm,ierr)
+  call MPI_BCAST(HeaderAssoc,6,MPI_LOGICAL,root,comm,ierr)
 
        ! Step 1. Broadcast List attributes of the GeneralGrid.
 
@@ -1366,7 +1368,7 @@
 
        ! Broadcast the size of ioGGrid%descend(:) from the root.
 
-     call MPI_BCAST(DescendSize, 1, MP_INTEGER, root, comm, ierr)
+     call MPI_BCAST(DescendSize, 1, MPI_INTEGER, root, comm, ierr)
      if(ierr /= 0) then
         call MP_perr_die(myname_,'MPI_BCAST(DescendSize...',ierr)
      endif
@@ -1384,7 +1386,7 @@
 
       ! Finally, broadcast ioGGrid%descend(:) from the root
 
-     call MPI_BCAST(ioGGrid%descend, DescendSize, MP_LOGICAL, root, &
+     call MPI_BCAST(ioGGrid%descend, DescendSize, MPI_LOGICAL, root, &
                     comm, ierr)
      if(ierr /= 0) then
         call MP_perr_die(myname_,'MPI_BCAST(ioGGrid%descend...',ierr)

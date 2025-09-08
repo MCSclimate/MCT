@@ -175,9 +175,10 @@
                                    SumWeights, comm)
 ! ! USES:
 
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_Type
 
       use m_realkinds, only : FP
 
@@ -302,9 +303,10 @@
 
       use m_realkinds, only : FP
 
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_Type
 
       use m_AttrVect, only : AttrVect
       use m_AttrVect, only : AttrVect_init => init
@@ -445,7 +447,6 @@
 
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_realkinds, only : FP
 
@@ -969,7 +970,6 @@
 
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_AttrVect, only : AttrVect
       use m_AttrVect, only : AttrVect_init => init
@@ -1188,7 +1188,6 @@
 
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_realkinds, only : FP
 
@@ -1340,7 +1339,6 @@
 
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_AttrVect, only : AttrVect
       use m_AttrVect, only : AttrVect_init => init
@@ -1510,9 +1508,10 @@
                                          SumWeights, comm)
 ! ! USES:
 
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_Type
 
       use m_realkinds, only : FP
 
@@ -1696,7 +1695,7 @@
        ! Perform the global sum on the paired buffer
 
   call MPI_AllReduce(PairedBuffer, OutPairedBuffer, PairedBufferLength, &
-                        MP_Type(PairedBuffer(1)), MP_SUM, comm, ierr)
+                        MP_Type(PairedBuffer(1)), MPI_SUM, comm, ierr)
   if(ierr /= 0) then
      write(stderr,'(2a,i8)') myname_, &
   	      ':: Fatal Error--MPI_ALLREDUCE() failed with ierror = ',ierr
@@ -1771,9 +1770,10 @@
                                         comm)
 ! ! USES:
 
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_Type
 
       use m_realkinds, only : FP
 
@@ -1957,7 +1957,7 @@
        ! Perform the global sum on the paired buffer
 
   call MPI_AllReduce(PairedBuffer, OutPairedBuffer, PairedBufferLength, &
-                        MP_Type(PairedBuffer(1)), MP_SUM, comm, ierr)
+                        MP_Type(PairedBuffer(1)), MPI_SUM, comm, ierr)
   if(ierr /= 0) then
      write(stderr,'(2a,i8)') myname_, &
   	      ':: Fatal Error--MPI_ALLREDUCE() failed with ierror = ',ierr

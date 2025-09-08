@@ -412,7 +412,8 @@ contains
 
 ! !USES:
 !
-      use m_mpif90
+      use mpi
+      use m_mpif90, only : MP_perr
       use m_die, only : perr,die
       use m_mall,only : mall_mci,mall_ison
 
@@ -441,9 +442,9 @@ contains
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm,myID,ier)
+  call MPI_comm_rank(comm,myID,ier)
   if(ier /= 0) then
-    call MP_perr(myname_,'MP_comm_rank()',ier)
+    call MP_perr(myname_,'MPI_comm_rank()',ier)
     if(.not.present(stat)) call die(myname_)
     stat=ier
     return
@@ -454,7 +455,7 @@ contains
      if(ln<=0) call die(myname_,'size(Str%c) <= 0')
   endif
 
-  call MPI_bcast(ln,1,MP_INTEGER,root,comm,ier)
+  call MPI_bcast(ln,1,MPI_INTEGER,root,comm,ier)
   if(ier/=0) then
     call MP_perr(myname_,'MPI_bcast(ln)',ier)
     if(.not.present(stat)) call die(myname_)
@@ -475,7 +476,7 @@ contains
         if(mall_ison()) call mall_mci(Str%c,myname)
   endif
 
-  call MPI_bcast(Str%c(1),ln,MP_CHARACTER,root,comm,ier)
+  call MPI_bcast(Str%c(1),ln,MPI_CHARACTER,root,comm,ier)
   if(ier/=0) then
     call MP_perr(myname_,'MPI_bcast(Str%c)',ier)
     if(.not.present(stat)) call die(myname_)

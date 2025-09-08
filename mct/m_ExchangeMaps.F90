@@ -145,7 +145,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die,      only : MP_perr_die
       use m_stdio
       use m_MCTWorld, only : ThisMCTWorld
@@ -172,10 +172,10 @@
   character(len=*),parameter :: myname_=myname//'::MapHandshake_'
 
   integer :: ierr, myID, RemoteRootID, SendTag, RecvTag
-  integer,dimension(MP_STATUS_SIZE) :: status
+  integer,dimension(MPI_STATUS_SIZE) :: status
 
-  call MP_COMM_RANK(LocalComm, myID, ierr)
-  if(ierr /= 0) call MP_perr_die(myname_,'call MP_COMM_RANK()',ierr)
+  call MPI_COMM_RANK(LocalComm, myID, ierr)
+  if(ierr /= 0) call MP_perr_die(myname_,'call MPI_COMM_RANK()',ierr)
 
   RemoteRootID = ComponentRootRank(RemoteCompID, ThisMCTWorld)
 
@@ -188,13 +188,13 @@
 
       ! Post send to RemoteRootID:
 
-     call MPI_SEND(LocalMapPars, NumHandshakePars, MP_INTEGER, &
+     call MPI_SEND(LocalMapPars, NumHandshakePars, MPI_INTEGER, &
 	           RemoteRootID, SendTag, ThisMCTWorld%MCT_comm, ierr)
      if(ierr /= 0) call MP_perr_die(myname_,'call MPI_SEND()',ierr)
 
       ! Post receive from RemoteRootID:
 
-     call MPI_RECV(RemoteMapPars, NumHandshakePars, MP_INTEGER, &
+     call MPI_RECV(RemoteMapPars, NumHandshakePars, MPI_INTEGER, &
 	           RemoteRootID, RecvTag, ThisMCTWorld%MCT_comm, status, ierr)
      if(ierr /= 0) call MP_perr_die(myname_,'call MPI_RECV()',ierr)
 
@@ -221,7 +221,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
       use m_GlobalMap, only : GlobalMap
@@ -271,7 +271,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
       use m_GlobalSegMap, only : GlobalSegMap
@@ -325,7 +325,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
       use m_GlobalSegMap, only : GlobalSegMap
@@ -376,12 +376,12 @@
 
   integer :: myID, ngseg, remote_root,req
   integer :: local_ngseg, remote_ngseg
-  integer,dimension(MP_STATUS_SIZE) :: status,wstatus
+  integer,dimension(MPI_STATUS_SIZE) :: status,wstatus
 
       ! Determine rank on local communicator:
 
-  call MP_COMM_RANK(LocalComm, myID, ierr)
-  if(ierr /= 0) call MP_perr_die(myname_,'call MP_COMM_RANK()',ierr)
+  call MPI_COMM_RANK(LocalComm, myID, ierr)
+  if(ierr /= 0) call MP_perr_die(myname_,'call MPI_COMM_RANK()',ierr)
 
       ! If the root, exchange map handshake descriptors,
       ! and information needed to initialize the remote map
@@ -451,13 +451,13 @@
 
       ! Send off SendBuf to the remote component root:
 
-     call MPI_ISEND(SendBuf(1), 3*LocalMapPars(NumSegIndex), MP_INTEGER, &
+     call MPI_ISEND(SendBuf(1), 3*LocalMapPars(NumSegIndex), MPI_INTEGER, &
 	           remote_root, SendTag, ThisMCTWorld%MCT_comm, req, ierr)
      if(ierr /= 0) call MP_perr_die(myname_,'MPI_SEND(SendBuf...',ierr)
 
       ! Receive RecvBuf from the remote component root:
 
-     call MPI_RECV(RecvBuf, 3*RemoteMapPars(NumSegIndex), MP_INTEGER, &
+     call MPI_RECV(RecvBuf, 3*RemoteMapPars(NumSegIndex), MPI_INTEGER, &
 	           remote_root, RecvTag, ThisMCTWorld%MCT_comm, status, ierr)
      if(ierr /= 0) call MP_perr_die(myname_,'MPI_Recv(RecvBuf...',ierr)
 
@@ -553,7 +553,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
 

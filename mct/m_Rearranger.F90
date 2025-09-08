@@ -111,13 +111,13 @@
 ! !USES:
 !
 
+   use mpi
    use m_MCTWorld,     only : ThisMCTWorld
    use m_GlobalSegMap, only : GlobalSegMap
    use m_GlobalSegMap, only : GSMap_lsize => lsize
    use m_GlobalSegMap, only : GSMap_increasing => increasing
    use m_Router,       only : Router
    use m_Router,       only : Router_init => init
-   use m_mpif90
    use m_die
    use m_stdio
 
@@ -153,15 +153,15 @@
    call Router_init(SourceGSMap,TargetGSMap,myComm,OutRearranger%SendRouter)
    call Router_init(TargetGSMap,SourceGSMap,myComm,OutRearranger%RecvRouter)
 
-   call MP_comm_size(MP_COMM_WORLD,max_nprocs,ier)
-   if(ier/=0) call MP_perr_die(myname_,'MP_comm_size',ier)
+   call MPI_comm_size(MPI_COMM_WORLD,max_nprocs,ier)
+   if(ier/=0) call MP_perr_die(myname_,'MPI_comm_size',ier)
 
    ! SANITY CHECK: Make sure that if SendRouter is sending to self, then,
    ! by definition, RecvRouter is also receiving from self. If this is not
    ! true, then write to stderr and die.
 
-   call MP_comm_rank(ThisMCTWorld%MCT_comm,myPid,ier)
-   if(ier/=0) call MP_perr_die(myname_,'MP_comm_rank',ier)
+   call MPI_comm_rank(ThisMCTWorld%MCT_comm,myPid,ier)
+   if(ier/=0) call MP_perr_die(myname_,'MPI_comm_rank',ier)
 
    SendingToMyself = .false.
    ReceivingFromMyself = .false.
@@ -445,7 +445,6 @@
 !
    use m_Router,only : Router
    use m_Router,only : Router_clean => clean
-   use m_mpif90
    use m_die
    use m_stdio
 
@@ -554,6 +553,7 @@
 ! !USES:
 !
 
+   use mpi
    use m_MCTWorld,only :MCTWorld
    use m_MCTWorld,only :ThisMCTWorld
    use m_AttrVect,  only : AttrVect
@@ -567,7 +567,7 @@
    use m_Router,    only : Router
    use m_SPMDutils, only : m_swapm_int, m_swapm_FP
    use m_realkinds, only : FP
-   use m_mpif90
+   use m_mpif90, only : MP_Type
    use m_die
    use m_stdio
 
@@ -669,12 +669,12 @@
    integer :: recv_rreqs(max_nprocs)
 
    ! Structure to hold MPI status information for sends
-   integer :: send_istatus(MP_STATUS_SIZE,max_nprocs)
-   integer :: send_rstatus(MP_STATUS_SIZE,max_nprocs)
+   integer :: send_istatus(MPI_STATUS_SIZE,max_nprocs)
+   integer :: send_rstatus(MPI_STATUS_SIZE,max_nprocs)
 
    ! Structure to hold MPI status information for sends
-   integer :: recv_istatus(MP_STATUS_SIZE,max_nprocs)
-   integer :: recv_rstatus(MP_STATUS_SIZE,max_nprocs)
+   integer :: recv_istatus(MPI_STATUS_SIZE,max_nprocs)
+   integer :: recv_rstatus(MPI_STATUS_SIZE,max_nprocs)
 
    ! Pointer structure to make Router access simpler
    type(Router), pointer :: SendRout, RecvRout
@@ -850,11 +850,11 @@
 !::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
   ! INVERT PE LIST !
-  call MP_comm_rank(ThisMCTWorld%MCT_comm,myPid,ier)
-  if(ier/=0) call MP_perr_die(myname_,'MP_comm_rank',ier)
+  call MPI_comm_rank(ThisMCTWorld%MCT_comm,myPid,ier)
+  if(ier/=0) call MP_perr_die(myname_,'MPI_comm_rank',ier)
 
-  call MP_comm_size(ThisMCTWorld%MCT_comm, max_pe, ier)
-  if(ier/=0) call MP_perr_die(myname_,'MP_comm_size',ier)
+  call MPI_comm_size(ThisMCTWorld%MCT_comm, max_pe, ier)
+  if(ier/=0) call MP_perr_die(myname_,'MPI_comm_size',ier)
 
   SendList(:) = -1
   do proc = 1,SendRout%nprocs
@@ -905,7 +905,7 @@
      enddo
 
      ! SET MPI DATA TYPES
-     ITypes(:) = MP_INTEGER
+     ITypes(:) = MPI_INTEGER
      RTypes(:) = mp_Type_rp
   endif
 
@@ -952,14 +952,14 @@ else
 	if( (RecvRout%num_segs(proc) > 1) .or. DoSum ) then
 
 	   call MPI_IRECV(IRecvBuf(IRecvLoc(proc)),                 &
-		          RecvRout%locsize(proc)*numi,MP_INTEGER,   &
+		          RecvRout%locsize(proc)*numi,MPI_INTEGER,   &
 			  RecvRout%pe_list(proc),mytag,             &
 			  ThisMCTWorld%MCT_comm,recv_ireqs(proc),ier)
 
 	else
 
 	   call MPI_IRECV(TargetAV%iAttr(1,RecvRout%seg_starts(proc,1)), &
-		          RecvRout%locsize(proc)*numi,MP_INTEGER,        &
+		          RecvRout%locsize(proc)*numi,MPI_INTEGER,        &
                           RecvRout%pe_list(proc),mytag,                  &
                           ThisMCTWorld%MCT_comm,recv_ireqs(proc),ier)
 
@@ -1040,14 +1040,14 @@ else
 	if( SendRout%num_segs(proc) > 1 ) then
 
 	   call MPI_ISEND(ISendBuf(ISendLoc(proc)),                 &
-		          SendRout%locsize(proc)*numi,MP_INTEGER,   &
+		          SendRout%locsize(proc)*numi,MPI_INTEGER,   &
 			  SendRout%pe_list(proc),mytag,             &
 			  ThisMCTWorld%MCT_comm,send_ireqs(proc),ier)
 
 	else
 
 	   call MPI_ISEND(SourceAV%iAttr(1,SendRout%seg_starts(proc,1)), &
-		          SendRout%locsize(proc)*numi,MP_INTEGER,        &
+		          SendRout%locsize(proc)*numi,MPI_INTEGER,        &
                           SendRout%pe_list(proc),mytag,                  &
                           ThisMCTWorld%MCT_comm,send_ireqs(proc),ier)
 
@@ -1163,8 +1163,8 @@ if (usealltoall) then
  else
 
   if (numi .ge. 1) then
-     call MPI_Alltoallv(ISendBuf, ISendCnts, ISdispls, MP_INTEGER, &
-                        IRecvBuf, IRecvCnts, IRdispls, MP_INTEGER, &
+     call MPI_Alltoallv(ISendBuf, ISendCnts, ISdispls, MPI_INTEGER, &
+                        IRecvBuf, IRecvCnts, IRdispls, MPI_INTEGER, &
                         InRearranger%SendRouter%mpicomm,ier)
   endif
 
@@ -1207,53 +1207,53 @@ endif
 
      if(numi .ge. 1) then
 
-if (usealltoall) then
-        proc = numprocs
-else
-        if(DoSum) then
+        if (usealltoall) then
            proc = numprocs
-	   call MPI_WAIT(recv_ireqs(proc),recv_istatus,ier)
         else
-	   call MPI_WAITANY(RecvRout%nprocs,recv_ireqs,proc,recv_istatus,ier)
+           if(DoSum) then
+              proc = numprocs
+              call MPI_WAIT(recv_ireqs(proc),recv_istatus(:,proc),ier)
+            else
+              call MPI_WAITANY(RecvRout%nprocs,recv_ireqs,proc,recv_istatus(:,proc),ier)
+            endif
         endif
-endif
 
-	if(DoSum) then
+       if(DoSum) then
 
-	   ! load the correct pieces of the integer vectors
-           j=0
-	   do nseg = 1,RecvRout%num_segs(proc)
-	      seg_start = RecvRout%seg_starts(proc,nseg)
-	      seg_end = seg_start + RecvRout%seg_lengths(proc,nseg)-1
-	      do VectIndex = seg_start,seg_end
-		 do AttrIndex = 1,numi
-		    TargetAV%iAttr(AttrIndex,VectIndex)= &
+         ! load the correct pieces of the integer vectors
+         j=0
+         do nseg = 1,RecvRout%num_segs(proc)
+            seg_start = RecvRout%seg_starts(proc,nseg)
+            seg_end = seg_start + RecvRout%seg_lengths(proc,nseg)-1
+            do VectIndex = seg_start,seg_end
+               do AttrIndex = 1,numi
+                    TargetAV%iAttr(AttrIndex,VectIndex)= &
                     TargetAV%iAttr(AttrIndex,VectIndex) + IRecvBuf(IRecvLoc(proc)+j)
-		    j=j+1
-		 enddo
-	      enddo
-	   enddo
+                    j=j+1
+                enddo
+            enddo
+         enddo
 
-	else
+       else
 
-	   if (( RecvRout%num_segs(proc) > 1 ) .or. (usealltoall)) then
+         if (( RecvRout%num_segs(proc) > 1 ) .or. (usealltoall)) then
 
-	      ! load the correct pieces of the integer vectors
-              j=0
-	      do nseg = 1,RecvRout%num_segs(proc)
-		 seg_start = RecvRout%seg_starts(proc,nseg)
-		 seg_end = seg_start + RecvRout%seg_lengths(proc,nseg)-1
-		 do VectIndex = seg_start,seg_end
-		    do AttrIndex = 1,numi
-		       TargetAV%iAttr(AttrIndex,VectIndex)=IRecvBuf(IRecvLoc(proc)+j)
-		       j=j+1
-		    enddo
-		 enddo
-	      enddo
+            ! load the correct pieces of the integer vectors
+            j=0
+            do nseg = 1,RecvRout%num_segs(proc)
+               seg_start = RecvRout%seg_starts(proc,nseg)
+               seg_end = seg_start + RecvRout%seg_lengths(proc,nseg)-1
+               do VectIndex = seg_start,seg_end
+                  do AttrIndex = 1,numi
+                     TargetAV%iAttr(AttrIndex,VectIndex)=IRecvBuf(IRecvLoc(proc)+j)
+                     j=j+1
+                  enddo
+               enddo
+            enddo
 
-	   endif
+          endif
 
-	endif ! end of if DoSum
+       endif ! end of if DoSum
 
      endif  ! end of in numi>1
 
@@ -1264,9 +1264,9 @@ if (usealltoall) then
 else
 	if(DoSum) then
            proc = numprocs
-	   call MPI_WAIT(recv_rreqs(proc),recv_rstatus,ier)
+	   call MPI_WAIT(recv_rreqs(proc),recv_rstatus(:,proc),ier)
         else
-	   call MPI_WAITANY(RecvRout%nprocs,recv_rreqs,proc,recv_rstatus,ier)
+	   call MPI_WAITANY(RecvRout%nprocs,recv_rreqs,proc,recv_rstatus(:,proc),ier)
         endif
 endif
 

@@ -314,10 +314,8 @@
 ! !INTERFACE:
 
     subroutine I90_allLoadF(fname,root,comm,istat)
+      use mpi
       use m_mpif90, only : MP_perr
-      use m_mpif90, only : MP_comm_rank
-      use m_mpif90, only : MP_CHARACTER
-      use m_mpif90, only : MP_INTEGER
       use m_die, only : perr
       implicit none
       character(len=*),intent(in) :: fname
@@ -334,7 +332,7 @@
 
   istat=0
 
-  call MP_comm_rank(comm,myID,ier)
+  call MPI_comm_rank(comm,myID,ier)
   if(ier/=0) then
     call MP_perr(myname_,'MP_comm_rank()',ier)
     istat=ier
@@ -359,14 +357,14 @@
 
         ! Initialize the buffer on all PEs
 
-  call MPI_Bcast(i90_now%buffer,NBUF_MAX,MP_CHARACTER,root,comm,ier)
+  call MPI_Bcast(i90_now%buffer,NBUF_MAX,MPI_CHARACTER,root,comm,ier)
   if(ier /= 0) then
     call MP_perr(myname_,'MPI_Bcast(%buffer)',ier)
     istat=ier
     return
   endif
 
-  call MPI_Bcast(i90_now%nbuf,1,MP_INTEGER,root,comm,ier)
+  call MPI_Bcast(i90_now%nbuf,1,MPI_INTEGER,root,comm,ier)
   if(ier /= 0) then
     call MP_perr(myname_,'MPI_Bcast(%nbuf)',ier)
     istat=ier

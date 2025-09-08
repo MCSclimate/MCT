@@ -185,7 +185,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
       use m_FcComms, only : fc_gather_int, fc_gatherv_int
@@ -245,9 +245,9 @@
 
         ! Determine local process ID:
 
-  call MP_COMM_RANK(my_comm, myID, ier)
+  call MPI_COMM_RANK(my_comm, myID, ier)
 
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
 
         ! Check consistency of sizes of input arrays:
@@ -308,7 +308,7 @@
         ! Send local number of segments to the root.
 
   nlseg_tmp(1) = nlseg
-  call fc_gather_int(nlseg_tmp, 1, MP_INTEGER, counts, 1, MP_INTEGER, &
+  call fc_gather_int(nlseg_tmp, 1, MPI_INTEGER, counts, 1, MPI_INTEGER, &
                      root, my_comm)
 
         ! On the root compute the value of ngseg, along with
@@ -360,23 +360,23 @@
         ! Now, each process sends its values of start(:) to fill in
         ! the appropriate portion of root_start(:y) on the root.
 
-  call fc_gatherv_int(start, nlseg, MP_INTEGER, &
-                      root_start, counts, displs, MP_INTEGER, &
+  call fc_gatherv_int(start, nlseg, MPI_INTEGER, &
+                      root_start, counts, displs, MPI_INTEGER, &
                       root, my_comm)
 
         ! Next, each process sends its values of length(:) to fill in
         ! the appropriate portion of root_length(:) on the root.
 
-  call fc_gatherv_int(length, nlseg, MP_INTEGER, &
-                      root_length, counts, displs, MP_INTEGER, &
+  call fc_gatherv_int(length, nlseg, MPI_INTEGER, &
+                      root_length, counts, displs, MPI_INTEGER, &
                       root, my_comm)
 
         ! Finally, if the argument pe_loc is present, each process sends
         ! its values of pe_loc(:) to fill in the appropriate portion of
         ! root_pe_loc(:) on the root.
 
-  call fc_gatherv_int(my_pe_loc, nlseg, MP_INTEGER, &
-                      root_pe_loc, counts, displs, MP_INTEGER, &
+  call fc_gatherv_int(my_pe_loc, nlseg, MPI_INTEGER, &
+                      root_pe_loc, counts, displs, MPI_INTEGER, &
                       root, my_comm)
 
   call MPI_BARRIER(my_comm, ier)
@@ -442,7 +442,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
 
@@ -525,12 +525,12 @@
 
         ! Broadcast the value of GSMap%ngseg
 
-  call MPI_BCAST(GSMap%ngseg, 1, MP_INTEGER, root, my_comm, ier)
+  call MPI_BCAST(GSMap%ngseg, 1, MPI_INTEGER, root, my_comm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_BCAST(GSmap%ngseg)',ier)
 
         ! Broadcast the value of GSMap%comp_id
 
-  call MPI_BCAST(GSMap%comp_id, 1, MP_INTEGER, root, my_comm, ier)
+  call MPI_BCAST(GSMap%comp_id, 1, MPI_INTEGER, root, my_comm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_BCAST(GSmap%comp_id)',ier)
 
         ! Allocate the components GSMap%start(:), GSMap%length(:),
@@ -559,13 +559,13 @@
         ! Broadcast the root values of GSMap%start(:), GSMap%length(:),
         ! and GSMap%pe_loc(:)
 
-  call MPI_BCAST(GSMap%start, GSMap%ngseg, MP_INTEGER, root, my_comm, ier)
+  call MPI_BCAST(GSMap%start, GSMap%ngseg, MPI_INTEGER, root, my_comm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_BCAST(GSMap%start)',ier)
 
-  call MPI_BCAST(GSMap%length, GSMap%ngseg, MP_INTEGER, root, my_comm, ier)
+  call MPI_BCAST(GSMap%length, GSMap%ngseg, MPI_INTEGER, root, my_comm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_BCAST(GSMap%length)',ier)
 
-  call MPI_BCAST(GSMap%pe_loc, GSMap%ngseg, MP_INTEGER, root, my_comm, ier)
+  call MPI_BCAST(GSMap%pe_loc, GSMap%ngseg, MPI_INTEGER, root, my_comm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_BCAST(GSMap%pe_loc)',ier)
 
         ! If the argument gsize is present, use the root value to
@@ -580,7 +580,7 @@
      if(myID == root) then
 	GSMap%gsize = gsize
      endif
-     call MPI_BCAST(GSMap%gsize, 1, MP_INTEGER, root, my_comm, ier)
+     call MPI_BCAST(GSMap%gsize, 1, MPI_INTEGER, root, my_comm, ier)
      if(ier/=0) call MP_perr_die(myname_, 'MPI_BCAST(GSMap%gsize)', ier)
   else
      GSMap%gsize = 0
@@ -613,7 +613,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die, only : die
       use m_stdio
 
@@ -719,7 +719,6 @@
 !
 ! !USES:
 !
-      use m_mpif90
       use m_die, only : die
       use m_stdio
 
@@ -891,6 +890,7 @@
 
 !  use shr_sys_mod
 
+  use mpi
   use m_die
   implicit none
 
@@ -1179,7 +1179,6 @@
 ! !USES:
 
         use m_MCTWorld,      only :ThisMCTWorld
-        use m_mpif90
         use m_die
 
         use m_stdio    ! rml
@@ -1521,7 +1520,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die ,          only : MP_perr_die
 
       implicit none
@@ -1545,8 +1544,8 @@
 
         ! Determine local rank myID:
 
-  call MP_COMM_RANK(comm, myID, ierr)
-  if(ierr /= 0) call MP_perr_die(myname_,'MP_COMM_RANK',ierr)
+  call MPI_COMM_RANK(comm, myID, ierr)
+  if(ierr /= 0) call MP_perr_die(myname_,'MPI_COMM_RANK',ierr)
 
         ! Determine global number of segments:
 
@@ -2630,9 +2629,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_MCTWorld,      only : printnp
       use m_die
-      use m_mpif90
 
       implicit none
 
@@ -2650,8 +2649,8 @@
     integer ier
     character(len=*),parameter :: myname_=myname//'::print_'
 
-    call MP_comm_rank(mycomm,myrank,ier)
-    if(ier/=0) call MP_perr_die(myname_,'MP_comm_rank',ier)
+    call MPI_comm_rank(mycomm,myrank,ier)
+    if(ier/=0) call MP_perr_die(myname_,'MPI_comm_rank',ier)
 
     if (myrank == 0) then
       call printnp(gsmap%comp_id,lun)

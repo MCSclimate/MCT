@@ -96,9 +96,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalMap, only : GlobalMap
       use m_AttrVect, only : AttrVect_clean => clean
@@ -140,8 +140,8 @@
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm, myID, ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(comm, myID, ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
         ! Argument check of iC: kill if iC is not initialized
         ! on all processes
@@ -200,9 +200,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalSegMap, only : GlobalSegMap
       use m_AttrVect, only : AttrVect_clean => clean
@@ -241,8 +241,8 @@
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm, myID, ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(comm, myID, ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
         ! Argument check of iC
 
@@ -300,9 +300,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalMap,   only : GlobalMap
       use m_Accumulator, only : Accumulator
@@ -345,8 +345,8 @@
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm, myID, ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(comm, myID, ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
         ! Argument check of iC
 
@@ -408,9 +408,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die
-      use m_mpif90
 
       use m_GlobalSegMap, only : GlobalSegMap
       use m_Accumulator, only : Accumulator
@@ -449,8 +449,8 @@
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm, myID, ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(comm, myID, ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
         ! Argument check of iC
 
@@ -511,8 +511,8 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
-      use m_mpif90
       use m_AttrVectComms, only : AttrVect_bcast => bcast
 
       use m_Accumulator, only : Accumulator
@@ -550,8 +550,8 @@
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm,myID,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(comm,myID,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
         ! Argument check : Kill if the root aC is not initialized,
         ! or if the non-root aC is initialized
@@ -603,8 +603,8 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
-      use m_mpif90
       use m_AttrVectComms, only : AttrVect_bcast => bcast
       use m_Accumulator, only : Accumulator
       use m_Accumulator, only : Accumulator_initp => initp
@@ -644,8 +644,8 @@
 
   if(present(stat)) stat=0
 
-  call MP_comm_rank(comm,myID,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(comm,myID,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
         ! STEP 1: Pack broadcast buffer.
 
@@ -674,7 +674,7 @@
 
         ! Use AccBuffSize to initialize AccBuff on all processes
 
-  call MPI_BCAST(AccBuffSize, 1, MP_INTEGER, root, comm, ier)
+  call MPI_BCAST(AccBuffSize, 1, MPI_INTEGER, root, comm, ier)
 
   if(ier /= 0) call MP_perr_die(myname_,'AttrVect_bcast(AccBuffSize)',ier)
 
@@ -710,7 +710,7 @@
 
 	! Broadcast the root value of AccBuff
 
-  call MPI_BCAST(AccBuff, AccBuffSize, MP_INTEGER, root, comm, ier)
+  call MPI_BCAST(AccBuff, AccBuffSize, MPI_INTEGER, root, comm, ier)
 
   if(ier /= 0) call MP_perr_die(myname_,'MPI_bcast(AccBuff...',ier)
 

@@ -66,7 +66,8 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
+      use m_mpif90, only : MP_Type
       use m_die, only : MP_perr_die,die
       use m_stdio
 
@@ -186,7 +187,8 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
+      use m_mpif90, only: MP_Type
       use m_die, only : MP_perr_die,die
       use m_stdio
 
@@ -301,7 +303,8 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
+      use m_mpif90, only : MP_Type
       use m_die, only : MP_perr_die, die
       use m_stdio
 
@@ -331,7 +334,7 @@
   character(len=*),parameter :: myname_=myname//'::recv_'
 
   integer :: ierr,sourceID
-  integer :: MPstatus(MP_STATUS_SIZE)
+  integer :: MPstatus(MPI_STATUS_SIZE)
   integer :: RecvBuffer(3)
 
   if(present(status)) status = 0 ! the success value
@@ -412,7 +415,8 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
+      use m_mpif90, only: MP_Type
       use m_die, only : MP_perr_die,die
       use m_stdio
 
@@ -446,8 +450,8 @@
 
        ! Step One:  which process am I?
 
-  call MP_COMM_RANK(comm, myID, ierr)
-  if(ierr /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ierr)
+  call MPI_COMM_RANK(comm, myID, ierr)
+  if(ierr /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ierr)
 
        ! Step Two:  Broadcast the scalar bits of the GlobalSegMap from
        ! the root.

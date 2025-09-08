@@ -458,9 +458,10 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
+      use m_mpif90,        only : MP_Type
       use m_stdio ,        only : stderr
-      use m_mpif90
 
       use m_List,          only : List
       use m_List,          only : List_exportToChar => exportToChar
@@ -517,15 +518,15 @@
      select case(ReductionOp)
      case(AttrVectSUM)
 	call MPI_AllReduce(inAV%rAttr, outAV%rAttr, BufferSize, &
-	                   MP_Type(inAV%rAttr(1,1)), MP_SUM, &
+	                   MP_Type(inAV%rAttr(1,1)), MPI_SUM, &
 	                   comm, ier)
      case(AttrVectMIN)
 	call MPI_AllReduce(inAV%rAttr, outAV%rAttr, BufferSize, &
-                           MP_Type(inAV%rAttr(1,1)), MP_MIN, &
+                           MP_Type(inAV%rAttr(1,1)), MPI_MIN, &
                            comm, ier)
      case(AttrVectMAX)
 	call MPI_AllReduce(inAV%rAttr, outAV%rAttr, BufferSize, &
-                           MP_Type(inAV%rAttr(1,1)), MP_MAX, &
+                           MP_Type(inAV%rAttr(1,1)), MPI_MAX, &
                            comm, ier)
      case default
 	write(stderr,'(2a,i8,a)') myname_, &
@@ -549,15 +550,15 @@
      select case(ReductionOp)
      case(AttrVectSUM)
 	call MPI_AllReduce(inAV%iAttr, outAV%iAttr, BufferSize, &
-	                   MP_Type(inAV%iAttr(1,1)), MP_SUM, &
+	                   MP_Type(inAV%iAttr(1,1)), MPI_SUM, &
 	                   comm, ier)
      case(AttrVectMIN)
 	call MPI_AllReduce(inAV%iAttr, outAV%iAttr, BufferSize, &
-                           MP_Type(inAV%iAttr(1,1)), MP_MIN, &
+                           MP_Type(inAV%iAttr(1,1)), MPI_MIN, &
                            comm, ier)
      case(AttrVectMAX)
 	call MPI_AllReduce(inAV%iAttr, outAV%iAttr, BufferSize, &
-                           MP_Type(inAV%iAttr(1,1)), MP_MAX, &
+                           MP_Type(inAV%iAttr(1,1)), MPI_MAX, &
                            comm, ier)
      case default
 	write(stderr,'(2a,i8,a)') myname_, &
@@ -622,9 +623,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
       use m_stdio ,        only : stderr
-      use m_mpif90
 
       use m_AttrVect,      only : AttrVect
       use m_AttrVect,      only : AttrVect_clean => clean
@@ -945,9 +946,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
       use m_stdio ,        only : stderr
-      use m_mpif90
       use m_realkinds,     only : SP
 
       use m_List,          only : List
@@ -1031,9 +1032,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
       use m_stdio ,        only : stderr
-      use m_mpif90
       use m_realkinds,     only : DP
 
       use m_List,          only : List

@@ -31,7 +31,6 @@
   use m_AttrVect, only : lsize
   use m_Router,   only : Router
 
-  use m_mpif90
   use m_die
   use m_stdio
 
@@ -105,6 +104,8 @@
 !
 ! !USES:
 !
+      use mpi
+      use m_mpif90, only : MP_Type
       implicit none
 
 ! !INPUT PARAMETERS:
@@ -238,7 +239,7 @@
 
 
 	call MPI_ISEND(Rout%ip1(proc)%pi(1), &
-	     Rout%locsize(proc)*numi,MP_INTEGER,Rout%pe_list(proc), &
+	     Rout%locsize(proc)*numi,MPI_INTEGER,Rout%pe_list(proc), &
 	     mytag,ThisMCTWorld%MCT_comm,Rout%ireqs(proc),ier)
 
 	if(ier /= 0) call MP_perr_die(myname_,'MPI_ISEND(ints)',ier)
@@ -289,6 +290,7 @@ end subroutine isend_
 !
 ! !USES:
 !
+      use mpi
       implicit none
 
 ! !INPUT PARAMETERS:
@@ -420,6 +422,8 @@ end subroutine send_
 !
 ! !USES:
 !
+      use mpi
+      use m_mpif90 , only : MP_Type
       implicit none
 
 ! !INPUT/OUTPUT PARAMETERS:
@@ -524,13 +528,13 @@ end subroutine send_
 	if( Rout%num_segs(proc) > 1 .or. DoSum ) then
 
 	   call MPI_IRECV(Rout%ip1(proc)%pi(1), &
-		Rout%locsize(proc)*numi,MP_INTEGER,Rout%pe_list(proc), &
+		Rout%locsize(proc)*numi,MPI_INTEGER,Rout%pe_list(proc), &
 		mytag,ThisMCTWorld%MCT_comm,Rout%ireqs(proc),ier)
 
 	else
 
 	   call MPI_IRECV(aV%iAttr(1,Rout%seg_starts(proc,1)), &
-		Rout%locsize(proc)*numi,MP_INTEGER,Rout%pe_list(proc), &
+		Rout%locsize(proc)*numi,MPI_INTEGER,Rout%pe_list(proc), &
 		mytag,ThisMCTWorld%MCT_comm,Rout%ireqs(proc),ier)
 
 	endif
@@ -585,6 +589,7 @@ end subroutine irecv_
 !
 ! !USES:
 !
+      use mpi
       implicit none
 
 ! !INPUT/OUTPUT PARAMETERS:

@@ -107,7 +107,7 @@
 !           address in mpi_irecv
 ! 27Nov01 - E. Ong <eong@mcs.anl.gov> - added R. Jacob's version of initd_
 !           to support PCM mode.
-! 15Feb02 - R. Jacob - elminate use of MP_COMM_WORLD.  Use
+! 15Feb02 - R. Jacob - elminate use of MPI_COMM_WORLD.  Use
 !           argument globalcomm instead.  Create MCT_comm from
 !           globalcomm
 !EOP __________________________________________________________________
@@ -175,7 +175,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
 
@@ -223,18 +223,18 @@
   endif
 
 ! determine overall size
-  call MP_comm_size(globalcomm,Gsize,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_size()',ier)
+  call MPI_comm_size(globalcomm,Gsize,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_size()',ier)
 
 ! determine my rank in comm_world
-  call MP_comm_rank(globalcomm,myGid,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(globalcomm,myGid,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
 ! allocate space on global root to receive info about
 ! the other components
   if(myGid == 0) then
      allocate(nprocs(ncomps),compids(ncomps),&
-     reqs(ncomps),status(MP_STATUS_SIZE,ncomps),&
+     reqs(ncomps),status(MPI_STATUS_SIZE,ncomps),&
      root_nprocs(ncomps),stat=ier)
      if (ier /= 0) then
         call die(myname_, 'allocate(nprocs,...)',ier)
@@ -249,7 +249,7 @@
 !  First on the global root, post a receive for each component
   if(myGid == 0) then
     do i=1,ncomps
-       call MPI_IRECV(root_nprocs(i), 1, MP_INTEGER, MP_ANY_SOURCE,i, &
+       call MPI_IRECV(root_nprocs(i), 1, MPI_INTEGER, MPI_ANY_SOURCE,i, &
 	 globalcomm, reqs(i), ier)
        if(ier /= 0) call MP_perr_die(myname_,'MPI_IRECV(root_nprocs)',ier)
     enddo
@@ -257,13 +257,13 @@
 
 !  The local root on each component sends
   do i=1,size(myids)
-    if(mycomms(i)/=MP_COMM_NULL) then
-      call MP_comm_size(mycomms(i),mysize,ier)
-      if(ier /= 0) call MP_perr_die(myname_,'MP_comm_size()',ier)
-      call MP_comm_rank(mycomms(i),myLid,ier)
-      if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+    if(mycomms(i)/=MPI_COMM_NULL) then
+      call MPI_comm_size(mycomms(i),mysize,ier)
+      if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_size()',ier)
+      call MPI_comm_rank(mycomms(i),myLid,ier)
+      if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
       if(myLid == 0) then
-        call MPI_SEND(mysize,1,MP_INTEGER,0,myids(i),globalcomm,ier)
+        call MPI_SEND(mysize,1,MPI_INTEGER,0,myids(i),globalcomm,ier)
         if(ier /= 0) call MP_perr_die(myname_,'MPI_SEND(mysize)',ier)
       endif
     endif
@@ -298,19 +298,19 @@
   if(myGid == 0) then
     do i=1,ncomps
        apoint => tmparray(0:root_nprocs(i)-1,i)
-       call MPI_IRECV(apoint, root_nprocs(i),MP_INTEGER, &
-       MP_ANY_SOURCE,i,globalcomm, reqs(i), ier)
+       call MPI_IRECV(apoint, root_nprocs(i),MPI_INTEGER, &
+       MPI_ANY_SOURCE,i,globalcomm, reqs(i), ier)
        if(ier /= 0) call MP_perr_die(myname_,'MPI_IRECV()',ier)
     enddo
   endif
 
 !  The root on each component sends
   do i=1,size(myids)
-    if(mycomms(i)/=MP_COMM_NULL) then
-      call MP_comm_size(mycomms(i),mysize,ier)
-      if(ier /= 0) call MP_perr_die(myname_,'MP_comm_size()',ier)
-      call MP_comm_rank(mycomms(i),myLid,ier)
-      if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+    if(mycomms(i)/=MPI_COMM_NULL) then
+      call MPI_comm_size(mycomms(i),mysize,ier)
+      if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_size()',ier)
+      call MPI_comm_rank(mycomms(i),myLid,ier)
+      if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
 ! make the master list of global proc ids
 !
@@ -324,7 +324,7 @@
       endif
       if(ier/=0) call die(myname_,'allocate(Gprocids)',ier)
 ! gather over the LOCAL comm
-      call MPI_GATHER(myGid,1,MP_INTEGER,Gprocids,1,MP_INTEGER,0,mycomms(i),ier)
+      call MPI_GATHER(myGid,1,MPI_INTEGER,Gprocids,1,MPI_INTEGER,0,mycomms(i),ier)
       if(ier/=0) call die(myname_,'MPI_GATHER Gprocids',ier)
 
 ! This barrier needed for good performance on high-processor counts.
@@ -332,7 +332,7 @@
       if(ier/=0) call die(myname_,'MPI_Barrier Gprocids',ier)
 
       if(myLid == 0) then
-        call MPI_SEND(Gprocids,mysize,MP_INTEGER,0,myids(i),globalcomm,ier)
+        call MPI_SEND(Gprocids,mysize,MPI_INTEGER,0,myids(i),globalcomm,ier)
         if(ier /= 0) call MP_perr_die(myname_,'MPI_SEND(Gprocids)',ier)
       endif
 
@@ -404,7 +404,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
 
@@ -491,7 +491,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
 
@@ -519,16 +519,16 @@
   endif
 
 ! determine overall size
-  call MP_comm_size(globalcomm,Gsize,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_size()',ier)
+  call MPI_comm_size(globalcomm,Gsize,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_size()',ier)
 
 ! determine my rank in comm_world
-  call MP_comm_rank(globalcomm,myGid,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(globalcomm,myGid,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
 ! create the MCT comm world
-  call MP_comm_dup(globalcomm,MCTcomm,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_dup()',ier)
+  call MPI_comm_dup(globalcomm,MCTcomm,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_dup()',ier)
 
   allocate(ThisMCTWorld%nprocspid(ncomps),stat=ier)
   if(ier/=0) call die(myname_,'allocate(MCTWorld%nprocspid(:),...',ier)
@@ -546,10 +546,10 @@
     ThisMCTWorld%idGprocid = ridGprocid
   endif
 
-  call MPI_BCAST(ThisMCTWorld%nprocspid, ncomps, MP_INTEGER, 0, MCTcomm, ier)
+  call MPI_BCAST(ThisMCTWorld%nprocspid, ncomps, MPI_INTEGER, 0, MCTcomm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_BCast nprocspid',ier)
 
-  call MPI_BCAST(ThisMCTWorld%idGprocid, ncomps*Gsize,MP_INTEGER, 0,MCTcomm, ier)
+  call MPI_BCAST(ThisMCTWorld%idGprocid, ncomps*Gsize,MPI_INTEGER, 0,MCTcomm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_BCast Gprocids',ier)
 
 ! if(myGid==17) then
@@ -578,7 +578,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die
 
       implicit none
@@ -600,8 +600,8 @@
   deallocate(ThisMCTWorld%nprocspid,ThisMCTWorld%idGprocid,stat=ier)
   if(ier /= 0) call warn(myname_,'deallocate(MCTW,...)',ier)
 
-  call MP_comm_free(ThisMCTWorld%MCT_comm, ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_free()',ier)
+  call MPI_comm_free(ThisMCTWorld%MCT_comm, ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_free()',ier)
 
   ThisMCTWorld%ncomps = 0
   ThisMCTWorld%mygrank = 0
@@ -867,7 +867,7 @@
 ! !USES:
 !
       use m_die
-      use m_mpif90
+      use mpi
 
       implicit none
 

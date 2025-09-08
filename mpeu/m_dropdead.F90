@@ -45,10 +45,7 @@ contains
 
     subroutine die_(where)
       use m_stdio, only : stderr
-      use m_mpif90,only : MP_comm_world
-      use m_mpif90,only : MP_comm_rank
-      use m_mpif90,only : MP_abort
-      use m_mpif90,only : MP_initialized
+      use mpi
       implicit none
       character(len=*),intent(in) :: where      ! where it is called
 
@@ -64,7 +61,7 @@ contains
   integer :: myrank,ier
   logical :: initialized
 
-  call MP_initialized(initialized,ier)
+  call MPI_initialized(initialized,ier)
 
   if (initialized) then
 
@@ -72,7 +69,7 @@ contains
         ! MPI_ should have been initialized for this call
         !-------------------------------------------------
 
-    call MP_comm_rank(MP_comm_world,myrank,ier)
+    call MPI_comm_rank(MPI_comm_world,myrank,ier)
 
         ! a message for the users:
 
@@ -84,7 +81,7 @@ contains
 #ifdef ENABLE_UNIX_ABORT
     call abort
 #else
-    call MP_abort(MP_comm_world,2,ier)
+    call MPI_abort(MPI_comm_world,2,ier)
 #endif
 
   else
@@ -119,10 +116,7 @@ end subroutine die_
 
     subroutine diex_(where,fnam,line)
       use m_stdio, only : stderr
-      use m_mpif90,only : MP_comm_world
-      use m_mpif90,only : MP_comm_rank
-      use m_mpif90,only : MP_abort
-      use m_mpif90,only : MP_initialized
+      use mpi
       implicit none
       character(len=*),intent(in) :: where      ! where it is called
       character(len=*),intent(in) :: fnam
@@ -144,7 +138,7 @@ end subroutine die_
 
   write(lineno,'(i16)') line
 
-  call MP_initialized(initialized,ier)
+  call MPI_initialized(initialized,ier)
 
   if (initialized) then
 
@@ -152,7 +146,7 @@ end subroutine die_
         ! MPI_ should have been initialized for this call
         !-------------------------------------------------
 
-    call MP_comm_rank(MP_comm_world,myrank,ier)
+    call MPI_comm_rank(MPI_comm_world,myrank,ier)
 
         ! a message for the users:
     write(stderr,'(z3.3,9a)') myrank,'.',myname_,       &
@@ -165,7 +159,7 @@ end subroutine die_
 #ifdef ENABLE_UNIX_ABORT
     call abort
 #else
-    call MP_abort(MP_comm_world,2,ier)
+    call MPI_abort(MPI_comm_world,2,ier)
 #endif
 
   else

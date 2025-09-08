@@ -590,8 +590,8 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
-      use m_mpif90
 
       implicit none
 
@@ -613,8 +613,8 @@
 
   MyNumElements = lsize_(sMat)
 
-  call MPI_ALLREDUCE(MyNumElements, GNumElements, 1, MP_INTEGER, &
-                     MP_SUM, comm, ierr)
+  call MPI_ALLREDUCE(MyNumElements, GNumElements, 1, MPI_INTEGER, &
+                     MPI_SUM, comm, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,"MPI_ALLREDUCE(MyNumElements...",ierr)
   endif
@@ -1913,8 +1913,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_Type
       use m_realkinds, only : SP, FP, DP
 
       use m_AttrVect, only : AttrVect_lsize => lsize
@@ -1953,8 +1954,8 @@
        ! use the value of lnum_elements
 
   if(present(comm)) then
-     call MPI_ALLREDUCE(Lnum_elements, tot_elements, 1, MP_REAL8, &
-                        MP_SUM, comm, ierr)
+     call MPI_ALLREDUCE(Lnum_elements, tot_elements, 1, MPI_REAL8, &
+                        MPI_SUM, comm, ierr)
      if(ierr /= 0) then
 	call MP_perr_die(myname_,"MPI_ALLREDUCE(MySparsity...",ierr)
      endif
@@ -1994,8 +1995,8 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
-      use m_mpif90
       use m_realkinds, only : DP, FP
 
       use m_AttrVect, only : AttrVect_lsize => lsize
@@ -2034,8 +2035,8 @@
        ! use the value of lnum_elements
 
   if(present(comm)) then
-     call MPI_ALLREDUCE(Lnum_elements, tot_elements, 1, MP_REAL8, &
-                        MP_SUM, comm, ierr)
+     call MPI_ALLREDUCE(Lnum_elements, tot_elements, 1, MPI_REAL8, &
+                        MPI_SUM, comm, ierr)
      if(ierr /= 0) then
 	call MP_perr_die(myname_,"MPI_ALLREDUCE(MySparsity...",ierr)
      endif
@@ -2176,8 +2177,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_Type
       use m_realkinds, only : SP, FP
 
       use m_AttrVect, only : AttrVect_lsize => lsize
@@ -2217,7 +2219,7 @@
 
        ! Determine local rank
 
-  call MP_COMM_RANK(comm, myID, ierr)
+  call MPI_COMM_RANK(comm, myID, ierr)
 
        ! Determine on each process the row of global row indices:
 
@@ -2226,7 +2228,7 @@
        ! Determine across the communicator the _maximum_ value of
        ! end_row, which will be assigned to num_rows on each process:
 
-  call MPI_ALLREDUCE(end_row, num_rows, 1, MP_INTEGER, MP_MAX, &
+  call MPI_ALLREDUCE(end_row, num_rows, 1, MPI_INTEGER, MPI_MAX, &
                     comm, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,"MPI_ALLREDUCE(end_row...",ierr)
@@ -2256,7 +2258,7 @@
        ! processes own the global sums.
 
   mp_Type_lsums=MP_Type(lsums)
-  call MPI_ALLREDUCE(lsums, gsums, num_rows, mp_Type_lsums, MP_SUM, comm, ierr)
+  call MPI_ALLREDUCE(lsums, gsums, num_rows, mp_Type_lsums, MPI_SUM, comm, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,"MPI_ALLREDUCE(lsums...",ierr)
   endif
@@ -2296,8 +2298,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
-      use m_mpif90
+      use m_mpif90, only : MP_Type
 
       use m_realkinds, only : DP, FP
 
@@ -2338,7 +2341,7 @@
 
        ! Determine local rank
 
-  call MP_COMM_RANK(comm, myID, ierr)
+  call MPI_COMM_RANK(comm, myID, ierr)
 
        ! Determine on each process the row of global row indices:
 
@@ -2347,7 +2350,7 @@
        ! Determine across the communicator the _maximum_ value of
        ! end_row, which will be assigned to num_rows on each process:
 
-  call MPI_ALLREDUCE(end_row, num_rows, 1, MP_INTEGER, MP_MAX, &
+  call MPI_ALLREDUCE(end_row, num_rows, 1, MPI_INTEGER, MPI_MAX, &
                     comm, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,"MPI_ALLREDUCE(end_row...",ierr)
@@ -2377,7 +2380,7 @@
        ! processes own the global sums.
 
   mp_Type_lsums=MP_Type(lsums)
-  call MPI_ALLREDUCE(lsums, gsums, num_rows, mp_Type_lsums, MP_SUM, comm, ierr)
+  call MPI_ALLREDUCE(lsums, gsums, num_rows, mp_Type_lsums, MPI_SUM, comm, ierr)
   if(ierr /= 0) then
      call MP_perr_die(myname_,"MPI_ALLREDUCE(lsums...",ierr)
   endif

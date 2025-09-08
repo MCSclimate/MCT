@@ -130,7 +130,7 @@
 
 ! !USES:
 
-      use m_mpif90
+      use mpi
       use m_die
 
       implicit none
@@ -157,11 +157,11 @@
   character(len=*),parameter :: myname_=myname//'::initd_'
   integer :: nPEs,myID,ier,l,i
 
-  call MP_comm_size(comm,nPEs,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_size()',ier)
+  call MPI_comm_size(comm,nPEs,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_size()',ier)
 
-  call MP_comm_rank(comm,myID,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(comm,myID,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
   allocate(GMap%counts(0:nPEs-1),GMap%displs(0:nPEs-1),stat=ier)
   if(ier /= 0) call die(myname_,'allocate()',ier)
@@ -171,7 +171,7 @@
 	call mall_ci(size(transfer(GMap%displs,(/1/))),myname_)
 #endif
 
-  call MPI_allgather(ln,1,MP_INTEGER,GMap%counts,1,MP_INTEGER,comm,ier)
+  call MPI_allgather(ln,1,MPI_INTEGER,GMap%counts,1,MPI_INTEGER,comm,ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_allgather()',ier)
 
   l=0
@@ -208,7 +208,7 @@
 
 ! !USES:
 
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
 
@@ -236,11 +236,11 @@
   character(len=*),parameter :: myname_=myname//'::initr_'
   integer :: nPEs,myID,ier,l,i
 
-  call MP_comm_size(comm,nPEs,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_size()',ier)
+  call MPI_comm_size(comm,nPEs,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_size()',ier)
 
-  call MP_comm_rank(comm,myID,ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(comm,myID,ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
   allocate(GMap%counts(0:nPEs-1),GMap%displs(0:nPEs-1),stat=ier)
   if(ier /= 0) call die(myname_,'allocate()',ier)
@@ -262,7 +262,7 @@
     GMap%counts(:)=lns(:)
   endif
 
-  call MPI_bcast(GMap%counts, nPEs, MP_INTEGER, root, comm, ier)
+  call MPI_bcast(GMap%counts, nPEs, MPI_INTEGER, root, comm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_bcast()',ier)
 
   ! on each process, use GMap%counts(:) to compute GMap%displs(:)
@@ -280,7 +280,7 @@
 
   if(myID == root) GMap%comp_id = comp_id
 
-  call MPI_bcast(GMap%comp_id,1,MP_INTEGER,root,comm,ier)
+  call MPI_bcast(GMap%comp_id,1,MPI_INTEGER,root,comm,ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_bcast()',ier)
 
  end subroutine initr_
@@ -314,7 +314,7 @@
                          my_comm, remote_comp_id)
 ! !USES:
 
-      use m_mpif90
+      use mpi
       use m_die
       use m_stdio
 
@@ -350,8 +350,8 @@
         ! Which processor am I on communicator my_comm?  Store
         ! the answer in myID:
 
-  call MP_comm_rank(my_comm, myID, ier)
-  if(ier /= 0) call MP_perr_die(myname_,'MP_comm_rank()',ier)
+  call MPI_comm_rank(my_comm, myID, ier)
+  if(ier /= 0) call MP_perr_die(myname_,'MPI_comm_rank()',ier)
 
         ! allocate counts and displacements component arrays
         ! for the sake of compactness, store the value of remote_npes
@@ -359,7 +359,7 @@
 
   if(myID == my_root) nPEs = remote_npes
 
-  call MPI_bcast(nPEs, 1, MP_INTEGER, my_root, my_comm, ier)
+  call MPI_bcast(nPEs, 1, MPI_INTEGER, my_root, my_comm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_bcast(nPEs...)',ier)
 
   allocate(GMap%counts(0:nPEs-1),GMap%displs(0:nPEs-1),stat=ier)
@@ -386,7 +386,7 @@
     GMap%counts(:)=remote_lns(:)
   endif
 
-  call MPI_bcast(GMap%counts, nPEs, MP_INTEGER, my_root, my_comm, ier)
+  call MPI_bcast(GMap%counts, nPEs, MPI_INTEGER, my_root, my_comm, ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_bcast()',ier)
 
         ! Now, on each processor of my_comm, compute from
@@ -405,7 +405,7 @@
         ! process my_root is valid).
 
   if(myID == my_root)  GMap%comp_id = remote_comp_id
-  call MPI_bcast(GMap%comp_id, 1, MP_INTEGER, my_root, my_comm,ier)
+  call MPI_bcast(GMap%comp_id, 1, MPI_INTEGER, my_root, my_comm,ier)
   if(ier/=0) call MP_perr_die(myname_,'MPI_bcast(GMap%comp_id...)',ier)
 
  end subroutine init_remote_

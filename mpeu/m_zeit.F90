@@ -222,9 +222,9 @@ contains
 ! !INTERFACE:
 
     subroutine ci_(name)
+      use mpi
       use m_stdio, only : stderr
       use m_die, only : die
-      use m_mpif90,only : MP_wtime
       implicit none
       character(len=*), intent(in) :: name
 
@@ -256,7 +256,7 @@ contains
         ! Get the current _zeits_
 
   call get_zeits(zts(1))
-  zts(0)=MP_wtime()
+  zts(0)=MPI_wtime()
 
         !--------------------------------------------------------
         ! Charge the ticks since the last co_() to the current level
@@ -321,9 +321,9 @@ end subroutine ci_
 ! !INTERFACE:
 
     subroutine co_(name,tms)
+      use mpi
       use m_stdio, only : stderr
       use m_die, only : die
-      use m_mpif90,only : MP_wtime
       implicit none
       character(len=*), intent(in) :: name      ! account name
       real*8,optional,dimension(0:5,0:1),intent(out) :: tms ! timings
@@ -362,7 +362,7 @@ end subroutine ci_
         ! Get the current _zeits_
 
   call get_zeits(zts(1))
-  zts(0)=MP_wtime()
+  zts(0)=MPI_wtime()
 
         ! need special handling if ndep is too large or too small.
 
@@ -425,7 +425,7 @@ end subroutine co_
 ! !INTERFACE:
 
     subroutine reset_()
-      use m_mpif90,only : MP_wtime
+      use mpi
       implicit none
 
 ! !REVISION HISTORY:
@@ -444,7 +444,7 @@ end subroutine co_
         ! Start timing
 
   call get_zeits(zts_sv(1))
-  zts_sv(0)=MP_wtime()
+  zts_sv(0)=MPI_wtime()
 
         ! Sign in the module name for the overheads (.eqv. ci_(ZEIT))
 
@@ -537,10 +537,10 @@ end function lookup_
 ! !INTERFACE:
 
     subroutine flush_(lu,umask)
+      use mpi
       use m_stdio, only : stderr
       use m_ioutil, only : luflush
       use m_die, only : die
-      use m_mpif90,only : MP_wtime
       implicit none
       integer,intent(in) :: lu  ! logical unit for the output
       integer,optional,intent(in) :: umask
@@ -576,7 +576,7 @@ end function lookup_
         ! latest times, but not closing on any entry
 
   call get_zeits(zts(1))
-  zts(0)=MP_wtime()
+  zts(0)=MPI_wtime()
 
         ! Print selected tables
 
@@ -729,11 +729,11 @@ end subroutine sp_balances_
 ! !INTERFACE:
 
     subroutine allflush_(comm,root,lu,umask)
+      use mpi
       use m_stdio, only : stderr
       use m_ioutil, only : luflush
       use m_die, only : die
-      use m_mpif90,only : MP_wtime,MP_type
-      use m_mpif90,only : MP_comm_size,MP_comm_rank
+      use m_mpif90,only : MP_type
       use m_SortingTools,only : IndexSet,IndexSort
       implicit none
       integer,intent(in) :: comm
@@ -766,7 +766,7 @@ end subroutine sp_balances_
   if(imask==0) return
 
   call get_zeits(zts(1))
-  zts(0)=MP_wtime()
+  zts(0)=MPI_wtime()
 
         ! Update the accounts and prepare for the messages
 
@@ -787,10 +787,10 @@ end subroutine sp_balances_
   end do
   nbf=size(ztbf(0:5,0:1,0:mnm))
 
-  call MP_comm_rank(comm,myID,ier)
+  call MPI_comm_rank(comm,myID,ier)
   if(ier /= 0) then
     write(stderr,'(2a,i3)') myname_,    &
-        ': MP_comm_rank() error, ier =',ier
+        ': MPI_comm_rank() error, ier =',ier
     call die(myname_)
   endif
 
@@ -811,10 +811,10 @@ end subroutine sp_balances_
 
   else
 
-    call MP_comm_size(comm,nPE,ier)
+    call MPI_comm_size(comm,nPE,ier)
     if(ier /= 0) then
       write(stderr,'(2a,i3)') myname_,  &
-        ': MP_comm_size() error, ier =',ier
+        ': MPI_comm_size() error, ier =',ier
       call die(myname_)
     endif
 

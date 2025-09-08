@@ -31,7 +31,6 @@ SRCS_F90	= m_IndexBin_char.F90		\
 		  m_inpak90.F90			\
 		  m_ioutil.F90			\
 		  m_mall.F90			\
-		  m_mpif.F90			\
 		  m_mpif90.F90			\
 		  m_mpout.F90			\
 		  m_rankMerge.F90		\
@@ -100,8 +99,7 @@ m_flow.o: m_chars.o
 m_inpak90.o: m_die.o m_ioutil.o m_mall.o m_mpif90.o m_realkinds.o m_stdio.o
 m_ioutil.o: m_stdio.o
 m_mall.o: m_chars.o m_die.o m_ioutil.o m_realkinds.o m_stdio.o
-m_mpif.o:
-m_mpif90.o: m_mpif.o m_realkinds.o m_stdio.o
+m_mpif90.o: m_realkinds.o m_stdio.o
 m_mpout.o: m_dropdead.o m_ioutil.o m_mpif90.o m_stdio.o
 m_rankMerge.o:
 m_realkinds.o:

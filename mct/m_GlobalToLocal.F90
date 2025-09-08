@@ -100,7 +100,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die,          only : MP_perr_die, die, warn
       use m_GlobalSegMap, only : GlobalSegMap
       use m_GlobalSegMap, only : GlobalSegMap_ngseg => ngseg
@@ -128,8 +128,8 @@
 
           ! determine local process id myID
 
-  call MP_COMM_RANK(comm, myID, ierr)
-  if(ierr /= 0) call MP_perr_die(myname_,'MP_COMM_RANK',ierr)
+  call MPI_COMM_RANK(comm, myID, ierr)
+  if(ierr /= 0) call MP_perr_die(myname_,'MPI_COMM_RANK',ierr)
 
           ! determine number of global segments ngseg:
 
@@ -203,7 +203,7 @@
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die,          only : MP_perr_die, die, warn
       use m_GlobalSegMap, only : GlobalSegMap
       use m_GlobalSegMap, only : GlobalSegMap_ngseg => ngseg
@@ -231,8 +231,8 @@
 
   ! Determine local process id myID:
 
-  call MP_COMM_RANK(comm, myID, ierr)
-  if(ierr /= 0) call MP_perr_die(myname_,'MP_COMM_RANK()',ierr)
+  call MPI_COMM_RANK(comm, myID, ierr)
+  if(ierr /= 0) call MP_perr_die(myname_,'MPI_COMM_RANK()',ierr)
 
   ! Extract the global number of segments in GSMap
 
@@ -322,8 +322,8 @@ subroutine GlobalSegMapToIndexArr_(GSMap, i_global, i_local, nindex, comm)
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
-      use m_mpif90
       use m_die,          only : MP_perr_die, die, warn
       use m_GlobalSegMap, only : GlobalSegMap
       use m_GlobalSegMap, only : GlobalSegMap_ngseg => ngseg
@@ -353,8 +353,8 @@ subroutine GlobalSegMapToIndexArr_(GSMap, i_global, i_local, nindex, comm)
 
   ! Determine local process id myID:
 
-  call MP_COMM_RANK(comm, myID, ierr)
-  if(ierr /= 0) call MP_perr_die(myname_,'MP_COMM_RANK()',ierr)
+  call MPI_COMM_RANK(comm, myID, ierr)
+  if(ierr /= 0) call MP_perr_die(myname_,'MPI_COMM_RANK()',ierr)
 
 
   ngseg = GlobalSegMap_ngseg(GSMap)
@@ -478,7 +478,7 @@ subroutine GlobalSegMapToIndexArr_(GSMap, i_global, i_local, nindex, comm)
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die,          only : MP_perr_die, die, warn
       use m_GlobalMap,    only : GlobalMap
 
@@ -504,8 +504,8 @@ subroutine GlobalSegMapToIndexArr_(GSMap, i_global, i_local, nindex, comm)
 
   ! Determine local process id myID:
 
-  call MP_COMM_RANK(comm, myID, ierr)
-  if(ierr /= 0) call MP_perr_die(myname_,'MP_COMM_RANK()',ierr)
+  call MPI_COMM_RANK(comm, myID, ierr)
+  if(ierr /= 0) call MP_perr_die(myname_,'MPI_COMM_RANK()',ierr)
 
   ! Initialize logical "point located" flag found as false
 
@@ -553,7 +553,7 @@ subroutine GlobalSegMapToIndexArr_(GSMap, i_global, i_local, nindex, comm)
 !
 ! !USES:
 !
-      use m_mpif90
+      use mpi
       use m_die,          only : MP_perr_die, die, warn
       use m_GlobalSegMap, only : GlobalSegMap
       use m_GlobalSegMap, only : GlobalSegMap_ngseg => ngseg
@@ -582,8 +582,8 @@ subroutine GlobalSegMapToIndexArr_(GSMap, i_global, i_local, nindex, comm)
 
           ! determine local process id myID
 
-  call MP_COMM_RANK(comm, myID, ierr)
-  if(ierr /= 0) call MP_perr_die(myname_,'MP_COMM_RANK',ierr)
+  call MPI_COMM_RANK(comm, myID, ierr)
+  if(ierr /= 0) call MP_perr_die(myname_,'MPI_COMM_RANK',ierr)
 
           ! determine number of global segments ngseg:
 

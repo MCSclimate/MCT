@@ -1482,7 +1482,6 @@
       use m_stdio
       use m_die, only : die
 
-      use m_mpif90
 
       use m_String, only:  String
       use m_String, only:  String_toChar => toChar
@@ -1540,7 +1539,6 @@
       use m_stdio
       use m_die, only : die
 
-      use m_mpif90
 
       use m_String, only:  String
       use m_String, only:  String_init => init
@@ -1666,12 +1664,12 @@
 !
       use m_stdio,  only : stderr
       use m_die, only : MP_perr_die, die
+      use mpi
 
       use m_String, only:  String
       use m_String, only:  String_bcast => bcast
       use m_String, only:  String_clean => clean
 
-      use m_mpif90
 
       implicit none
 
@@ -1782,11 +1780,13 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio
       use m_die, only : MP_perr_die
 
-      use m_mpif90
 
+
+      use m_mpif90, only:  MP_type
       use m_String, only:  String
       use m_String, only:  String_toChar => toChar
       use m_String, only:  String_len
@@ -1843,7 +1843,7 @@
        ! Step 3.  Send CHARACTER portion of String DummStr
        ! to process dest.
 
- call MPI_SEND(DummStr%c(1), length, MP_CHARACTER, dest, TagBase+1, &
+ call MPI_SEND(DummStr%c(1), length, MPI_CHARACTER, dest, TagBase+1, &
                comm, ierr)
   if(ierr /= 0) then
      if(present(status)) then
@@ -1885,12 +1885,13 @@
 !
 ! !USES:
 !
+      use mpi
       use m_stdio, only : stderr
       use m_die,   only : MP_perr_die
 
-      use m_mpif90
 
       use m_String, only : String
+      use m_mpif90, only:  MP_type
 
       implicit none
 
@@ -1915,7 +1916,7 @@
  character(len=*),parameter :: myname_=myname//'::recv_'
 
  integer :: ierr, length
- integer :: MPstatus(MP_STATUS_SIZE)
+ integer :: MPstatus(MPI_STATUS_SIZE)
  type(String) :: DummStr
 
        ! Initialize status to zero (success), if present.
@@ -1942,7 +1943,7 @@
        ! Step 2.  Send CHARACTER portion of String DummStr
        ! to process dest.
 
- call MPI_RECV(DummStr%c(1), length, MP_CHARACTER, source, TagBase+1, &
+ call MPI_RECV(DummStr%c(1), length, MPI_CHARACTER, source, TagBase+1, &
                comm, MPstatus, ierr)
   if(ierr /= 0) then
      if(present(status)) then

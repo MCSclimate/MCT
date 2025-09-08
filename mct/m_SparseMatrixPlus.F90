@@ -216,7 +216,6 @@
 
       use m_die
       use m_stdio
-      use m_mpif90
 
       use m_String, only : String
       use m_String, only : String_init => init
@@ -413,7 +412,6 @@
 
       use m_die
       use m_stdio
-      use m_mpif90
 
       use m_String, only : String
       use m_String, only : String_init => init

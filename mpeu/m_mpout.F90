@@ -89,8 +89,7 @@ contains
       use m_stdio, only : stderr,stdout
       use m_ioutil, only : luavail,opntext
       use m_dropdead, only : die
-      use m_mpif90, only : MP_comm_WORLD
-      use m_mpif90, only : MP_comm_rank
+      use mpi
       use m_mpif90, only : MP_perr
       implicit none
       integer,optional,intent(in) :: mask
@@ -132,9 +131,9 @@ contains
   mpout=stdout
   mpout_set=.false.
 
-  call MP_comm_rank(MP_comm_world,irank,ier)
+  call MPI_comm_rank(MPI_comm_world,irank,ier)
   if(ier /= 0) then
-    call MP_perr(myname_,'MP_comm_rank()',ier)
+    call MP_perr(myname_,'MPI_comm_rank()',ier)
     call die(myname_)
   endif
 

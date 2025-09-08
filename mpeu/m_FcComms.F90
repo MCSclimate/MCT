@@ -75,8 +75,8 @@
 !
 ! !USES:
 !
+      use mpi
       use m_die
-      use m_mpif90
 !
 ! !INPUT PARAMETERS:
 !
@@ -106,7 +106,7 @@
  integer :: mytid, mysize, mtag, p, i, count, displs
  integer :: preposts, head, tail
  integer :: rcvid(max_gather_block_size)
- integer :: status(MP_STATUS_SIZE)
+ integer :: status(MPI_STATUS_SIZE)
  integer :: ier ! MPI error code
 
  signal = 1
@@ -216,9 +216,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_realkinds, only : FP
       use m_die
-      use m_mpif90
 !
 ! !INPUT PARAMETERS:
 !
@@ -248,7 +248,7 @@
  integer :: mytid, mysize, mtag, p, i, count, displs
  integer :: preposts, head, tail
  integer :: rcvid(max_gather_block_size)
- integer :: status(MP_STATUS_SIZE)
+ integer :: status(MPI_STATUS_SIZE)
  integer :: ier ! MPI error code
 
  signal = 1.0
@@ -359,7 +359,7 @@
 ! !USES:
 !
       use m_die
-      use m_mpif90
+      use mpi
 !
 ! !INPUT PARAMETERS:
 !
@@ -390,7 +390,7 @@
  integer :: mytid, mysize, mtag, p, q, i, count
  integer :: preposts, head, tail
  integer :: rcvid(max_gather_block_size)
- integer :: status(MP_STATUS_SIZE)
+ integer :: status(MPI_STATUS_SIZE)
  integer :: ier ! MPI error code
 
  signal = 1
@@ -500,9 +500,9 @@
 !
 ! !USES:
 !
+      use mpi
       use m_realkinds, only : FP
       use m_die
-      use m_mpif90
 !
 ! !INPUT PARAMETERS:
 !
@@ -533,7 +533,7 @@
  integer :: mytid, mysize, mtag, p, q, i, count
  integer :: preposts, head, tail
  integer :: rcvid(max_gather_block_size)
- integer :: status(MP_STATUS_SIZE)
+ integer :: status(MPI_STATUS_SIZE)
  integer :: ier ! MPI error code
 
  signal = 1.0
