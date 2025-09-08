@@ -102,10 +102,6 @@
   and send us config.out, make.out and config.log (which is produced by the
   configure command)
 
-  PLATFORM NOTES:
-  On a BlueGene, use:
-  >  ./configure FC=bgxlf90_r CC=mpixlc_r MPIFC=mpixlf90_r (can also use versions without _r)
-
 ######################################################################
   INSTALLATION INSTRUCTIONS:
 
