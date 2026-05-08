@@ -64,11 +64,13 @@
 
       public :: clean        ! destruction method
       public :: print        ! print out comm info
+      public :: isLocalOnly  ! query method
 
       interface init      ; module procedure init_      ; end interface
       interface Rearrange ; module procedure Rearrange_ ; end interface
       interface clean     ; module procedure clean_     ; end interface
       interface print     ; module procedure print_     ; end interface
+      interface isLocalOnly ; module procedure isLocalOnly_ ; end interface
 
 ! !DEFINED PARAMETERS:
 
@@ -1391,6 +1393,42 @@ endif
       call router_print(rearr%RecvRouter,mycomm,lun)
 
   end subroutine print_
+
+
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!    Math and Computer Science Division, Argonne National Laboratory   !
+!BOP -------------------------------------------------------------------
+!
+! !IROUTINE: isLocalOnly_ - Query if Rearranger has only local data movement
+!
+! !DESCRIPTION:
+! Returns {\tt .true.} if the {\tt Rearranger} {\tt InRearranger} has no
+! remote sends or receives---all data movement is a local on-processor
+! copy.  Returns {\tt .false.} if any inter-processor communication is
+! required.
+!
+! !INTERFACE:
+
+ logical function isLocalOnly_(InRearranger)
+
+!
+! !USES:
+!
+   implicit none
+
+! !INPUT PARAMETERS:
+!
+   type(Rearranger), intent(in) :: InRearranger
+
+! !REVISION HISTORY:
+! 07May26 - Added to query communication pattern of a Rearranger
+!EOP ___________________________________________________________________
+   character(len=*),parameter :: myname_=myname//'::isLocalOnly_'
+
+   isLocalOnly_ = (InRearranger%SendRouter%nprocs == 0 .and. &
+                   InRearranger%RecvRouter%nprocs == 0)
+
+ end function isLocalOnly_
 
 
 end module m_Rearranger

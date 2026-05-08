@@ -133,6 +133,7 @@
       public :: clean
       public :: initialized
       public :: exportStrategyToChar
+      public :: YPrimeToYLocalOnly
 
       interface init ; module procedure &
         initFromRoot_, &
@@ -144,6 +145,7 @@
       interface exportStrategyToChar ; module procedure &
         exportStrategyToChar_
       end interface
+      interface YPrimeToYLocalOnly ; module procedure YPrimeToYLocalOnly_ ; end interface
 
 ! !PUBLIC DATA MEMBERS:
 
@@ -867,6 +869,43 @@
   call String_clean(dummyStrategy)
 
  end function exportStrategyToChar_
+
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!    Math and Computer Science Division, Argonne National Laboratory   !
+!BOP -------------------------------------------------------------------
+!
+! !IROUTINE: YPrimeToYLocalOnly_ - Query if YPrimeToY Rearranger is local only
+!
+! !DESCRIPTION:
+! This {\tt LOGICAL} query function returns {\tt .TRUE.} if the
+! {\tt YPrimeToY} {\tt Rearranger} in the input {\tt SparseMatrixPlus}
+! argument {\tt sMatPlus} has no remote sends or receives---all data
+! movement is a local on-processor copy.  Returns {\tt .FALSE.} if any
+! inter-processor communication is required.
+!
+! !INTERFACE:
+
+ logical function YPrimeToYLocalOnly_(sMatPlus)
+!
+! !USES:
+!
+      use m_Rearranger, only : Rearranger_isLocalOnly => isLocalOnly
+
+      implicit none
+
+! !INPUT PARAMETERS:
+!
+      type(SparseMatrixPlus), intent(in)  :: sMatPlus
+
+! !REVISION HISTORY:
+! 07May26 - Added to query YPrimeToY communication pattern
+!EOP ___________________________________________________________________
+!
+ character(len=*),parameter :: myname_=myname//'::YPrimeToYLocalOnly_'
+
+  YPrimeToYLocalOnly_ = Rearranger_isLocalOnly(sMatPlus%YPrimeToY)
+
+ end function YPrimeToYLocalOnly_
 
  end module m_SparseMatrixPlus
 
