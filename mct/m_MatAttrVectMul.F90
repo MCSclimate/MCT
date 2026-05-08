@@ -93,13 +93,14 @@
 !
 ! !INTERFACE:
 
- subroutine sMatAvMult_DataLocal_(xAV, sMat, yAV, Vector, rList, TrList)
+ subroutine sMatAvMult_DataLocal_(xAV, sMat, yAV, Vector, rList, TrList, timer)
 !
 ! !USES:
 !
       use m_realkinds, only : FP
       use m_stdio,     only : stderr
       use m_die,       only : MP_perr_die, die, warn
+      use perf_mod,    only : t_startf, t_stopf
 
       use m_List, only : List_identical => identical
       use m_List, only : List_nitem => nitem
@@ -125,6 +126,7 @@
       logical,optional,   intent(in)    :: Vector
       character(len=*),optional, intent(in)    :: rList
       character(len=*),optional, intent(in)    :: TrList
+      character(len=*),optional, intent(in)    :: timer
 
 
 ! !INPUT/OUTPUT PARAMETERS:
@@ -187,6 +189,8 @@
   logical :: usevector,TrListIsPresent,rListIsPresent
   logical :: contiguous,ycontiguous
 
+
+  if(present(timer)) call t_startf(timer)
 
   usevector = .false.
   if(present(Vector)) then
@@ -396,6 +400,8 @@
   endif ! if(List_identical(xAV%rAttr, yAV%rAttr))...
         ! And we are finished!
 
+  if(present(timer)) call t_stopf(timer)
+
  end subroutine sMatAvMult_DataLocal_
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -428,13 +434,14 @@
 !
 ! !INTERFACE:
 
- subroutine sMatAvMult_SMPlus_(xAV, sMatPlus, yAV, Vector, rList, TrList)
+ subroutine sMatAvMult_SMPlus_(xAV, sMatPlus, yAV, Vector, rList, TrList, timer)
 !
 ! !USES:
 !
       use m_stdio
       use m_die
       use m_mpif90
+      use perf_mod,    only : t_startf, t_stopf
 
       use m_String, only : String
       use m_String, only : String_ToChar => ToChar
@@ -462,6 +469,7 @@
       logical, optional,      intent(in)    :: Vector
       character(len=*),optional, intent(in)    :: rList
       character(len=*),optional, intent(in)    :: TrList
+      character(len=*),optional, intent(in)    :: timer
 
 ! !INPUT/OUTPUT PARAMETERS:
 
@@ -489,6 +497,7 @@
   type(AttrVect) :: yAVre
   integer :: ierr
   logical ::  usevector
+  logical :: do_timer
   character(len=5) :: strat
 
   ! check arguments
@@ -497,6 +506,9 @@
        call die(myname_,'MCTERROR: TrList provided without rList',2)
      endif
   endif
+
+  do_timer = .false.
+  if(present(timer)) do_timer=.true.
 
   usevector = .FALSE.
   if(present(Vector)) then
@@ -511,11 +523,15 @@
      call AttrVect_init(xPrimeAV, xAV, sMatPlus%XPrimeLength)
      call AttrVect_zero(xPrimeAV)
        ! Rearrange data from x to get x'
+     if(do_timer) call t_startf(timer//':matcommx')
      call Rearrange(xAV, xPrimeAV, sMatPlus%XToXPrime, &
                     tag=sMatPlus%Tag, vector=usevector,&
                     alltoall=.true., handshake=.true.  )
 
+     if(do_timer) call t_stopf(timer//':matcommx')
+
        ! Perform perfectly data-local multiply y = Mx'
+     if(do_timer) call t_startf(timer//':matmultx')
      if (present(TrList).and.present(rList)) then
        call sMatAvMult_DataLocal_(xPrimeAV, sMatPlus%Matrix, yaV, &
               Vector=usevector,rList=rList,TrList=TrList)
@@ -526,6 +542,7 @@
        call sMatAvMult_DataLocal_(xPrimeAV, sMatPlus%Matrix, yaV, &
                Vector=usevector)
      endif
+     if(do_timer) call t_stopf(timer//':matmultx')
 
        ! Clean up space occupied by x'
      call AttrVect_clean(xPrimeAV, ierr)
@@ -546,6 +563,7 @@
      endif
 
        ! Perform perfectly data-local multiply y' = Mx
+     if(do_timer) call t_startf(timer//':matmulty')
      if (present(TrList).and.present(rList)) then
         call sMatAvMult_DataLocal_(xAV, sMatPlus%Matrix, yPrimeAV, &
 	       Vector=usevector,rList=rList,TrList=TrList)
@@ -556,8 +574,10 @@
         call sMatAvMult_DataLocal_(xAV, sMatPlus%Matrix, yPrimeAV, &
 	       Vector=usevector)
      endif
+     if(do_timer) call t_stopf(timer//':matmulty')
 
        ! Rearrange/reduce partial sums in y' to get y
+     if(do_timer) call t_startf(timer//':matcommy')
      if (present(TrList).or.present(rList)) then
        call Rearrange(yPrimeAV, yAVre, sMatPlus%YPrimeToY,            &
                       tag=sMatPlus%Tag, sum=.TRUE., Vector=usevector, &
@@ -569,6 +589,7 @@
                       tag=sMatPlus%Tag, sum=.TRUE., Vector=usevector, &
                       alltoall=.true., handshake=.true.               )
      endif
+     if(do_timer) call t_stopf(timer//':matcommy')
        ! Clean up space occupied by y'
      call AttrVect_clean(yPrimeAV, ierr)
 
@@ -593,11 +614,14 @@
      endif
 
        ! Rearrange data from x to get x'
+     if(do_timer) call t_startf(timer//':matcommxyx')
      call Rearrange(xAV, xPrimeAV, sMatPlus%XToXPrime,  &
                     tag=sMatPlus%Tag, Vector=usevector, &
                     alltoall=.true., handshake=.true.   )
+     if(do_timer) call t_stopf(timer//':matcommxyx')
 
        ! Perform perfectly data-local multiply y' = Mx'
+     if(do_timer) call t_startf(timer//':matmultxy')
      if (present(TrList).and.present(rList)) then
          call sMatAvMult_DataLocal_(xPrimeAV, sMatPlus%Matrix, yPrimeAV, &
                              Vector=usevector,rList=rList,TrList=TrList)
@@ -608,8 +632,10 @@
          call sMatAvMult_DataLocal_(xPrimeAV, sMatPlus%Matrix, yPrimeAV, &
                              Vector=usevector)
      endif
+     if(do_timer) call t_stopf(timer//':matmultxy')
 
        ! Rearrange/reduce partial sums in y' to get y
+     if(do_timer) call t_startf(timer//':matcommxyy')
      if (present(TrList).or.present(rList)) then
        call Rearrange(yPrimeAV, yAVre, sMatPlus%YPrimeToY,            &
                       tag=sMatPlus%Tag, sum=.TRUE., Vector=usevector, &
@@ -621,11 +647,13 @@
                       tag=sMatPlus%Tag, sum=.TRUE., Vector=usevector, &
                       alltoall=.true., handshake=.true.               )
      endif
+     if(do_timer) call t_stopf(timer//':matcommxyy')
 
        ! Clean up space occupied by x'
      call AttrVect_clean(xPrimeAV, ierr)
        ! Clean up space occupied by y'
      call AttrVect_clean(yPrimeAV, ierr)
+
   case default
      write(stderr,'(4a)') myname_, &
 	  ':: FATAL ERROR--parallelization strategy name ',&
