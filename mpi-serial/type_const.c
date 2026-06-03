@@ -184,6 +184,6 @@ Typestruct TSoffset = {.count = 1,   .lb = 0,   .ub=sizeof(MPI_Offset),
                        };
 
 
-  /* optional datatypes (Fortran)  MPI_INTEGER1 MPI_INTEGER2 MPI_INTEGER4 MPI_REAL2 MPI_REAL4 MPI_REAL8
+/* optional datatypes (Fortran)  MPI_INTEGER1 MPI_INTEGER2 MPI_INTEGER4 MPI_REAL2 MPI_REAL4 MPI_REAL8 */
 
-  /* optional datatypes (C)  MPI_LONG_LONG_INT */
+/* optional datatypes (C)  MPI_LONG_LONG_INT */

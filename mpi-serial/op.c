@@ -5,9 +5,10 @@
  * suffices here.
  */
 
-FC_FUNC(mpi_op_create, MPI_OP_CREATE)(MPI_User_function *func, int * commute, int * op, int * ierr)
+int FC_FUNC(mpi_op_create, MPI_OP_CREATE)(MPI_User_function *func, int * commute, int * op, int * ierr)
 {
   *ierr = MPI_Op_create(func, *commute, op);
+  return(MPI_SUCCESS);
 }
 
 int MPI_Op_create(MPI_User_function *function, int commute, MPI_Op *op)
@@ -16,9 +17,10 @@ int MPI_Op_create(MPI_User_function *function, int commute, MPI_Op *op)
   return MPI_SUCCESS;
 }
 
-FC_FUNC(mpi_op_free, MPI_OP_FREE)(int * op, int * ierr)
+int FC_FUNC(mpi_op_free, MPI_OP_FREE)(int * op, int * ierr)
 {
   *ierr = MPI_Op_free(op);
+  return(MPI_SUCCESS);
 }
 
 int MPI_Op_free(MPI_Op * op)

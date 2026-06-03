@@ -1,0 +1,28 @@
+name: mpi-serial
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: load-env
+        run: |
+          sudo apt-get update
+          sudo apt-get install gfortran
+          sudo apt-get install autoconf
+        
+      - name: Build mpi-serial
+        id: build
+        run: |
+          cd $GITHUB_WORKSPACE
+          autoreconf -i
+          ./configure CFLAGS="-Wall -Werror -Wno-format"
+          make
+          make tests

@@ -7,10 +7,11 @@
 
 
 
-FC_FUNC( mpi_test , MPI_TEST)(int *request, int *flag, int *status,
+int FC_FUNC( mpi_test , MPI_TEST)(int *request, int *flag, int *status,
                                 int *ierror)
 {
   *ierror=MPI_Test( (void *)request ,flag,mpi_c_status(status));
+  return MPI_SUCCESS;
 }
 
 
@@ -52,9 +53,10 @@ int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status)
 
 
 
-FC_FUNC( mpi_wait , MPI_WAIT )(int *request, int *status, int *ierror)
+int FC_FUNC( mpi_wait , MPI_WAIT )(int *request, int *status, int *ierror)
 {
   *ierror=MPI_Wait( (void *)request, mpi_c_status(status) );
+  return MPI_SUCCESS;
 }
 
 
@@ -78,16 +80,17 @@ int MPI_Wait(MPI_Request *request, MPI_Status *status)
 /*********/
 
 
-FC_FUNC( mpi_waitany , MPI_WAITANY )(int *count, int *requests,
+int FC_FUNC( mpi_waitany , MPI_WAITANY )(int *count, int *requests,
                                        int *index, int *status, int *ierror)
 {
 
   *ierror=MPI_Waitany(*count, (void *)requests,index,mpi_c_status(status));
+  return MPI_SUCCESS;
 }
 
 
 
-int MPI_Waitany(int count, MPI_Request *array_of_requests,
+int MPI_Waitany(int count, MPI_Request array_of_requests[],
                 int *index, MPI_Status *status)
 {
   int flag;
@@ -111,15 +114,16 @@ int MPI_Waitany(int count, MPI_Request *array_of_requests,
  * flag=0 means no match was found.
  */
 
-FC_FUNC(mpi_testany, MPI_TESTANY)
+int FC_FUNC(mpi_testany, MPI_TESTANY)
          (int * count, int * array_of_requests,
           int * index, int * flag, int *status, int * ierr)
 {
   *ierr = MPI_Testany(*count, array_of_requests, index,
                       flag, mpi_c_status(status));
+  return MPI_SUCCESS;
 }
 
-int MPI_Testany(int count,  MPI_Request *array_of_requests,
+int MPI_Testany(int count,  MPI_Request array_of_requests[],
                 int *index, int *flag, MPI_Status *status)
 {
   int i;
@@ -142,15 +146,16 @@ int MPI_Testany(int count,  MPI_Request *array_of_requests,
  * testall: tests that all requests have completed,
  * if so return request array, otherwise set flag=0
  */
-FC_FUNC(mpi_testall, MPI_TESTALL)
+int FC_FUNC(mpi_testall, MPI_TESTALL)
          (int * count, int * array_of_requests, int *flag,
           int * array_of_statuses, int * ierr)
 {
   *ierr = MPI_Testall(*count, array_of_requests, flag,
                       mpi_c_statuses(array_of_statuses));
+  return MPI_SUCCESS;
 }
 
-int MPI_Testall(int count, MPI_Request *array_of_requests,
+int MPI_Testall(int count, MPI_Request array_of_requests[],
                 int *flag, MPI_Status *array_of_statuses)
 {
   int i;
@@ -174,17 +179,18 @@ int MPI_Testall(int count, MPI_Request *array_of_requests,
  * completed, abort with an error
  */
 
-FC_FUNC( mpi_waitall , MPI_WAITALL )(int *count, int *array_of_requests,
+int FC_FUNC( mpi_waitall , MPI_WAITALL )(int *count, int *array_of_requests,
                                        int *array_of_statuses, int *ierror)
 {
   *ierror=MPI_Waitall(*count, (void *)array_of_requests,
                       mpi_c_statuses(array_of_statuses));
+  return MPI_SUCCESS;
 
 }
 
 
 
-int MPI_Waitall(int count, MPI_Request *array_of_requests,
+int MPI_Waitall(int count, MPI_Request array_of_requests[],
                 MPI_Status *array_of_statuses)
 {
   int i;
@@ -208,29 +214,30 @@ int MPI_Waitall(int count, MPI_Request *array_of_requests,
  * status in an array (if it is available
  */
 
-FC_FUNC(mpi_testsome, MPI_TESTSOME)
+int FC_FUNC(mpi_testsome, MPI_TESTSOME)
          (int * incount, int * array_of_requests, int * outcount,
           int * array_of_indices, int * array_of_statuses, int * ierr)
 {
   *ierr = MPI_Testsome(*incount, array_of_requests, outcount,
 		       array_of_indices, mpi_c_statuses(array_of_statuses));
+  return MPI_SUCCESS;
 }
 
-int MPI_Testsome(int incount, MPI_Request *array_of_requests, int *outcount,
-                 int *array_of_indices, MPI_Status *array_of_statuses)
+int MPI_Testsome(int incount, MPI_Request array_of_requests[], int *outcount,
+                 int array_of_indices[], MPI_Status *array_of_statuses)
 {
   int i;
   int flag;
 
-  *outcount =0;
-    for (i=0; i<incount; i++)
-    {
+  *outcount = 0;
+  for (i=0; i<incount; i++)
+  {
       flag=0;
       MPI_Test(&array_of_requests[i],&flag,&array_of_statuses[i]);
-
+      
       if (flag)
-        *outcount++;
-    }
+	  (*outcount)++;
+  }
 
   return(MPI_SUCCESS);
 
@@ -240,16 +247,17 @@ int MPI_Testsome(int incount, MPI_Request *array_of_requests, int *outcount,
  * requests.  If no statuses are available, abort with error
  */
 
-FC_FUNC(mpi_waitsome, MPI_WAITSOME)
+int FC_FUNC(mpi_waitsome, MPI_WAITSOME)
          (int * incount, int * array_of_requests, int * outcount,
           int * array_of_indices, int *array_of_statuses, int * ierr)
 {
   *ierr = MPI_Waitsome(*incount, array_of_requests, outcount,
 		       array_of_indices, mpi_c_statuses(array_of_statuses));
+  return MPI_SUCCESS;
 }
 
-int MPI_Waitsome(int incount, MPI_Request *array_of_requests, int *outcount,
-                 int *array_of_indices, MPI_Status *array_of_statuses)
+int MPI_Waitsome(int incount, MPI_Request array_of_requests[], int *outcount,
+                 int array_of_indices[], MPI_Status *array_of_statuses)
 {
   MPI_Testsome(incount, array_of_requests, outcount,
                array_of_indices, array_of_statuses);
@@ -267,10 +275,11 @@ int MPI_Waitsome(int incount, MPI_Request *array_of_requests, int *outcount,
 /* Request_free:  Frees the handle and request
  */
 
-FC_FUNC(mpi_request_free, MPI_REQUEST_FREE)
+int FC_FUNC(mpi_request_free, MPI_REQUEST_FREE)
          (int * request, int * ierr)
 {
   *ierr = MPI_Request_free(request);
+  return MPI_SUCCESS;
 }
 
 int MPI_Request_free(MPI_Request * req)

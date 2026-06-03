@@ -1,5 +1,3 @@
-
-
 #include "mpiP.h"
 #include "mpi.h"
 #include "type.h"
@@ -15,7 +13,7 @@ static int *f_MPI_STATUS_IGNORE;
 static int *f_MPI_STATUSES_IGNORE;
 static int *f_MPI_IN_PLACE;
 
-static char *mpi_version_string="mpi-serial 2.3";
+static char *mpi_version_string="mpi-serial 2.5.0";
 
 
 /****************************************************************************/
@@ -28,7 +26,7 @@ static char *mpi_version_string="mpi-serial 2.3";
 
 
 
-FC_FUNC( mpi_init_fort , MPI_INIT_FORT)
+int FC_FUNC( mpi_init_fort , MPI_INIT_FORT)
                           (int *f_MPI_COMM_WORLD,
                            int *f_MPI_ANY_SOURCE, int *f_MPI_ANY_TAG,
 			   int *f_MPI_PROC_NULL, int *f_MPI_ROOT,
@@ -154,6 +152,7 @@ FC_FUNC( mpi_init_fort , MPI_INIT_FORT)
 
   if (err)
     abort();
+  return err;
 }
 
 int MPI_Init_thread(int *argc, char **argv[], int required, int *provided)
@@ -162,7 +161,7 @@ int MPI_Init_thread(int *argc, char **argv[], int required, int *provided)
     return MPI_Init(argc, argv);
 }
 
-int MPI_Init(int *argc, char **argv[])
+int MPI_Init(int *argc, char ***argv)
 {
   MPI_Comm my_comm_world;
 
@@ -193,9 +192,10 @@ int MPI_Init(int *argc, char **argv[])
 /*********/
 
 
-FC_FUNC( mpi_finalize, MPI_FINALIZE )(int *ierror)
+int FC_FUNC( mpi_finalize, MPI_FINALIZE )(int *ierror)
 {
   *ierror=MPI_Finalize();
+  return(MPI_SUCCESS);
 }
 
 
@@ -221,9 +221,10 @@ int MPI_Finalize(void)
 /*********/
 
 
-FC_FUNC( mpi_abort , MPI_ABORT )(int *comm, int *errorcode, int *ierror)
+int FC_FUNC( mpi_abort , MPI_ABORT )(int *comm, int *errorcode, int *ierror)
 {
   *ierror=MPI_Abort( *comm, *errorcode);
+  return(MPI_SUCCESS);
 }
 
 
@@ -239,11 +240,12 @@ int MPI_Abort(MPI_Comm comm, int errorcode)
 
 
 
-FC_FUNC( mpi_error_string , MPI_ERROR_STRING)
+int FC_FUNC( mpi_error_string , MPI_ERROR_STRING)
                              (int *errorcode, char *string,
 			      int *resultlen, int *ierror)
 {
   *ierror=MPI_Error_string(*errorcode, string, resultlen);
+  return(MPI_SUCCESS);
 }
 
 
@@ -259,10 +261,11 @@ int MPI_Error_string(int errorcode, char *string, int *resultlen)
 /*********/
 
 
-FC_FUNC( mpi_get_processor_name , MPI_GET_PROCESSOR_NAME )
+int FC_FUNC( mpi_get_processor_name , MPI_GET_PROCESSOR_NAME )
                           (char *name, int *resultlen, int *ierror)
 {
   *ierror=MPI_Get_processor_name(name,resultlen);
+  return(MPI_SUCCESS);
 }
 
 
@@ -286,9 +289,10 @@ int MPI_Get_processor_name(char *name, int *resultlen)
 /*********/
 
 
-FC_FUNC( mpi_initialized , MPI_INITIALIZED )(int *flag, int *ierror)
+int FC_FUNC( mpi_initialized , MPI_INITIALIZED )(int *flag, int *ierror)
 {
   *ierror=MPI_Initialized(flag);
+  return(MPI_SUCCESS);
 }
 
 
@@ -301,6 +305,17 @@ int MPI_Initialized(int *flag)
 
 
 /**********/
+
+int MPI_Get_library_version(char *version, int *resultlen)
+{
+
+    strncpy(version,mpi_version_string,MPI_MAX_LIBRARY_VERSION_STRING);
+    // Make sure it is null terminated
+    version[MPI_MAX_LIBRARY_VERSION_STRING-1]='\0';
+    *resultlen=strlen(version);
+
+    return(MPI_SUCCESS);
+}
 
 
 void FC_FUNC( mpi_get_library_version, MPI_GET_LIBRARY_VERSION) (char *version, int *resultlen, int *ierror)
@@ -318,15 +333,12 @@ void FC_FUNC( mpi_get_library_version, MPI_GET_LIBRARY_VERSION) (char *version, 
 
 
 
-int MPI_Get_library_version(char *version, int *resultlen)
+int MPI_Get_Version(int *version, int *subversion)
 {
+    *version = 1;
+    *subversion = 0;
 
-  strncpy(version,mpi_version_string,MPI_MAX_LIBRARY_VERSION_STRING);
-  // Make sure it is null terminated
-  version[MPI_MAX_LIBRARY_VERSION_STRING-1]='\0';
-  *resultlen=strlen(version);
-
-  return(MPI_SUCCESS);
+    return (MPI_SUCCESS);
 }
 
 /**********/
@@ -335,14 +347,7 @@ void FC_FUNC( mpi_get_version, MPI_GET_VERSION )(int *mpi_vers, int *mpi_subvers
   MPI_Get_Version(mpi_vers, mpi_subvers);
 
   *ierror=MPI_SUCCESS;
-}
 
-int MPI_Get_Version(int *mpi_vers, int *mpi_subvers)
-{
-  *mpi_vers = 1;
-  *mpi_subvers = 0;
-
-  return (MPI_SUCCESS);
 }
 
 /**********/

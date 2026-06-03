@@ -23,11 +23,11 @@
  * fix this issue later...
  */
 
-extern int Pcopy_data2(void *source, int src_count, Datatype src_type,
+extern int Pcopy_data2(const void *source, int src_count, Datatype src_type,
 		       void *dest, int dest_count, Datatype dest_type);
 
 
-int copy_data2(void *source, int src_count, MPI_Datatype src_type,
+int copy_data2(const void *source, int src_count, MPI_Datatype src_type,
                void *dest, int dest_count, MPI_Datatype dest_type)
 {
   Datatype src_ptr = *(Datatype*) mpi_handle_to_datatype(src_type);
@@ -39,7 +39,7 @@ int copy_data2(void *source, int src_count, MPI_Datatype src_type,
 
 
 
-int Pcopy_data2(void *source, int src_count, Datatype src_type,
+int Pcopy_data2(const void *source, int src_count, Datatype src_type,
                 void *dest, int dest_count, Datatype dest_type)
 {
   int i;
@@ -84,6 +84,7 @@ int Pcopy_data2(void *source, int src_count, Datatype src_type,
 
     memcpy(dest+doffset, source+soffset, Simpletype_length(dest_type->pairs[i % dest_type->count].type));
   }
+  return MPI_SUCCESS;
 }
 
 
