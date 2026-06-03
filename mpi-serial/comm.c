@@ -30,9 +30,10 @@ MPI_Comm mpi_comm_new(void)
 /*********/
 
 
-FC_FUNC( mpi_comm_free , MPI_COMM_FREE )(int *comm, int *ierror)
+int FC_FUNC( mpi_comm_free , MPI_COMM_FREE )(int *comm, int *ierror)
 {
   *ierror=MPI_Comm_free(comm);
+  return MPI_SUCCESS;
 }
 
 
@@ -81,9 +82,10 @@ int MPI_Comm_free(MPI_Comm *comm)
 
 
 
-FC_FUNC( mpi_comm_size , MPI_COMM_SIZE )(int *comm, int *size, int *ierror)
+int FC_FUNC( mpi_comm_size , MPI_COMM_SIZE )(int *comm, int *size, int *ierror)
 {
   *ierror=MPI_Comm_size(*comm, size);
+  return MPI_SUCCESS;
 }
 
 
@@ -99,9 +101,10 @@ int MPI_Comm_size(MPI_Comm comm, int *size)
 /*********/
 
 
-FC_FUNC( mpi_comm_rank , MPI_COMM_RANK )(int *comm, int *rank, int *ierror)
+int FC_FUNC( mpi_comm_rank , MPI_COMM_RANK )(int *comm, int *rank, int *ierror)
 {
   *ierror=MPI_Comm_rank( *comm, rank);
+  return MPI_SUCCESS;
 }
 
 
@@ -117,10 +120,11 @@ int MPI_Comm_rank(MPI_Comm comm, int *rank)
 /*********/
 
 
-FC_FUNC( mpi_comm_dup , MPI_COMM_DUP )(int *comm, int *newcomm, int *ierror)
+int FC_FUNC( mpi_comm_dup , MPI_COMM_DUP )(int *comm, int *newcomm, int *ierror)
 {
 
   *ierror=MPI_Comm_dup( *comm, newcomm);
+  return MPI_SUCCESS;
 
 }
 
@@ -145,6 +149,7 @@ int FC_FUNC( mpi_comm_create, MPI_COMM_CREATE)
      (int *comm, int *group, int *newcomm, int *ierror)
 {
   *ierror=MPI_Comm_create(*comm,*group,newcomm);
+  return MPI_SUCCESS;
 }
 
 
@@ -164,10 +169,11 @@ int MPI_Comm_create(MPI_Comm comm, MPI_Group group, MPI_Comm *newcomm)
 /*********/
 
 
-FC_FUNC( mpi_comm_split, MPI_COMM_SPLIT )
+int FC_FUNC( mpi_comm_split, MPI_COMM_SPLIT )
      (int *comm, int *color, int *key, int *newcomm, int *ierror)
 {
   *ierror=MPI_Comm_split(*comm,*color,*key,newcomm);
+  return MPI_SUCCESS;
 
 }
 
@@ -187,10 +193,11 @@ int MPI_Comm_split(MPI_Comm comm, int color, int key, MPI_Comm *newcomm)
 /*********/
 
 
-FC_FUNC( mpi_comm_group, MPI_COMM_GROUP )
+int FC_FUNC( mpi_comm_group, MPI_COMM_GROUP )
      (int *comm, int *group, int *ierror)
 {
   *ierror= MPI_Comm_group(*comm, group);
+  return MPI_SUCCESS;
 }
 
 
@@ -209,13 +216,14 @@ int MPI_Comm_group(MPI_Comm comm, MPI_Group *group)
  *
  */
 
-FC_FUNC(mpi_intercomm_create, MPI_INTERCOMM_CREATE)(
+int FC_FUNC(mpi_intercomm_create, MPI_INTERCOMM_CREATE)(
                           int * local_comm, int * local_leader,
                           int * peer_comm,  int * remote_leader,
                           int * tag, int * newintercomm, int* ierr)
 {
   *ierr = MPI_Intercomm_create(*local_comm, *local_leader, *peer_comm,
                                *remote_leader, *tag, newintercomm);
+  return MPI_SUCCESS;
 }
 
 int MPI_Intercomm_create(MPI_Comm local_comm, int local_leader,

@@ -18,13 +18,14 @@
         call mpi_init(ierr)
 
         call MPI_GET_LIBRARY_VERSION(version,vlen,ierr)
-        print *,"MPI Version '",version,"' len=",vlen
+        print *,"MPI Version '",trim(version),"' len=",vlen
 
         call test_contiguous(ec)
         call test_vector(ec)
         call test_simple_hvector(ec)
         call test_simple_indexed(ec)
         call test_simple_bindexed(ec)
+        call test_simple_bindexed2(ec)
         call test_simple_hindexed(ec)
         call test_complex_indexed(ec)
         call test_packed(ec)
@@ -240,9 +241,71 @@
         call mpi_irecv(b, 1, indexed_type,mpi_any_source,mpi_any_tag, &
                        mpi_comm_world, req, ierr)
 #endif
+        ! Make sure the sent values were received
         do i=1,6
           if (a(index_test(i)) .ne. b(index_test(i))) then
             print *, ">>>FAILED:test_simple_bindexed"
+            ec = ec+1
+            return
+          end if
+        end do
+        ! Make sure the unsent values were unchanged
+        do i=1, 10
+          if (.not. ANY(index_test == i)) then
+            if (b(i) /= 0) then
+              print *, ">>>FAILED:test_simple_bindexed"
+              ec = ec+1
+              return
+            end if
+          end if
+        end do
+      end subroutine
+
+!!!!!!!!!!!!!!!!
+! Block indexed.  All blocks have same length
+!!!!!!!!!!!!!!!!
+
+      subroutine test_simple_bindexed2(ec)
+      use mpi
+      integer ec
+        integer i
+        integer, parameter :: count = 4
+        integer :: disps(count)
+        integer a(8), b(8)
+        integer indexed_type
+        integer ierr
+        integer req
+
+        print *, "Block indexed type, test 2"
+
+        do i = 1, 8
+          a(i) = i
+          b(i) = -1
+        end do
+        do i = 1, count
+!          disps(i) = 1 + (i * 2)
+          disps(i) = 1 + ((i-1) * 2)
+        end do
+
+        call mpi_type_create_indexed_block(count,1,disps,mpi_integer, &
+                                           indexed_type, ierr)
+        call mpi_type_commit(indexed_type, ierr)
+#ifdef TEST_INTERNAL
+        call copy_data2(a,1,indexed_type, b,1,indexed_type, ierr)
+#else
+        call mpi_irecv(b, 1, indexed_type,mpi_any_source,mpi_any_tag, &
+                       mpi_comm_world, req, ierr)
+        call mpi_send(a, 4, MPI_INTEGER,0, 0, mpi_comm_world,req,ierr)
+#endif
+        do i = 1, 8
+          if (MOD(i-1, 2) == 0) then
+            if (b(i) /= -1) then
+              print *, ">>>FAILED:test_simple_bindexed2, b=", b
+              ec = ec+1
+              return
+            end if
+          else if (b(i) /= a(i / 2)) then
+            print *, ">>>FAILED:test_simple_bindexed2 a=",a," b=",b
             ec = ec+1
             return
           end if

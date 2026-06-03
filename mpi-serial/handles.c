@@ -178,7 +178,6 @@ void mpi_destroy_handles(void)
 void mpi_alloc_handle(int *handle, void **data)
 {
   Handleitem *new;
-  int i;
 
   if (need_to_init)
     init_handles();
@@ -226,7 +225,7 @@ void mpi_alloc_handle(int *handle, void **data)
 }
 
 
-
+#ifdef CHECKS
 
 static void verify_handle(int handle, int block, int index)
 {
@@ -243,6 +242,7 @@ static void verify_handle(int handle, int block, int index)
       abort();
     }
 }
+#endif
 
 void *mpi_handle_to_ptr(int handle)
 {

@@ -3,13 +3,15 @@
 
 mpi-serial
 
-   Version 2.3
+   Version 2.5.0
 
-   Ray Loy (rloy@alcf.anl.gov)
+   Jim Edwards (jedwards@ucar.edu)
+
+   Originally written by
+   Ray Loy 
    John Yackovich
 
    plus contributions from:
-   Jim Edwards
    Steve Goldhaber
    Robert Jacob
    Sean Patrick Santos

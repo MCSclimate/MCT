@@ -8,7 +8,7 @@ VPATH=$(SRCDIR)/mpi-serial
 MODULE		= mpi-serial
 
 SRCS_F90	= fort.F90 \
-                  mpif.F90
+		  mpif.F90
 
 SRCS_C		= mpi.c \
 		  send.c \
@@ -17,20 +17,20 @@ SRCS_C		= mpi.c \
 		  req.c \
 		  list.c \
 		  handles.c \
-                  comm.c \
+		  comm.c \
 		  error.c \
-                  ic_merge.c \
-                  group.c \
-                  time.c \
-                  pack.c \
-                  type.c \
-                  type_const.c \
-                  copy.c \
-                  op.c \
-                  cart.c \
-                  getcount.c \
-                  probe.c \
-                  info.c
+		  ic_merge.c \
+		  group.c \
+		  time.c \
+		  pack.c \
+		  type.c \
+		  type_const.c \
+		  copy.c \
+		  op.c \
+		  cart.c \
+		  getcount.c \
+		  probe.c \
+		  info.c
 
 
 OBJS_ALL	= $(SRCS_C:.c=.o) \
@@ -80,14 +80,11 @@ clean:
 	/bin/rm -f *.o ctest ftest $(LIB) mpi.mod config.log config.status
 	cd tests ; $(MAKE) clean
 
-tests:
+tests: lib$(MODULE).a
 	cd tests; make
 
-install: lib
+install: lib$(MODULE).a
 	$(MKINSTALLDIRS) $(libdir) $(includedir)
 	$(INSTALL) lib$(MODULE).a -m 644 $(libdir)
 	$(INSTALL) mpi.h -m 644 $(includedir)
 	$(INSTALL) mpif.h -m 644 $(includedir)
-
-
-

@@ -228,6 +228,106 @@ void test_simple_bindexed()
     }
 }
 
+//block indexed.  Same as bindexed except
+//send ints
+
+void test_simple_bindexed2()
+{
+  int blocksize=1;
+  int len=4;
+  int displace[len];
+  MPI_Datatype mtype;
+  int sbuf[8];
+  int rbuf[8];
+  int i;
+  MPI_Request rcvid;
+  MPI_Status status;
+  int mpierr;
+  
+  //block indexed of simple types
+  printf("\nBlock indexed type of MPI_INT, sending MPI_INT.\n");
+
+  for (i=0;i<8;i++){
+    sbuf[i] = i;
+  }
+  for (i=0;i<8;i++){
+    rbuf[i] = -1;
+  }
+  for (i=0;i<len;i++)
+    displace[i]=1+i*2;
+
+  mpierr = MPI_Type_create_indexed_block(len, blocksize, displace,
+					 MPI_INT, &mtype);
+  if(mpierr){
+      printf("\n>>>FAILED: %d %d\n",__LINE__,mpierr);
+      errcount++;
+      return;
+  }
+  mpierr = MPI_Type_commit(&mtype);
+  if(mpierr){
+      printf("\n>>>FAILED: %d %d\n",__LINE__,mpierr);
+      errcount++;
+      return;
+  }
+
+  
+#ifdef TEST_INTERNAL
+  copy_data(&a, &b, indexed_type);
+  print_typemap(indexed_type);
+#else
+  
+  mpierr = MPI_Irecv(rbuf, 1, mtype,
+		     0, 1, MPI_COMM_WORLD, &rcvid);
+  if(mpierr){
+      printf("\n>>>FAILED: %d %d\n",__LINE__,mpierr);
+      errcount++;
+      return;
+  }
+
+  mpierr = MPI_Send(sbuf, 4, MPI_INT,
+		    0, 1, MPI_COMM_WORLD);
+  if(mpierr){
+      printf("\n>>>FAILED: %d %d\n",__LINE__,mpierr);
+      errcount++;
+      return;
+  }
+
+  mpierr = MPI_Wait(&rcvid, &status);
+  if(mpierr){
+      printf("\n>>>FAILED: %d %d\n",__LINE__,mpierr);
+      errcount++;
+      return;
+  }
+
+#endif
+
+  printf("a = [");
+  for (i = 0; i < 8; i++)
+    printf("%d ", sbuf[i]);
+  printf("]\n");
+
+  printf("b = [");
+  for (i = 0; i < 8; i++)
+    printf("%d ", rbuf[i]);
+  printf("]\n");
+
+  for (i = 0; i < 8; i++)
+    if (i%2 == 0)
+    {
+      if (rbuf[i] != -1)
+      {
+        printf(">>>FAILED: test_simple_bindexed2\n");
+        errcount++;
+        return;
+      }
+    } else if (rbuf[i] != sbuf[i / 2])
+    {
+      printf(">>>FAILED: test_simple_bindexed2\n");
+      errcount++;
+      return;
+    }
+}
+
 //hindexed:  same as indexed, but
 //using byte displacements based off of sizeof(int)
 //(no reason why this shouldn't work)
@@ -418,7 +518,6 @@ void test_simple_struct()
 
 void test_complex_struct()
 {
-  MPI_Datatype sstruct;
   typedef struct {long a; long b; char c; int d; int e;} st;
   typedef struct {st a; int b; char c;} st2;
   st s1 = {.a = 100, .b = 200, .c = 'x', .d = 45, .e = 50};
@@ -946,6 +1045,7 @@ int main(int argc, char ** argv)
   test_simple_hvector();
   test_simple_indexed();
   test_simple_bindexed();
+  test_simple_bindexed2();
   test_simple_hindexed();
   test_simple_struct();
   test_complex_struct();
@@ -964,4 +1064,3 @@ int main(int argc, char ** argv)
 
   return(errcount);
 }
-

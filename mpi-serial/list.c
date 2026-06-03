@@ -277,7 +277,7 @@ int AP_list_delete(pList list, void *data)
 {
   pListitem item;
 
-  if (item=AP_list_search(list,data))
+  if ((item=AP_list_search(list,data)))
     {
       AP_list_delete_item(list,item);
       return(1);

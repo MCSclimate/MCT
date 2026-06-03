@@ -81,6 +81,7 @@ typedef Typestruct* Datatype;
 
 //internal type functions
 int Simpletype_length(Simpletype s);
+int Type_extent(Datatype datatype, MPI_Aint * extent);
 
 //testing only
 int print_typemap(MPI_Datatype in);
@@ -117,8 +118,32 @@ int print_typemap(MPI_Datatype in);
 const extern Datatype simpletypes[];
 Datatype* mpi_handle_to_datatype(int handle);
 
-extern int Unpack(void * inbuf, int insize, int * position, void *outbuf,
+extern int Unpack(const void * inbuf, int insize, int * position, void *outbuf,
                   int outcount, Datatype type, Comm* comm);
-extern int Pack(void *inbuf, int incount, Datatype type,
+extern int Pack(const void *inbuf, int incount, Datatype type,
               void *outbuf, int outsize, int *position, Comm * comm);
+
+// added to avoid implicit declaration error (GCC-14)
+extern int Copy_type(typepair *source, typepair *dest);
+extern int FGet_address(void * loc, long * address);
+extern int MPI_Address(void * loc, MPI_Aint * address);
+extern int MPI_Get_address(void * loc, MPI_Aint * address);
+extern int Pack_size(int incount, Datatype datatype,
+                   Comm * comm, MPI_Aint * size);
+extern int Type_contiguous(int count, Datatype oldtype, Datatype *newtype);
+extern int Type_create_indexed_block(int count, int blocklen, const int *displacements,
+               Datatype oldtype, Datatype *newtype);
+extern int Type_hindexed(int count, const int *blocklens, const MPI_Aint *displacements,
+                  Datatype oldtype, Datatype *newtype);
+extern int Type_hvector(int count, int blocklen, MPI_Aint stride,
+                      Datatype oldtype, Datatype *newtype);
+extern int Type_indexed(int count, const int *blocklens, const int *displacements,
+                 Datatype oldtype, Datatype *newtype);
+extern int Type_lb(Datatype type, MPI_Aint * lb);
+extern int Type_size(Datatype type, int * size);
+extern int Type_struct(int count, const int * blocklens, const MPI_Aint * displacements,
+                Datatype *oldtypes_ptr,     Datatype *newtype);
+extern int Type_ub(Datatype type, MPI_Aint * ub);
+extern int Type_vector(int count, int blocklen, int stride,
+                Datatype oldtype, Datatype *newtype);
 #endif /* TYPE_H */
